@@ -7,7 +7,7 @@ const PORT = 7777;
 
 app.use(LogMiddleware);
 app.use(express.json());
-// 라우트 자리
+//app.use('/api'); //라우터 넣는 곳
 app.use(ErrorHandlingMiddleware);
 
 app.listen(PORT, () => {
