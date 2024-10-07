@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
 
 const mockStoreService = {
@@ -45,7 +45,7 @@ describe('Store Controller Unit Test', () => {
 
     mockStoreService.createStore.mockReturnValue(createdStoreReturnValue);
 
-    const createdStore = await storeController.createStore(mockRequest, mockResponse, mockNext);
+    await storeController.createStore(mockRequest, mockResponse, mockNext);
     expect(mockStoreService.createStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.createStore).toHaveBeenCalledWith(
       createStoreRequestBodyParams.userId,
@@ -79,12 +79,10 @@ describe('Store Controller Unit Test', () => {
       ...updateStoreRequestBodyParams,
       updatedAt: new Date().toString,
     };
-    console.log(updateStoreRequestBodyParams);
-    console.log(updatedStoreReturnValue);
 
     mockStoreService.updateStore.mockReturnValue(updatedStoreReturnValue);
 
-    const updatedStore = await storeController.updateStore(mockRequest, mockResponse, mockNext);
+    await storeController.updateStore(mockRequest, mockResponse, mockNext);
     expect(mockStoreService.updateStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.updateStore).toHaveBeenCalledWith(
       updateStoreRequestBodyParams.userId,
@@ -100,6 +98,40 @@ describe('Store Controller Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: updatedStoreReturnValue,
+    });
+  });
+
+  /** Delete Controller Test */
+  test('deleteStore Method by Success', async () => {
+    const deleteStoreRequestBodyParams = {
+      userId: 1,
+      storeName: 'Delete Store Name',
+    };
+
+    mockRequest.body = deleteStoreRequestBodyParams;
+
+    const deletedStoreReturnValue = {
+      ...deleteStoreRequestBodyParams,
+    };
+
+    mockStoreService.deleteStore.mockReturnValue(deletedStoreReturnValue);
+
+    await storeController.deleteStore(mockRequest, mockResponse, mockNext);
+    expect(mockStoreService.deleteStore).toHaveBeenCalledTimes(1);
+    expect(mockStoreService.deleteStore).toHaveBeenCalledWith(
+      deleteStoreRequestBodyParams.userId,
+      deleteStoreRequestBodyParams.storeName,
+    );
+
+    // Response status
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    // Response json
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      message: '가게 삭제를 완료 하였습니다.',
+      data: deletedStoreReturnValue,
     });
   });
 });

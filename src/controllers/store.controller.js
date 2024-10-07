@@ -26,6 +26,7 @@ export class StoreController {
     try {
       //   const userId = req.cookie;
       const { userId, storeName, foodType } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
+
       const updatedStore = await this.storeService.updateStore(userId, storeName, foodType);
       return res.status(200).json({ data: updatedStore });
     } catch (err) {
@@ -37,12 +38,12 @@ export class StoreController {
     try {
       // 인증 인가 부분이 없어서 임시로 body로 추가
       // const { userId } = req.user;
-      const { storeId, userId } = req.body;
+      const { storeName, userId } = req.body;
 
       // 서비스 계층에 구현된 deleteStore 로직을 실행합니다.
-      const deletedStore = await this.storeService.deleteStore(userId, storeId);
+      const deletedStore = await this.storeService.deleteStore(userId, storeName);
 
-      return res.status(200).json({ message: '가게 삭제를 완료 하렸습니다.', data: deletedStore });
+      return res.status(200).json({ message: '가게 삭제를 완료 하였습니다.', data: deletedStore });
     } catch (err) {
       next(err);
     }
