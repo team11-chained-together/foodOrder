@@ -2,12 +2,14 @@ import { beforeEach, describe, expect, jest } from '@jest/globals';
 import { StoreRepository } from '../../../src/repositories/store.repository.js';
 
 let mockPrisma = {
-  stores: {
+  store: {
     create: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
   },
 };
 
-let storesRepository = new StoreRepository(mockPrisma);
+let storeRepository = new StoreRepository(mockPrisma);
 
 describe('Store Repository Unit Test', () => {
   // 각 test가 실행되기 전에 실행됩니다.
@@ -15,33 +17,98 @@ describe('Store Repository Unit Test', () => {
     jest.resetAllMocks(); // 모든 Mock을 초기화합니다.
   });
 
-  test('createStore Method', async () => {
-    // 1. 최종적으로 createStore 메서드의 반환값을 설정한다.
-    const mockReturn = 'create Store Return String';
-    mockPrisma.stores.create.mockReturnValue(mockReturn);
+  test('findStoreByUserId Method', async () => {
+    // 1. findStoreByUserId 메서드의 반환값을 설정한다.
+    const mockReturn = 'find UserId';
+    mockPrisma.store.findUnique.mockReturnValue(mockReturn);
 
-    // 2. createPost 메서드를 실행하기 위한, storeName, foodType의 데이터를 전달한다.
-    const createStoreParams = {
-      storeName: 'createStoreName',
-      foodType: 'createFoodType',
+    // 2. findStoreByUserId 메서드를 실행하기 위한 userId 데이터 전달
+    const findUserIdParams = {
+      userId: 1,
     };
 
-    const createStoreData = await storesRepository.createStore(
+    const findUserData = await storeRepository.findStoreByUserId(findUserIdParams.userId);
+
+    // findUnique 메서드의 반환값은 Return 값과 동일하다.
+    expect(findUserData).toEqual(mockReturn);
+
+    // findUnique 메서드는 1번만 실행된다.
+    expect(mockPrisma.store.findUnique).toHaveBeenCalledTimes(1);
+
+    // findStoreByUserId 메서드를 실행할때, findUnique 메서드는 전달한 userId를 전달
+    expect(mockPrisma.store.findUnique).toHaveBeenCalledWith({
+      where: { userId: findUserIdParams.userId },
+    });
+  });
+
+  test('createStore Method', async () => {
+    // 1. createStore 메서드의 반환값을 설정한다.
+    const mockReturn = 'create Store Return String';
+    mockPrisma.store.create.mockReturnValue(mockReturn);
+
+    // 2. createStore 메서드를 실행하기 위한 userId, storeName, foodType의 데이터를 전달한다.
+    const createStoreParams = {
+      userId: 1,
+      storeName: 'createStoreName',
+      foodType: 'createFoodType',
+      sales: 0,
+    };
+
+    const createStoreData = await storeRepository.createStore(
+      createStoreParams.userId,
       createStoreParams.storeName,
       createStoreParams.foodType,
+      createStoreParams.sales,
     );
 
     // create 메서드의 반환값은 Return 값과 동일하다.
     expect(createStoreData).toEqual(mockReturn);
 
     // create 메서드는 1번만 실행된다.
-    expect(mockPrisma.stores.create).toHaveBeenCalledTimes(1);
+    expect(mockPrisma.store.create).toHaveBeenCalledTimes(1);
 
-    // createStore 메서드를 실행할때, create 메서드는 전달한 storeName, foodType이 순서대로 전달된다.
-    expect(mockPrisma.stores.create).toHaveBeenCalledWith({
+    // createStore 메서드를 실행할때, create 메서드는 전달한 userId, storeName, foodType이 순서대로 전달된다.
+    expect(mockPrisma.store.create).toHaveBeenCalledWith({
       data: {
+        userId: createStoreParams.userId,
         storeName: createStoreParams.storeName,
         foodType: createStoreParams.foodType,
+        sales: createStoreParams.sales,
+      },
+    });
+  });
+
+  test('updateStore Method', async () => {
+    // 1. updateStore 메서드의 반환값을 설정한다.
+    const mockReturn = 'Update Store Return String';
+    mockPrisma.store.update.mockReturnValue(mockReturn);
+
+    // 2. updateStore 메서드를 실행하기 위한 userId, storeName, foodType의 데이터를 전달한다.
+    const updateStoreParams = {
+      userId: 1,
+      storeName: 'createStoreName',
+      foodType: 'createFoodType',
+    };
+
+    const updateStoreData = await storeRepository.updateStore(
+      updateStoreParams.userId,
+      updateStoreParams.storeName,
+      updateStoreParams.foodType,
+    );
+
+    expect(updateStoreData).toEqual(mockReturn);
+
+    // create 메서드는 1번만 실행된다.
+    expect(mockPrisma.store.update).toHaveBeenCalledTimes(1);
+
+    // createStore 메서드를 실행할때, update 메서드는 전달한 userId, storeName, foodType이 순서대로 전달된다.
+    expect(mockPrisma.store.update).toHaveBeenCalledWith({
+      where: {
+        userId: updateStoreParams.userId,
+      },
+      data: {
+        storeName: updateStoreParams.storeName,
+        foodType: updateStoreParams.foodType,
       },
     });
   });
