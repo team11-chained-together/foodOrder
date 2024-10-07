@@ -4,6 +4,7 @@ import { StoreService } from '../../../src/services/store.service.js';
 let mockStoreRepository = {
   createStore: jest.fn(),
   updateStore: jest.fn(),
+  deleteStore: jest.fn(),
   findStoreByUserId: jest.fn(),
 };
 
@@ -14,6 +15,7 @@ describe('Store Service Unit Test', () => {
     jest.resetAllMocks();
   });
 
+  /** Create Store Service Method 테스트 */
   test('createStore Method By Success', async () => {
     // 반환값 설정
     const sampleStore = {
@@ -48,6 +50,7 @@ describe('Store Service Unit Test', () => {
     });
   });
 
+  /** Update Store Service Method 테스트 */
   test('updateStore Method By Success', async () => {
     const sampleStore = {
       storeId: 1,
@@ -68,20 +71,51 @@ describe('Store Service Unit Test', () => {
     );
 
     expect(mockStoreRepository.updateStore).toHaveBeenCalledTimes(1);
-    expect(mockStoreRepository).toHaveBeenCalledWith(
+    expect(mockStoreRepository.updateStore).toHaveBeenCalledWith(
       sampleStore.userId,
       sampleStore.storeName,
       sampleStore.foodType,
     );
 
     expect(updatedStore).toEqual({
-      storeId: sampleStore.storeId,
       userId: sampleStore.userId,
+      storeId: sampleStore.storeId,
       storeName: sampleStore.storeName,
       foodType: sampleStore.foodType,
       sales: sampleStore.sales,
       createdAt: sampleStore.createdAt,
       updatedAt: sampleStore.updatedAt,
+    });
+  });
+
+  /** Delete Store Service Method 테스트 */
+  test('deleteStore Method By Success', async () => {
+    const sampleStore = {
+      storeId: 1,
+      userId: 1,
+      storeName: 'Delete StoreName Test',
+      foodType: 'Delete FoodType Test',
+      sales: 0,
+      createdAt: '2024-09-28T09:35:43.410Z',
+      updatedAt: '2024-09-28T09:35:43.410Z',
+    };
+
+    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
+    mockStoreRepository.deleteStore.mockReturnValue(sampleStore);
+
+    const deletedStore = await storeService.updateStore(1, 'Delete StoreName Test');
+
+    expect(mockStoreRepository.deleteStore).toHaveBeenCalledTimes(1);
+    expect(mockStoreRepository.deleteStore).toHaveBeenCalledWith(
+      sampleStore.userId,
+      sampleStore.storeName,
+    );
+
+    expect(deletedStore).toEqual({
+      storeId: sampleStore.storeId,
+      storeName: sampleStore.storeName,
+      foodType: sampleStore.foodType,
+      sales: sampleStore.sales,
     });
   });
 });
