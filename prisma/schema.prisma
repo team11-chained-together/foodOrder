@@ -30,6 +30,7 @@ model Store {
   userId Int @unique @map("userId")
   storeName String @map("storeName")
   foodType String @map("foodType")
+  sales Int @map("sales")
   createdAt         DateTime            @default(now()) @map("createdAt")
   updatedAt         DateTime            @updatedAt @map("updatedAt")
 
