@@ -84,6 +84,7 @@ describe('Store Controller Unit Test', () => {
 
     mockStoreService.updateStore.mockReturnValue(updatedStoreReturnValue);
 
+    const updatedStore = await storeController.updateStore(mockRequest, mockResponse, mockNext);
     expect(mockStoreService.updateStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.updateStore).toHaveBeenCalledWith(
       updateStoreRequestBodyParams.userId,
