@@ -8,6 +8,9 @@ import userRouter from './routes/user.router.js';
 
 const app = express();
 const PORT = 7777;
+require('dotenv').config();
+
+
 
 app.use(LogMiddleware);
 app.use(express.json());
