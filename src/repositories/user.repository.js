@@ -1,31 +1,27 @@
-import { prisma } from "../utils/prisma/index.js";
-
-
 //유저 생성 (회원 가입)
+export class UserRepository{
+  constructor(prisma) {
+    this.prisma = prisma
+  }
 
-export class userRepository{
-    createdUser = async(email,password,name,address)=>{
-        
-        return await prisma.user.create({
+    checkEmail= async (email) =>{
+      const existingUser = await this.prisma.user.findUnique({
+        where:{email}
+      });
+      return existingUser;
+    }
+
+    createdUser = async (email, hashedPassword, name, address, type) => {
+    
+        const createdUser = await this.prisma.user.create({
+          data: {
             email,
-            password,
+            password: hashedPassword,
             name,
             address,
-            point,
+            type,
+          },
         });
-    }
-
-        async findUserEmail(email){
-        return await prisma.user.findUnique({
-            where : {
-            email
-            },
-        });
-        // const existEmail = await prisma.user.findUnique({
-        //     where : {
-        //     email
-        //     },
-        // });
-        // return existEmail;
-    }
+        return createdUser;
+      };
 }

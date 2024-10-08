@@ -1,10 +1,16 @@
 import express from 'express';
-import {userController} from '../controllers/user.controller.js';
+import {prisma} from '../utils/prisma/index.js'
+import {UserController} from '../controllers/user.controller.js';
+import {UserService} from '../services/user.service.js'
+import{UserRepository} from '../repositories/user.repository.js'
 
 const router = express.Router();
-const usersController = new userController();
 
-router.post('/signup',usersController.userSignup);
-router.post('/login', usersController.userLogin);
+const userRepository = new UserRepository(prisma);
+const userService = new UserService(userRepository);
+const userController = new UserController(userService);
+
+router.post('/signup',userController.userSignup);
+router.post('/login', userController.userLogin);
 
 export default router;
