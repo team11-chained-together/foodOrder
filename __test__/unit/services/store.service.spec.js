@@ -6,6 +6,7 @@ let mockStoreRepository = {
   updateStore: jest.fn(),
   deleteStore: jest.fn(),
   findStoreByUserId: jest.fn(),
+  findStoreByStoreName: jest.fn(),
 };
 
 let storeService = new StoreService(mockStoreRepository);
@@ -117,5 +118,21 @@ describe('Store Service Unit Test', () => {
       foodType: sampleStore.foodType,
       sales: sampleStore.sales,
     });
+  });
+
+  test('getStore Method By Success', async () => {
+    const sampleStore = {
+      userId: 1,
+      storeName: 'Get storeName Test',
+      foodType: 'Get FoodType Test',
+      createdAt: '2024-09-28T09:35:43.410Z',
+    };
+
+    mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
+    const getStore = await storeService.getStore(sampleStore.storeName);
+
+    expect(getStore).toEqual(sampleStore);
+    expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
+    expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith(sampleStore.storeName);
   });
 });

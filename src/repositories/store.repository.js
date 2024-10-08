@@ -38,4 +38,22 @@ export class StoreRepository {
 
     return updatedStore;
   };
+
+  deleteStore = async (userId) => {
+    const deletedStore = await this.prisma.store.delete({
+      where: {
+        userId: +userId,
+      },
+    });
+
+    return deletedStore;
+  };
+
+  findStoreByStoreName = async (storeName) => {
+    const getStore = await this.prisma.store.findFirst({
+      where: {
+        storeName: storeName,
+      },
+    });
+  };
 }

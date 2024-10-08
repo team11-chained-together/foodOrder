@@ -48,4 +48,16 @@ export class StoreController {
       next(err);
     }
   };
+
+  getStore = async (req, res, next) => {
+    try {
+      const { storeName } = req.body;
+
+      const getStore = await this.storeService.getStore(storeName);
+
+      return res.status(200).json({ data: getStore });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
