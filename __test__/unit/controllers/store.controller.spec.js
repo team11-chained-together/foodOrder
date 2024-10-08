@@ -28,7 +28,7 @@ describe('Store Controller Unit Test', () => {
     mockResponse.status.mockReturnValue(mockResponse);
   });
 
-  /** Create Controller Test */
+  /** Create Store Controller Test */
   test('createStore Method by Success', async () => {
     const createStoreRequestBodyParams = {
       userId: 1,
@@ -65,7 +65,7 @@ describe('Store Controller Unit Test', () => {
     });
   });
 
-  /** Update Controller Test */
+  /** Update Store Controller Test */
   test('updateStore Method by Success', async () => {
     const updateStoreRequestBodyParams = {
       userId: 1,
@@ -102,7 +102,7 @@ describe('Store Controller Unit Test', () => {
     });
   });
 
-  /** Delete Controller Test */
+  /** Delete Store Controller Test */
   test('deleteStore Method by Success', async () => {
     const deleteStoreRequestBodyParams = {
       userId: 1,
@@ -136,7 +136,7 @@ describe('Store Controller Unit Test', () => {
     });
   });
 
-  /** Get Controller Test */
+  /** Get Store Controller Test */
   test('getStore Method by Success', async () => {
     const getStoreRequestBodyParams = {
       storeName: 'Get Store Name',
