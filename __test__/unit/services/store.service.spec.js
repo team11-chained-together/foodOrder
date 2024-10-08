@@ -135,4 +135,21 @@ describe('Store Service Unit Test', () => {
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith(sampleStore.storeName);
   });
+
+  /** Update Store Service Method Fail 테스트 */
+  test('updateStore Method By Fail', async () => {
+    const sampleMenu = null;
+    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleMenu);
+
+    try {
+      await storeService.updateStore(1, 'storeName', 'foodType');
+    } catch (err) {
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledTimes(1);
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledWith(1);
+
+      expect(mockStoreRepository.updateStore).toBeCalledTimes(0);
+
+      expect(err.message).toEqual('보유하고 있는 식당이 없습니다, 식당을 만들어주세요.');
+    }
+  });
 });

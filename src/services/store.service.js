@@ -21,7 +21,7 @@ export class StoreService {
     // 저장소(Repository)에게 특정 유저아이디의 상점을 요청합니다.
     const store = await this.storeRepository.findStoreByUserId(userId);
     if (!store) {
-      throw new Error('보유하고 있는 식당이 없습니다, 식당을 만들어주세요');
+      throw new Error('보유하고 있는 식당이 없습니다, 식당을 만들어주세요.');
     }
 
     await this.storeRepository.updateStore(userId, storeName, foodType);
