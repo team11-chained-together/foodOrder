@@ -103,7 +103,7 @@ describe('Store Service Unit Test', () => {
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
     mockStoreRepository.deleteStore.mockReturnValue(sampleStore);
 
-    const deletedStore = await storeService.updateStore(1, 'Delete StoreName Test');
+    const deletedStore = await storeService.deleteStore(1, 'Delete StoreName Test');
 
     expect(mockStoreRepository.deleteStore).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.deleteStore).toHaveBeenCalledWith(
