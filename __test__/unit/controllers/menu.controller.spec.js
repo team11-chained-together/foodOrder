@@ -28,6 +28,7 @@ describe('Menu Controller Unit Test', () => {
   /** Create Menu Controller Test*/
   test('createMenu Method By Success', async () => {
     const createMenuRequestBodyParams = {
+      userId: 1,
       menuName: '훌랄라 치킨',
       image: '치킨 이미지',
       price: 10000,
@@ -48,6 +49,7 @@ describe('Menu Controller Unit Test', () => {
     await menuController.createMenu(mockRequest, mockResponse, mockNext);
     expect(mockMenuService.createMenu).toHaveBeenCalledTimes(1);
     expect(mockMenuService.createMenu).toHaveBeenCalledWith(
+      createMenuRequestBodyParams.userId,
       createMenuRequestBodyParams.menuName,
       createMenuRequestBodyParams.image,
       createMenuRequestBodyParams.price,
@@ -56,7 +58,7 @@ describe('Menu Controller Unit Test', () => {
 
     // Response status
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.status).toHaveBeenCalledWith(201);
 
     // Response json
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
