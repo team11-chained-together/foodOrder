@@ -16,7 +16,7 @@ export class UserController {
     } = req.body;
 
       // 서비스 계층에 구현된 createUser 로직을 실행합니다.
-      const createdUser = await this.userService.signup(
+      const createdUser = await this.userService.signUp(
         email,
         password,
         name,
@@ -26,7 +26,7 @@ export class UserController {
 
       return res.status(201).json({ 
         message: '회원가입 성공!',
-        user:createdUser,
+        data:createdUser,
     });
     } catch (err) {
       
