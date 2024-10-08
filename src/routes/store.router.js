@@ -11,5 +11,8 @@ const storeService = new StoreService(storeRepository);
 const storeController = new StoreController(storeService);
 
 router.post('/owner/store', storeController.createStore);
+router.put('/owner/store', storeController.updateStore);
+router.delete('/owner/store', storeController.deleteStore);
+router.get('/owner/store', storeController.getStore);
 
 export default router;

@@ -5,6 +5,7 @@ const mockStoreService = {
   createStore: jest.fn(),
   updateStore: jest.fn(),
   deleteStore: jest.fn(),
+  getStore: jest.fn(),
 };
 
 const mockRequest = {
@@ -132,6 +133,35 @@ describe('Store Controller Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledWith({
       message: '가게 삭제를 완료 하였습니다.',
       data: deletedStoreReturnValue,
+    });
+  });
+
+  /** Get Controller Test */
+  test('getStore Method by Success', async () => {
+    const getStoreRequestBodyParams = {
+      storeName: 'Get Store Name',
+    };
+
+    mockRequest.body = getStoreRequestBodyParams;
+
+    const getStoreReturnValue = {
+      ...getStoreRequestBodyParams,
+    };
+
+    mockStoreService.getStore.mockReturnValue(getStoreReturnValue);
+
+    await storeController.getStore(mockRequest, mockResponse, mockNext);
+    expect(mockStoreService.getStore).toHaveBeenCalledTimes(1);
+    expect(mockStoreService.getStore).toHaveBeenCalledWith(getStoreRequestBodyParams.storeName);
+
+    // Response status
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    // Response json
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: getStoreReturnValue,
     });
   });
 });

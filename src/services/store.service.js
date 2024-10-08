@@ -57,4 +57,19 @@ export class StoreService {
       sales: store.sales,
     };
   };
+
+  getStore = async (storeName) => {
+    const store = await this.storeRepository.findStoreByStoreName(storeName);
+
+    if (!store) {
+      throw new Error('해당하는 음식점이 없습니다.');
+    }
+
+    return {
+      userId: store.userId,
+      storeName: store.storeName,
+      foodType: store.foodType,
+      createdAt: store.createdAt,
+    };
+  };
 }

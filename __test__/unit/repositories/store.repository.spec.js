@@ -6,6 +6,8 @@ let mockPrisma = {
     create: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
+    findFirst: jest.fn(),
   },
 };
 
@@ -109,6 +111,56 @@ describe('Store Repository Unit Test', () => {
       data: {
         storeName: updateStoreParams.storeName,
         foodType: updateStoreParams.foodType,
+      },
+    });
+  });
+
+  test('deleteStore Method', async () => {
+    // 1. deleteStore 메서드의 반환값을 설정
+    const mockReturn = 'Delete Store Return String';
+    mockPrisma.store.delete.mockReturnValue(mockReturn);
+
+    // 2. deleteStore 메서드를 실행하기 위한 userId 전달
+    const deleteStoreParams = {
+      userId: 1,
+    };
+
+    // 3. deleteStore 실행
+    const deleteStoreData = await storeRepository.deleteStore(deleteStoreParams.userId);
+
+    // delete 메서드의 반환값은 return 값과 동일하다.
+    expect(deleteStoreData).toEqual(mockReturn);
+
+    // delete 메서드는 1번만 실행된다.
+    expect(mockPrisma.store.delete).toHaveBeenCalledTimes(1);
+
+    // deleteStore 메서드를 실행할 때 delete 메서드는 전달한 postId를 전달한다.
+    expect(mockPrisma.store.delete).toHaveBeenCalledWith({
+      where: {
+        userId: deleteStoreParams.userId,
+      },
+    });
+  });
+
+  test('findStoreByStoreName Method', async () => {
+    // 1. findStoreByStoreName 메서드의 반환값을 설정
+    const mockReturn = 'get Store Name';
+    mockPrisma.store.findFirst.mockReturnValue(mockReturn);
+
+    // 2. findStoreByStoreName 메서드를 실행하기 위한 storeName 전달
+    const getStoreParams = {
+      storeName: 'Get Store Name',
+    };
+
+    // 3. findStoreByStoreName 실행
+    await storeRepository.findStoreByStoreName(getStoreParams.storeName);
+
+    // findFirst 메서드는 1번만 실행된다.
+    expect(mockPrisma.store.findFirst).toHaveBeenCalledTimes(1);
+
+    expect(mockPrisma.store.findFirst).toHaveBeenCalledWith({
+      where: {
+        storeName: getStoreParams.storeName,
       },
     });
   });
