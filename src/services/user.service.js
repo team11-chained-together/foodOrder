@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 
 //회원가입 로직
 export class UserService{
@@ -37,8 +37,8 @@ export class UserService{
         email : createdUser.email,
         name : createdUser.name,
         address : createdUser.address,
-        createAt : createdUser.createdAt,
         type : createdUser.type,
+        createdAt: createdUser.createdAt,
     };
  };
 
