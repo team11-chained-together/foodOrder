@@ -164,4 +164,15 @@ describe('Store Controller Unit Test', () => {
       data: getStoreReturnValue,
     });
   });
+
+  test('createStore Method By Invalid Params Error', async () => {
+    mockRequest.body = {
+      userId: 1,
+      storeName: 'StoreName_InvalidParamsError',
+    };
+
+    await storeController.createStore(mockRequest, mockResponse, mockNext);
+
+    expect(mockNext).toHaveBeenCalledWith(new Error('InvalidParamsError'));
+  });
 });
