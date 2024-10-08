@@ -3,6 +3,7 @@ import { MenuController } from '../../../src/controllers/menu.controller';
 
 const mockMenuService = {
   createMenu: jest.fn(),
+  updateMenu: jest.fn(),
 };
 
 const mockRequest = {
@@ -64,6 +65,48 @@ describe('Menu Controller Unit Test', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: createdMenuReturnValue,
+    });
+  });
+
+  test('updateMethod By Success', async () => {
+    const updateMenuRequestBodyParams = {
+      userId: 1,
+      menuName: '수정할 메뉴이름',
+      image: '수정할 이미지 URL',
+      price: 1000,
+      stock: 29,
+    };
+
+    mockRequest.body = updateMenuRequestBodyParams;
+
+    // service 계층에서 구현된 updateMenu 메소드를 실행하였을 때, 반환되는 데이터 형식
+    const updatedMenuReturnValue = {
+      menuId: 1,
+      ...updateMenuRequestBodyParams,
+      createdAt: new Date().toString,
+      updatedAt: new Date().toString,
+    };
+
+    mockMenuService.updateMenu.mockReturnValue(updatedMenuReturnValue);
+
+    await menuController.updateMenu(mockRequest, mockResponse, mockNext);
+    expect(mockMenuService.updateMenu).toHaveBeenCalledTimes(1);
+    expect(mockMenuService.updateMenu).toHaveBeenCalledWith(
+      updateMenuRequestBodyParams.userId,
+      updateMenuRequestBodyParams.menuName,
+      updateMenuRequestBodyParams.image,
+      updateMenuRequestBodyParams.price,
+      updateMenuRequestBodyParams.stock,
+    );
+
+    // Response status
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    // Response json
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: updatedMenuReturnValue,
     });
   });
 });

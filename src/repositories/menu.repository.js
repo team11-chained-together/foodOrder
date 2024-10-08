@@ -35,4 +35,20 @@ export class MenuRepository {
 
     return createdMenu;
   };
+
+  updateMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
+    const updatedMenu = await this.prisma.menu.update({
+      where: {
+        storeId: +storeId,
+        menuName,
+      },
+      data: {
+        menuName: newMenuName,
+        image: image,
+        price: price,
+        stock: stock,
+      },
+    });
+    return updatedMenu;
+  };
 }
