@@ -24,6 +24,7 @@ export class UserRepository {
     return createdUser;
   };
 
+  // 존재하지않는 이메일 확인
   findUserByEmail = async (email) => {
     const findUserByEmail = await this.prisma.user.findUnique({
       where: { email },
@@ -31,14 +32,26 @@ export class UserRepository {
     return findUserByEmail;
   };
 
-  getUserPoint = async(userId) =>{
-    const getUserPoint = await this.prisma.user.findFirst({
-      where:{
-        userId:+userId,
-      },
-      select :{
-        point:userId.point
-      }
+  // 포인트 0일때 확인
+  // userPoint = async (point) => {
+  //   const ckeckPoint = await this.prisma.user.findFirst({
+  //     where: {
+  //       point,
+  //     },
+  //   });
+  //   return ckeckPoint;
+  // };
 
-    })
-  }
+  // 포인트 조회
+  getUserPoint = async (userId) => {
+    const userPoint = await this.prisma.user.findFirst({
+      where: {
+        userId: +userId,
+      },
+      select: {
+        point: true,
+      },
+    });
+    return userPoint;
+  };
+}

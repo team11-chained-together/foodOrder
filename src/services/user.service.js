@@ -59,6 +59,15 @@ export class UserService {
   };
 
   getUserPoint = async (userId) => {
-    const user = await this.userRepository.getUserPoint(userId);
+    // const ckeckPoint = this.userRepository.ckeckPoint(point);
+    // if (ckeckPoint === 0) {
+    //   throw new Error('포인트가 부족합니다');
+    // }
+
+    const userPoint = await this.userRepository.getUserPoint(userId);
+    return {
+      userId: userPoint.userId,
+      point: userPoint.point,
+    };
   };
 }

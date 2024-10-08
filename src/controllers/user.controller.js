@@ -42,11 +42,11 @@ export class UserController {
     try {
       const { userId } = req.params;
 
-      if (!userId) {
-        throw new Error('InvalidParamsError');
-      }
-      await this.userService.getUserPoint(userId);
-      return res.status(200).json({ data: getUserPoint });
+      // if (!userId) {
+      //   throw new Error('InvalidParamsError');
+      // }
+      const userPoint = await this.userService.getUserPoint(userId);
+      return res.status(200).json({ data: userPoint });
     } catch (err) {
       next(err);
     }
