@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import { UserRepository } from '../repositories/user.repository';
 
 //회원가입 로직
 export class UserService{
@@ -42,4 +43,29 @@ export class UserService{
     };
  };
 
-}
+logIn=async(email,password)=>{
+    const user = await this.userRepository.findUserByEmail(email);
+    //이메일을 통해 사용자 존재여부
+    if(!user){
+        throw new Error ('해당 email의 사용자가 존재하지 않습니다.')
+    }
+    //비밀번호 검증
+    const isPasswordValid = await bcrypt.compare(password,user.password);
+    if(!isPasswordValid){
+        throw new Error('비밀번호가 일치하지 않습니다.');
+    }
+    //JMT 토큰 생성
+    const {JWT_SECRET} = process.env;
+    const token = jwt.sign({
+        userId:user.id,
+        email:user.email
+    },
+        
+        {excepiresIn:'1h'}
+    );
+    return{
+        message: '로그인 성공',
+        token,
+    };
+  };
+};
