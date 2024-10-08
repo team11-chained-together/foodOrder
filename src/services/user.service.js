@@ -8,7 +8,7 @@ export class UserService{
         this.userRepository = userRepository
     }
 
-    signup = async(email,password,name,address,type)=>{
+    signUp = async(email,password,name,address,type)=>{
 
     if(!email || !password){
         throw new Error('email 과 password를 입력해주세요 ');
