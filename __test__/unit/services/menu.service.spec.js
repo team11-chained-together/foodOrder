@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { jest, test } from '@jest/globals';
 import { MenuService } from '../../../src/services/menu.service.js';
 
 //
@@ -6,6 +6,7 @@ let mockMenuRepository = {
   createMenu: jest.fn(),
   findStoreIdByUserId: jest.fn(),
   findMenuName: jest.fn(),
+  updateMenu: jest.fn(),
 };
 
 // menuService의 repository를 Mock Repository로 의존성을 주입
@@ -17,7 +18,7 @@ describe('Menu Service Unit Test', () => {
     jest.resetAllMocks();
   });
 
-  test('createMenu Method', async () => {
+  test('createMenu Method By Success', async () => {
     const sampleMenu = {
       menuId: 1,
       storeId: 1,
@@ -65,5 +66,72 @@ describe('Menu Service Unit Test', () => {
       sampleStore.storeId,
       sampleMenu.menuName,
     );
+  });
+
+  test('updateMenu Method By Success', async () => {
+    const sampleMenu = {
+      menuId: 1,
+      storeId: 1,
+      menuName: 'Update Test MenuName',
+      image: 'Update Test image',
+      price: 10,
+      stock: 1,
+      createdAt: '2024-09-28T09:35:43.410Z',
+      updatedAt: '2024-09-28T09:35:43.410Z',
+    };
+
+    const sampleStore = {
+      storeId: 1,
+      userId: 1,
+      storeName: 'StoreName Test',
+      foodType: 'FoodType Test',
+      sales: 0,
+      createdAt: '2024-09-28T09:35:43.410Z',
+      updatedAt: '2024-09-28T09:35:43.410Z',
+    };
+
+    mockMenuRepository.findStoreIdByUserId.mockReturnValue(sampleStore);
+    const mockName = mockMenuRepository.findMenuName.mockReturnValue(
+      sampleStore.storeId,
+      sampleMenu.menuName,
+    );
+    mockMenuRepository.updateMenu.mockReturnValue(sampleMenu);
+
+    const updatedMenu = await menuService.updateMenu(
+      sampleMenu.storeId,
+      sampleMenu.menuName,
+      sampleMenu.image,
+      sampleMenu.price,
+      sampleMenu.stock,
+    );
+
+    expect(mockMenuRepository.updateMenu).toHaveBeenCalledTimes(1);
+    expect(mockMenuRepository.updateMenu).toHaveBeenCalledWith(
+      sampleMenu.storeId,
+      mockName.menuName,
+      sampleMenu.menuName,
+      sampleMenu.image,
+      sampleMenu.price,
+      sampleMenu.stock,
+    );
+
+    expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledTimes(1);
+    expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledWith(sampleMenu.storeId);
+
+    expect(mockMenuRepository.findMenuName).toHaveBeenCalledTimes(1);
+    expect(mockMenuRepository.findMenuName).toHaveBeenCalledWith(
+      sampleStore.storeId,
+      sampleMenu.menuName,
+    );
+
+    expect(updatedMenu).toEqual({
+      menuId: sampleMenu.menuId,
+      menuName: sampleMenu.menuName,
+      image: sampleMenu.image,
+      price: sampleMenu.price,
+      stock: sampleMenu.stock,
+      createdAt: sampleMenu.createdAt,
+      updatedAt: sampleMenu.updatedAt,
+    });
   });
 });
