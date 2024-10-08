@@ -1,4 +1,4 @@
-import {jest, test} from '@jest/globals'
+import {jest, test,expect} from '@jest/globals'
 import { UserController } from '../../../src/controllers/user.controller'
 
 const mockUserService = {
@@ -62,15 +62,9 @@ test('signUp Method by Success', async()=>{
             
         });
 
+    });
 
-
-        
-    })
     test('signUp Method by Invalid Params Error', async () =>{
-        mockRequest.body ={
-            email: 'emailInvaildParamsError',
-            password:'passwordInvaildParamsError',
-        };
         await userController.userSignup(mockRequest,mockResponse);
 
         expect(mockResponse.status).toHaveBeenCalledTimes(1);
@@ -79,5 +73,4 @@ test('signUp Method by Success', async()=>{
         expect(mockRequest.json).toHaveBeenCalledTimes(1);
         expect(mockResponse.json).toHaveBeenCalledWith({message:'회원가입 실패!'});
     })
-
 })
