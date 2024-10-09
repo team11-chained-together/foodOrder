@@ -28,6 +28,7 @@ describe('Store Service Unit Test', () => {
       createdAt: '2024-09-28T09:35:43.410Z',
       updatedAt: '2024-09-28T09:35:43.410Z',
     };
+    mockStoreRepository.findStoreByUserId.mockReturnValue(null);
     mockStoreRepository.createStore.mockReturnValue(sampleStore);
 
     // createStore 메소드에서 userId, storeName, FoodType에 해당하는 데이터 넣기
@@ -136,6 +137,21 @@ describe('Store Service Unit Test', () => {
     expect(getStore).toEqual(sampleStore);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith(sampleStore.storeName);
+  });
+
+  /** Create Store Service Method Fail 테스트 */
+  test('createStore Method By Fail', async () => {
+    const sampleStore = { userId: 1 };
+    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
+
+    try {
+      await storeService.createStore(1, 'storeName', '한식');
+    } catch (err) {
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledTimes(1);
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledWith(1);
+
+      expect(err.message).toEqual('이미 보유하고 있는 식당이 있습니다.');
+    }
   });
 
   /** Update Store Service Method Fail 테스트 */

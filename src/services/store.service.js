@@ -4,6 +4,11 @@ export class StoreService {
   }
 
   createStore = async (userId, storeName, foodType) => {
+    const store = await this.storeRepository.findStoreByUserId(userId);
+    if (store) {
+      throw new Error('이미 보유하고 있는 식당이 있습니다.');
+    }
+
     const createdStore = await this.storeRepository.createStore(userId, storeName, foodType);
 
     return {
