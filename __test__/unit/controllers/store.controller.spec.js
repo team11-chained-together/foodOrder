@@ -1,4 +1,4 @@
-import { jest, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
 
 const mockStoreService = {
@@ -34,6 +34,7 @@ describe('Store Controller Unit Test', () => {
       userId: 1,
       storeName: 'Store_name_Success',
       foodType: 'Food_Type_Success',
+      type: true,
     };
     mockRequest.body = createStoreRequestBodyParams;
 
@@ -71,6 +72,7 @@ describe('Store Controller Unit Test', () => {
       userId: 1,
       storeName: 'New_Store_name_Success',
       foodType: 'New_Food_Type_Success',
+      type: true,
     };
 
     mockRequest.body = updateStoreRequestBodyParams;
@@ -107,6 +109,7 @@ describe('Store Controller Unit Test', () => {
     const deleteStoreRequestBodyParams = {
       userId: 1,
       storeName: 'Delete Store Name',
+      type: true,
     };
 
     mockRequest.body = deleteStoreRequestBodyParams;
@@ -165,6 +168,7 @@ describe('Store Controller Unit Test', () => {
     });
   });
 
+  /** Created Store Controller Fail Test */
   test('createStore Method By Invalid Params Error', async () => {
     mockRequest.body = {
       userId: 1,
@@ -174,5 +178,21 @@ describe('Store Controller Unit Test', () => {
     await storeController.createStore(mockRequest, mockResponse, mockNext);
 
     expect(mockNext).toHaveBeenCalledWith(new Error('InvalidParamsError'));
+  });
+
+  /** 사장님이 아닐때 발생하는 에러 Test*/
+  test('Store Method By Type Error', async () => {
+    mockRequest.body = {
+      userId: 1,
+      storeName: 'storeName',
+      foodType: 'foodType',
+      type: false,
+    };
+
+    await storeController.createStore(mockRequest, mockResponse, mockNext);
+    await storeController.updateStore(mockRequest, mockResponse, mockNext);
+    await storeController.deleteStore(mockRequest, mockResponse, mockNext);
+
+    expect(mockNext).toHaveBeenCalledWith(new Error('해당하는 유저는 사장님이 아닙니다.'));
   });
 });

@@ -66,6 +66,7 @@ export class StoreService {
     }
 
     return {
+      storeId: store.storeId,
       userId: store.userId,
       storeName: store.storeName,
       foodType: store.foodType,
