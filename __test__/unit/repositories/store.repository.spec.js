@@ -9,6 +9,9 @@ let mockPrisma = {
     delete: jest.fn(),
     findFirst: jest.fn(),
   },
+  menu: {
+    findMany: jest.fn(),
+  },
 };
 
 let storeRepository = new StoreRepository(mockPrisma);
@@ -161,6 +164,29 @@ describe('Store Repository Unit Test', () => {
     expect(mockPrisma.store.findFirst).toHaveBeenCalledWith({
       where: {
         storeName: getStoreParams.storeName,
+      },
+    });
+  });
+
+  test('findMenuByStoreId Method', async () => {
+    // 1. findMenuByStoreId 메서드의 반환값을 설정
+    const mockReturn = 'get StoreId';
+    mockPrisma.menu.findMany.mockReturnValue(mockReturn);
+
+    // 2. findMenuByStoreId 메서드를 실행하기 위한 storeId 전달
+    const getMenuParams = {
+      storeId: 1,
+    };
+
+    // 3. findMenuByStoreId 실행
+    await storeRepository.findMenuByStoreId(getMenuParams.storeId);
+
+    // findMany 메서드는 1번만 실행된다.
+    expect(mockPrisma.menu.findMany).toHaveBeenCalledTimes(1);
+
+    expect(mockPrisma.menu.findMany).toHaveBeenCalledWith({
+      where: {
+        storeId: getMenuParams.storeId,
       },
     });
   });

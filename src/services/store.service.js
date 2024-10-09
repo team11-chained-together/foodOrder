@@ -70,11 +70,17 @@ export class StoreService {
       throw new Error('해당하는 음식점이 없습니다.');
     }
 
+    const menu = await this.storeRepository.findMenuByStoreId(store.storeId);
+
     return {
       storeId: store.storeId,
       userId: store.userId,
       storeName: store.storeName,
       foodType: store.foodType,
+      menuName: menu.menuName,
+      image: menu.image,
+      price: menu.price,
+      stock: menu.stock,
       createdAt: store.createdAt,
     };
   };
