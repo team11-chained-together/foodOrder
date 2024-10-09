@@ -173,6 +173,7 @@ describe('Store Controller Unit Test', () => {
     mockRequest.body = {
       userId: 1,
       storeName: 'StoreName_InvalidParamsError',
+      type: true,
     };
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
