@@ -55,5 +55,7 @@ export class StoreRepository {
         storeName: storeName,
       },
     });
+
+    return getStore;
   };
 }

@@ -120,8 +120,10 @@ describe('Store Service Unit Test', () => {
     });
   });
 
+  /** Get Store Service Method 테스트 */
   test('getStore Method By Success', async () => {
     const sampleStore = {
+      storeId: 1,
       userId: 1,
       storeName: 'Get storeName Test',
       foodType: 'Get FoodType Test',
@@ -138,8 +140,8 @@ describe('Store Service Unit Test', () => {
 
   /** Update Store Service Method Fail 테스트 */
   test('updateStore Method By Fail', async () => {
-    const sampleMenu = null;
-    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleMenu);
+    const sampleStore = null;
+    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
     try {
       await storeService.updateStore(1, 'storeName', 'foodType');
@@ -150,6 +152,38 @@ describe('Store Service Unit Test', () => {
       expect(mockStoreRepository.updateStore).toBeCalledTimes(0);
 
       expect(err.message).toEqual('보유하고 있는 식당이 없습니다, 식당을 만들어주세요.');
+    }
+  });
+
+  /** Delete Store Service Method Fail 테스트 */
+  test('deleteStore Method By Fail', async () => {
+    const sampleStore = null;
+    mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
+
+    try {
+      await storeService.deleteStore(1, 'storeName');
+    } catch (err) {
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledTimes(1);
+      expect(mockStoreRepository.findStoreByUserId).toHaveBeenCalledWith(1);
+
+      expect(mockStoreRepository.deleteStore).toBeCalledTimes(0);
+
+      expect(err.message).toEqual('보유하고 있는 식당이 없습니다.');
+    }
+  });
+
+  /** Get Store Service Method Fail 테스트 */
+  test('getStore Method By Fail', async () => {
+    const sampleStore = null;
+    mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
+
+    try {
+      await storeService.getStore('storeName');
+    } catch (err) {
+      expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
+      expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith('storeName');
+
+      expect(err.message).toEqual('해당하는 음식점이 없습니다.');
     }
   });
 });
