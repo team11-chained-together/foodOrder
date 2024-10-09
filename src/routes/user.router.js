@@ -12,5 +12,5 @@ const userController = new UserController(userService);
 
 router.post('/signup', userController.userSignup);
 router.post('/login', userController.userLogin);
-router.get('/users/:userId', userController.getUserPoint);
+router.get('/users/:userId', userController.userPoint);
 export default router;

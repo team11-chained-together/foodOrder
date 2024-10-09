@@ -37,8 +37,8 @@ export class UserController {
       next(err);
     }
   };
-
-  getUserPoint = async (req, res, next) => {
+  // 포인트 확인
+  userPoint = async (req, res, next) => {
     try {
       const { userId } = req.params;
 

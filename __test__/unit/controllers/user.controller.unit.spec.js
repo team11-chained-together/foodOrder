@@ -1,9 +1,11 @@
 import { jest, test, expect } from '@jest/globals';
 import { UserController } from '../../../src/controllers/user.controller';
+import { UserService } from '../../../src/services/user.service';
 
 const mockUserService = {
   signUp: jest.fn(),
   logIn: jest.fn(),
+  getUserPoint: jest.fn(),
 };
 
 const mockRequest = {
@@ -81,6 +83,7 @@ describe('UserController Unit Test', () => {
     const logInRequestBodyParams = {
       email: 'asdfasdfasdf',
       password: 'aaaa43321',
+      res: { json: mockResponse.json, status: mockResponse.status },
     };
     mockRequest.body = logInRequestBodyParams;
 
@@ -88,17 +91,50 @@ describe('UserController Unit Test', () => {
       message: '로그인 성공',
     };
     mockUserService.logIn.mockReturnValue(logInReturnValue);
-    await userController.userLogin(mockRequest, mockResponse);
+
+    await userController.userLogin(mockRequest, mockResponse, mockNext);
     expect(mockUserService.logIn).toHaveBeenCalledTimes(1);
     expect(mockUserService.logIn).toHaveBeenCalledWith(
       logInRequestBodyParams.email,
       logInRequestBodyParams.password,
+      logInRequestBodyParams.res,
     );
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(201);
 
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: '로그인 성공' });
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: '로그인 성공!' });
+  });
+
+  //포인트 성공
+  test('getUserPoint', async () => {
+    const getUserPointParams = {
+      userId: 1,
+      point: true,
+    };
+
+    mockRequest.body = getUserPointParams;
+
+    const getUserPointValue = {
+      point: 10000,
+    };
+
+    mockUserService.getUserPoint.mockReturnValue(getUserPointValue);
+
+    await userController.userPoint(mockRequest, mockResponse, mockNext);
+    expect(mockUserService.getUserPoint).toHaveBeenCalledTimes(1);
+    expect(mockUserService.getUserPoint).toHaveBeenCalledWith(
+      getUserPointParams.userId,
+      getUserPointParams.point,
+    );
+
+    expect(mockResponse.status).toBeCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    expect(mockResponse.json).toBeCalledTimes(1);
+    expect(mockResponse.json).toBeCalledWith({
+      data: getUserPointValue,
+    });
   });
 });

@@ -27,7 +27,9 @@ export class UserRepository {
   // 존재하지않는 이메일 확인
   findUserByEmail = async (email) => {
     const findUserByEmail = await this.prisma.user.findUnique({
-      where: { email },
+      where: {
+        email: email,
+      },
     });
     return findUserByEmail;
   };

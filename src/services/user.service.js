@@ -12,6 +12,11 @@ export class UserService {
     if (!email || !password) {
       throw new Error('email 과 password를 입력해주세요 ');
     }
+    const investigateEmail =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    if (!investigateEmail.test(email)) {
+      throw new Error('이메일 형식에 맞게 입력해주세요');
+    }
     if (password.length < 8) {
       throw new Error('비밀번호를 다시 설정하세요');
     }
@@ -55,7 +60,6 @@ export class UserService {
     const { JWT_SECRET } = process.env;
     const token = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '1h' });
     res.header('authorization', `Bearer ${token}`);
-    return token;
   };
 
   getUserPoint = async (userId) => {
