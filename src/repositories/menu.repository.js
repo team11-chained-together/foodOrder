@@ -13,9 +13,9 @@ export class MenuRepository {
     return menu;
   };
 
+  // userId를 사용해서 store 테이블에서 storeId를 가져오기 위한 로직
   findStoreIdByUserId = async (userId) => {
-    // ORM인 Prisma에서 findFirst 메서드를 사용해 데이터를 요청합니다.
-    const menu = await this.prisma.menu.findFirst({
+    const menu = await this.prisma.store.findFirst({
       where: { userId: +userId },
     });
 
