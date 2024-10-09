@@ -5,7 +5,12 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      const { userId, menuName, image, price, stock } = req.body;
+      const { userId, type, menuName, image, price, stock } = req.body;
+
+      // 사장과 손님 확인 작업
+      if (type !== true) {
+        throw new Error('해당하는 유저는 사장님이 아닙니다.');
+      }
 
       if (!menuName || !image || !price || !stock) {
         throw new Error('InvalidParamsError');
@@ -21,7 +26,12 @@ export class MenuController {
 
   updateMenu = async (req, res, next) => {
     try {
-      const { userId, menuName, image, price, stock } = req.body;
+      const { userId, type, menuName, image, price, stock } = req.body;
+
+      // 사장과 손님 확인 작업
+      if (type !== true) {
+        throw new Error('해당하는 유저는 사장님이 아닙니다.');
+      }
 
       const updateMenu = await this.menuService.updateMenu(userId, menuName, image, price, stock);
 

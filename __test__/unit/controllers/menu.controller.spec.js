@@ -30,6 +30,7 @@ describe('Menu Controller Unit Test', () => {
   test('createMenu Method By Success', async () => {
     const createMenuRequestBodyParams = {
       userId: 1,
+      type: true,
       menuName: '훌랄라 치킨',
       image: '치킨 이미지',
       price: 10000,
@@ -71,6 +72,7 @@ describe('Menu Controller Unit Test', () => {
   test('updateMethod By Success', async () => {
     const updateMenuRequestBodyParams = {
       userId: 1,
+      type: true,
       menuName: '수정할 메뉴이름',
       image: '수정할 이미지 URL',
       price: 1000,

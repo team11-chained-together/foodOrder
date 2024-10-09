@@ -4,7 +4,6 @@ export class MenuService {
   }
 
   createMenu = async (userId, menuName, image, price, stock) => {
-    // 여기서도 storeId를 받아야할 삘인데: 유저아이디로 찾아 주세요
     // 메뉴 생성
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
     // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요

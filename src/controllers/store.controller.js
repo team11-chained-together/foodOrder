@@ -11,13 +11,13 @@ export class StoreController {
 
       const { userId, storeName, foodType, type } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
 
-      if (!storeName || !foodType) {
-        throw new Error('InvalidParamsError');
-      }
-
       // 사장과 손님 확인 작업
       if (type !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
+      }
+
+      if (!storeName || !foodType) {
+        throw new Error('InvalidParamsError');
       }
 
       const createdStore = await this.storeService.createStore(userId, storeName, foodType);
