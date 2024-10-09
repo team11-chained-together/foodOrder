@@ -1,7 +1,6 @@
-import { jest, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import { MenuService } from '../../../src/services/menu.service.js';
 
-//
 let mockMenuRepository = {
   createMenu: jest.fn(),
   findStoreIdByUserId: jest.fn(),
@@ -133,5 +132,45 @@ describe('Menu Service Unit Test', () => {
       createdAt: sampleMenu.createdAt,
       updatedAt: sampleMenu.updatedAt,
     });
+  });
+
+  /** Create Menu Service Method Fail 테스트 */
+  test('createMenu Method By Fail', async () => {
+    const sampleStore = { userId: 1, storeId: 1 };
+    const sampleMenu = { menuName: 'menuName' };
+    mockMenuRepository.findStoreIdByUserId.mockReturnValue(sampleStore);
+    mockMenuRepository.findMenuName.mockReturnValue(sampleMenu);
+
+    try {
+      await menuService.createMenu(1, 'menuName');
+    } catch (err) {
+      expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledTimes(1);
+      expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledWith(1);
+
+      expect(mockMenuRepository.findMenuName).toHaveBeenCalledTimes(1);
+      expect(mockMenuRepository.findMenuName).toHaveBeenCalledWith(1, 'menuName');
+
+      expect(err.message).toEqual('이미 존재하는 메뉴 이름입니다.');
+    }
+  });
+
+  /** Update Menu Service Method Fail 테스트 */
+  test('updateMenu Method By Fail', async () => {
+    const sampleStore = { userId: 1, storeId: 1 };
+
+    mockMenuRepository.findStoreIdByUserId.mockReturnValue(sampleStore);
+    mockMenuRepository.findMenuName.mockReturnValue(null);
+
+    try {
+      await menuService.updateMenu(1, 'menuName');
+    } catch (err) {
+      expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledTimes(1);
+      expect(mockMenuRepository.findStoreIdByUserId).toHaveBeenCalledWith(1);
+
+      expect(mockMenuRepository.findMenuName).toHaveBeenCalledTimes(1);
+      expect(mockMenuRepository.findMenuName).toHaveBeenCalledWith(1, 'menuName');
+
+      expect(err.message).toEqual('존재하지 않는 메뉴입니다.');
+    }
   });
 });
