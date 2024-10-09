@@ -7,6 +7,7 @@ let mockStoreRepository = {
   deleteStore: jest.fn(),
   findStoreByUserId: jest.fn(),
   findStoreByStoreName: jest.fn(),
+  findMenuByStoreId: jest.fn(),
 };
 
 let storeService = new StoreService(mockStoreRepository);
@@ -132,11 +133,15 @@ describe('Store Service Unit Test', () => {
     };
 
     mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
+    mockStoreRepository.findMenuByStoreId.mockReturnValue(sampleStore);
     const getStore = await storeService.getStore(sampleStore.storeName);
 
     expect(getStore).toEqual(sampleStore);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith(sampleStore.storeName);
+
+    expect(mockStoreRepository.findMenuByStoreId).toHaveBeenCalledTimes(1);
+    expect(mockStoreRepository.findMenuByStoreId).toHaveBeenCalledWith(sampleStore.storeId);
   });
 
   /** Create Store Service Method Fail 테스트 */
