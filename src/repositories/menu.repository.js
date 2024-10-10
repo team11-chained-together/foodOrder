@@ -51,4 +51,20 @@ export class MenuRepository {
     });
     return updatedMenu;
   };
+
+  // deleteMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
+  //   const updatedMenu = await this.prisma.menu.delete({
+  //     where: {
+  //       storeId: +storeId,
+  //       menuName,
+  //     },
+  //     data: {
+  //       menuName: newMenuName,
+  //       image: image,
+  //       price: price,
+  //       stock: stock,
+  //     },
+  //   });
+  //   return updatedMenu;
+  // };
 }

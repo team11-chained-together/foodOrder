@@ -5,12 +5,12 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      const userId = req.user;
-      const type = req.user;
+      const userId = req.user.userId;
+      const type = req.user.type;
       const { menuName, image, price, stock } = req.body;
 
       // 사장과 손님 확인 작업
-      if (type !== true) {
+      if (type === false) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }
 
@@ -47,9 +47,16 @@ export class MenuController {
 
   /**메뉴 삭제 */
   deleteMenu = async (req, res, next) => {
-    //삭제할 메뉴의 id
-    //유저.바디의 이메일과 req.바디의 이메일 일시하면 삭제가능
-    //
-    console.log(user.email);
+    try {
+      const userId = req.user;
+      const type = req.user;
+      const { menuName, image, price, stock } = req.body;
+
+      const deleteMenu = await this.menuService.updateMenu(userId, menuName, image, price, stock);
+
+      return res.status(200).json({ data: deleteMenu });
+    } catch (err) {
+      next(err);
+    }
   };
 }

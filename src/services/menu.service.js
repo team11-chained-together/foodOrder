@@ -61,4 +61,34 @@ export class MenuService {
       updatedAt: updatedMenu.updatedAt,
     };
   };
+
+  // deleteMenu = async (userId, menuName, image, price, stock) => {
+  //   const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    
+  //   const isMenuNameExists = await this.menuRepository.findMenuName(checkStoreId.storeId, menuName);
+
+  //   if (!isMenuNameExists) {
+  //     throw new Error('존재하지 않는 메뉴입니다.');
+  //   }
+
+  //   const deleteMenu = await this.menuRepository.deleteMenu(
+  //     checkStoreId.storeId,
+  //     isMenuNameExists.menuName, // 검색을 위한 메뉴 이름
+  //     menuName,
+  //     image,
+  //     price,
+  //     stock,
+  //   );
+
+  //   return {
+  //     menuId: deleteMenu.menuId,
+  //     menuName: deleteMenu.menuName,
+  //     image: deleteMenu.image,
+  //     price: deleteMenu.price,
+  //     stock: deleteMenu.stock,
+  //     createdAt: deleteMenu.createdAt,
+  //     updatedAt: deleteMenu.updatedAt,
+  //   };
+  // };
+
 }
