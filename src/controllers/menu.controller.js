@@ -49,7 +49,7 @@ export class MenuController {
   deleteMenu = async (req, res, next) => {
     //삭제할 메뉴의 id
     //유저.바디의 이메일과 req.바디의 이메일 일시하면 삭제가능
-    //
+
     console.log(user.email);
   };
 }
