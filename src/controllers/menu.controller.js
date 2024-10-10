@@ -30,7 +30,7 @@ export class MenuController {
     try {
       const userId = req.user.isOwner;
       const isOwner = req.user.isOwner;
-      const { menuId, menuName, image, price, stock } = req.body;
+      const { menuName, image, price, stock } = req.body;
 
       // 사장과 손님 확인 작업
       if (isOwner !== true) {
@@ -41,14 +41,7 @@ export class MenuController {
         return res.status(400).json({ message: '변경할 메뉴아이디를 입력해 주세요.' });
       }
 
-      const updateMenu = await this.menuService.updateMenu(
-        userId,
-        menuId,
-        menuName,
-        image,
-        price,
-        stock,
-      );
+      const updateMenu = await this.menuService.updateMenu(userId, menuName, image, price, stock);
 
       return res.status(200).json({ data: updateMenu });
     } catch (err) {
