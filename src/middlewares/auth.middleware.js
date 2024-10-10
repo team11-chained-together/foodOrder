@@ -12,7 +12,7 @@ export default async function (req, res, next) {
 
     if (tokenType !== 'Bearer') throw new Error('토큰 타입이 Bearer 형식이 아닙니다.');
 
-    const decodedToken = jwt.verify(token, 'custom-secret-key');
+    const decodedToken = jwt.verify(token, 'JWT_SECRET');
     const userId = decodedToken.userId;
 
     // 사용자 조회
