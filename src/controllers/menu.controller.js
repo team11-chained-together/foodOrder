@@ -28,7 +28,7 @@ export class MenuController {
 
   updateMenu = async (req, res, next) => {
     try {
-      const userId = req.user.userId;
+      const userId = req.user.isOwner;
       const isOwner = req.user.isOwner;
       const { menuId, menuName, image, price, stock } = req.body;
 
@@ -51,6 +51,22 @@ export class MenuController {
       );
 
       return res.status(200).json({ data: updateMenu });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  getMenu = async (req, res, next) => {
+    try {
+      const { storeName } = req.body;
+
+      if (!storeName) {
+        return res.status(200).json({ message: '해당하는 가게이름을 입력 해 주세요.' });
+      }
+
+      const getMenu = await this.menuService.getMenu(storeName);
+
+      return res.status(200).json({ data: getMenu });
     } catch (err) {
       next(err);
     }

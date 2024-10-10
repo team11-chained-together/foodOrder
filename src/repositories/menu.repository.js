@@ -52,4 +52,30 @@ export class MenuRepository {
     });
     return updatedMenu;
   };
+
+  // storeName으로 가게를 찾기 위한 로직
+  findStoreByStoreName = async (storeName) => {
+    const getStore = await this.prisma.store.findFirst({
+      where: {
+        storeName: storeName,
+      },
+    });
+
+    return getStore;
+  };
+
+  // storeId로 메뉴 테이블에 있는 menuName을 가져오기 위한 로직
+  findMenuByStoreId = async (storeId) => {
+    const getMenu = await this.prisma.menu.findMany({
+      where: { storeId: storeId },
+      select: {
+        menuName: true,
+        image: true,
+        price: true,
+        stock: true,
+      },
+    });
+
+    return getMenu;
+  };
 }
