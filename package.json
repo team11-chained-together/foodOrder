@@ -12,7 +12,7 @@
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --forceExit",
     "test:silent": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --silent --forceExit",
     "test:coverage": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --coverage --forceExit",
-    "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest __tests__/unit --forceExit"
+    "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest __test__/unit --forceExit"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
@@ -21,6 +21,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
     "prisma": "^5.20.0",
     "winston": "^3.15.0"

@@ -3,7 +3,7 @@ import { prisma } from '../utils/prisma/index.js';
 
 export default async function (req, res, next) {
   try {
-    const { authorization } = req.cookies; // 쿠키 가져오기
+    const { authorization } = req.header; // 헤더 가져오기
 
     if (!authorization) throw new Error('요청한 사용자의 토큰이 존재하지 않습니다.');
 
@@ -16,7 +16,7 @@ export default async function (req, res, next) {
     const userId = decodedToken.userId;
 
     // 사용자 조회
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
       where: { userId: +userId },
     });
     if (!user) {
