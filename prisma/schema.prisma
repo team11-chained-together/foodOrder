@@ -70,7 +70,7 @@ model Order {
 
 model OrderMenu {
   orderMenuId Int   @id @default(autoincrement()) @map("orderMenuId")
-  orderId     Int   @map("oderId")
+  orderId     Int   @map("orderId")
   menuId      Int   @unique @map("menuId")
   quantity    Int   @map("quantity")
   menu        Menu  @relation(fields: [menuId], references: [menuId])
