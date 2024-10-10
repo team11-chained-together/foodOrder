@@ -41,11 +41,8 @@ export class UserController {
   // 포인트 확인
   userPoint = async (req, res, next) => {
     try {
-      const { userId } = req.params;
+      const { userId } = req.user;
 
-      // if (!userId) {
-      //   throw new Error('InvalidParamsError');
-      // }
       const userPoint = await this.userService.getUserPoint(userId);
       return res.status(200).json({ data: userPoint });
     } catch (err) {
