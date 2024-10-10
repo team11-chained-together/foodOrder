@@ -17,8 +17,24 @@ export class ReviewRepository {
 
   //리뷰 수정
   updateReveiw = async (reviewId, comment, rate) => {
-    const updatedReview = await this.prisma;
+    const updatedReview = await this.prisma.review.update({
+      where: {
+        reviewId: +reviewId,
+      },
+      data: {
+        comment,
+        rate,
+      },
+    });
+    return updatedReview;
   };
-
   //리뷰 삭제
+  deleteReview = async (reviewId) => {
+    const deleteReview = await this.prisma.review.delete({
+      where: {
+        reviewId: +reviewId,
+      },
+    });
+    return deleteReview;
+  };
 }
