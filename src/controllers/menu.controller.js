@@ -5,7 +5,9 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      const { userId, type, menuName, image, price, stock } = req.body;
+      const userId = req.user;
+      const type = req.user;
+      const { menuName, image, price, stock } = req.body;
 
       // 사장과 손님 확인 작업
       if (type !== true) {
@@ -26,7 +28,9 @@ export class MenuController {
 
   updateMenu = async (req, res, next) => {
     try {
-      const { userId, type, menuName, image, price, stock } = req.body;
+      const userId = req.user;
+      const type = req.user;
+      const { menuName, image, price, stock } = req.body;
 
       // 사장과 손님 확인 작업
       if (type !== true) {
