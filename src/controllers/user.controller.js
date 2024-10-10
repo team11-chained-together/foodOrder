@@ -7,7 +7,7 @@ export class UserController {
 
   userSignup = async (req, res, next) => {
     try {
-      const { email, password, name, address, type } = req.body;
+      const { email, password, name, address, isOwner } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({ message: 'email 과 password를 입력해주세요.' });
@@ -22,7 +22,7 @@ export class UserController {
       }
 
       // 서비스 계층에 구현된 createUser 로직을 실행합니다.
-      const createdUser = await this.userService.signUp(email, password, name, address, type);
+      const createdUser = await this.userService.signUp(email, password, name, address, isOwner);
 
       return res.status(201).json({
         message: '회원가입 성공!',

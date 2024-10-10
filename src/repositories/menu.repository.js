@@ -6,8 +6,10 @@ export class MenuRepository {
   findMenuName = async (storeId, menuName) => {
     const menu = await this.prisma.menu.findUnique({
       where: {
-        storeId: +storeId,
-        menuName,
+        storeId_menuName: {
+          storeId: +storeId,
+          menuName,
+        },
       },
     });
     return menu;
@@ -36,14 +38,13 @@ export class MenuRepository {
     return createdMenu;
   };
 
-  updateMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
+  updateMenu = async (menuId, menuName, image, price, stock) => {
     const updatedMenu = await this.prisma.menu.update({
       where: {
-        storeId: +storeId,
-        menuName,
+        menuId: menuId,
       },
       data: {
-        menuName: newMenuName,
+        menuName: menuName,
         image: image,
         price: price,
         stock: stock,

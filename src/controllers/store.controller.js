@@ -7,15 +7,12 @@ export class StoreController {
     try {
       // 로그인 인증 인가 미들웨어를 통해서 로그인한 유저의 정보 조회
       const userId = req.user.userId;
-      const type = req.user.type;
-
-      console.log(userId);
-      console.log(type);
+      const isOwner = req.user.isOwner;
 
       const { storeName, foodType } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
 
       // 사장과 손님 확인 작업
-      if (type !== true) {
+      if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }
 
@@ -33,12 +30,12 @@ export class StoreController {
 
   updateStore = async (req, res, next) => {
     try {
-      const userId = req.user;
-      const type = req.user;
+      const userId = req.user.userId;
+      const isOwner = req.user.isOwner;
       const { storeName, foodType } = req.body;
 
       // 사장과 손님 확인 작업
-      if (type !== true) {
+      if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }
 
@@ -51,12 +48,12 @@ export class StoreController {
 
   deleteStore = async (req, res, next) => {
     try {
-      const { userId } = req.user;
-      const type = req.user;
+      const userId = req.user.userId;
+      const isOwner = req.user.isOwner;
       const { storeName } = req.body;
 
       // 사장과 손님 확인 작업
-      if (type !== true) {
+      if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }
 
