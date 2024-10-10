@@ -77,10 +77,7 @@ export class StoreService {
       userId: store.userId,
       storeName: store.storeName,
       foodType: store.foodType,
-      menuName: menu.menuName,
-      image: menu.image,
-      price: menu.price,
-      stock: menu.stock,
+      menu: menu,
       createdAt: store.createdAt,
     };
   };
