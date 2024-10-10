@@ -60,4 +60,20 @@ export class MenuService {
       updatedAt: updatedMenu.updatedAt,
     };
   };
+
+  getMenu = async (storeName) => {
+    const store = await this.menuRepository.findStoreByStoreName(storeName);
+
+    if (!store) {
+      throw new Error('해당하는 음식점이 없습니다.');
+    }
+
+    const menu = await this.menuRepository.findMenuByStoreId(store.storeId);
+
+    return {
+      storeName: store.storeName,
+      foodType: store.foodType,
+      menu: menu,
+    };
+  };
 }
