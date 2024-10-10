@@ -11,14 +11,14 @@ export class UserRepository {
     return existingUser;
   };
   // 유저 생성
-  createdUser = async (email, hashedPassword, name, address, type) => {
+  createdUser = async (email, hashedPassword, name, address, isOwner) => {
     const createdUser = await this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
         address,
-        type,
+        isOwner,
       },
     });
     return createdUser;
@@ -33,16 +33,6 @@ export class UserRepository {
     });
     return findUserByEmail;
   };
-
-  // 포인트 0일때 확인
-  // userPoint = async (point) => {
-  //   const ckeckPoint = await this.prisma.user.findFirst({
-  //     where: {
-  //       point,
-  //     },
-  //   });
-  //   return ckeckPoint;
-  // };
 
   // 포인트 조회
   getUserPoint = async (userId) => {
