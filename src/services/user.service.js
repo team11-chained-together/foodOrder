@@ -55,12 +55,11 @@ logIn=async(email,password)=>{
         throw new Error('비밀번호가 일치하지 않습니다.');
     }
     //JMT 토큰 생성
-    const {JWT_SECRET} = process.env;
     const token = jwt.sign({
         userId:user.id,
         email:user.email
     },
-        
+        process.env.JWT_SECRET,
         {excepiresIn:'1h'}
     );
     return{
