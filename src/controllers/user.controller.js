@@ -37,6 +37,7 @@ export class UserController {
       next(err);
     }
   };
+
   // 포인트 확인
   userPoint = async (req, res, next) => {
     try {

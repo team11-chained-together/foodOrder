@@ -109,32 +109,29 @@ describe('UserController Unit Test', () => {
 
   //포인트 성공
   test('getUserPoint', async () => {
-    const getUserPointParams = {
-      userId: 1,
-      point: true,
+    const getUserPointBodyParams = {
+      userId: 'userId',
     };
 
-    mockRequest.body = getUserPointParams;
+    mockRequest.body = getUserPointBodyParams;
 
-    const getUserPointValue = {
+    const getUserPointReturnValue = {
+      ...getUserPointBodyParams,
       point: 10000,
     };
 
-    mockUserService.getUserPoint.mockReturnValue(getUserPointValue);
+    mockUserService.getUserPoint.mockReturnValue(getUserPointReturnValue);
 
     await userController.userPoint(mockRequest, mockResponse, mockNext);
     expect(mockUserService.getUserPoint).toHaveBeenCalledTimes(1);
-    expect(mockUserService.getUserPoint).toHaveBeenCalledWith(
-      getUserPointParams.userId,
-      getUserPointParams.point,
-    );
+    expect(mockUserService.getUserPoint).toHaveBeenCalledWith(getUserPointBodyParams.userId);
 
     expect(mockResponse.status).toBeCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
 
     expect(mockResponse.json).toBeCalledTimes(1);
     expect(mockResponse.json).toBeCalledWith({
-      data: getUserPointValue,
+      data: getUserPointReturnValue,
     });
   });
 });
