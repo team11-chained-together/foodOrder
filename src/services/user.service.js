@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { UserRepository } from '../repositories/user.repository';
+import { UserRepository } from '../repositories/user.repository.js';
 
 //회원가입 로직
 export class UserService{
