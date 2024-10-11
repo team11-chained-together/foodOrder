@@ -53,20 +53,6 @@ export class MenuRepository {
     return updatedMenu;
   };
 
-  deleteMenu = async (menuId) => {
-    const deleteMenu = await this.prisma.menu.delete({
-      where: { menuId: menuId },
-    });
-    return deleteMenu;
-  };
-
-  findMenuById = async (storeId, menuId) => {
-    const menu = await this.prisma.menu.findUnique({
-      where: { menuId: menuId },
-    });
-    return menu;
-  };
-
   // storeName으로 가게를 찾기 위한 로직
   findStoreByStoreName = async (storeName) => {
     const getStore = await this.prisma.store.findFirst({
