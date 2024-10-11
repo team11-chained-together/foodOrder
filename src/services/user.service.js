@@ -22,16 +22,7 @@ export class UserService{
     if (existEmail) {
         throw new Error('이미 존재하는 email 입니다.');
     }
-    //비밀번호 해싱
-    const hashedPassword = await bcrypt.hash(password, 10);
-    //새로운 유저 생성
-    const createdUser = await this.userRepository.createdUser(
-      email,
-      hashedPassword,
-      name,
-      address,
-      isOwner,
-    );
+
         //비밀번호 해싱
         const hashedPassword = await bcrypt.hash(password, 10); 
         //새로운 유저 생성
