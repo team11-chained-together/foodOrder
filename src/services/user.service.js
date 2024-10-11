@@ -35,11 +35,6 @@ export class UserService{
         );
 
     return {
-      email: createdUser.email,
-      name: createdUser.name,
-      address: createdUser.address,
-      isOwner: createdUser.isOwner,
-      createdAt: createdUser.createdAt,
         email : createdUser.email,
         name : createdUser.name,
         address : createdUser.address,
