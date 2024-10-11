@@ -8,6 +8,7 @@ let mockPrisma = {
     update: jest.fn(),
     delete: jest.fn(),
     findFirst: jest.fn(),
+    findMany:jest.fn(),
   },
   menu: {
     findMany: jest.fn(),
@@ -20,6 +21,39 @@ describe('Store Repository Unit Test', () => {
   // 각 test가 실행되기 전에 실행됩니다.
   beforeEach(() => {
     jest.resetAllMocks(); // 모든 Mock을 초기화합니다.
+  });
+
+  //검색기능 테스트 레파지토리
+  test('searchStores Method By success',async()=>{
+    const sampleStoreData={
+      storeId: 1,
+      userId: 1,
+      storeName: 'Test StoreName',
+      foodType:'Test Food Type',
+      location:'전북',
+      sales: 100000,
+      createdAt: '2024-09-28T09:35:43.410Z',
+      updatedAt: '2024-09-28T09:35:43.410Z',
+    };
+    mockPrisma.store.findMany.mockReturnValue([sampleStoreData]);
+
+    const searchedStores = await storeRepository.searchStores('Test search');
+
+    expect(mockPrisma.store.findMany).toHaveBeenCalledTimes(1);
+    expect(mockPrisma.store.findMany).toHaveBeenCalledWith({
+      where:{
+        OR:[
+          {
+            storeName:{contains:'Test search'}},
+          {
+            foodType:{contains:'Test search'}},
+          {
+            location:{contains:'Test search'}},       
+          ]
+      },
+    });
+    expect(searchedStores).toEqual([sampleStoreData]);
+
   });
 
   test('findStoreByUserId Method', async () => {
