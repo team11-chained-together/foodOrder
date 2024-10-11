@@ -33,18 +33,17 @@ export class MenuService {
     };
   };
 
-  updateMenu = async (userId, menuName, image, price, stock) => {
+  updateMenu = async (userId, menuId, menuName, image, price, stock) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
     // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
     const isMenuNameExists = await this.menuRepository.findMenuName(checkStoreId.storeId, menuName);
 
-    if (!isMenuNameExists) {
-      throw new Error('존재하지 않는 메뉴입니다.');
+    if (isMenuNameExists) {
+      throw new Error('이미 존재하는 메뉴이름 입니다.');
     }
 
     const updatedMenu = await this.menuRepository.updateMenu(
-      checkStoreId.storeId,
-      isMenuNameExists.menuName, // 검색을 위한 메뉴 이름
+      menuId,
       menuName, // 업데이트할 메뉴 이름
       image,
       price,
@@ -62,33 +61,42 @@ export class MenuService {
     };
   };
 
-  // deleteMenu = async (userId, menuName, image, price, stock) => {
-  //   const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
-    
-  //   const isMenuNameExists = await this.menuRepository.findMenuName(checkStoreId.storeId, menuName);
+  getMenu = async (storeName) => {
+    const store = await this.menuRepository.findStoreByStoreName(storeName);
 
-  //   if (!isMenuNameExists) {
-  //     throw new Error('존재하지 않는 메뉴입니다.');
-  //   }
+    if (!store) {
+      throw new Error('해당하는 음식점이 없습니다.');
+    }
 
-  //   const deleteMenu = await this.menuRepository.deleteMenu(
-  //     checkStoreId.storeId,
-  //     isMenuNameExists.menuName, // 검색을 위한 메뉴 이름
-  //     menuName,
-  //     image,
-  //     price,
-  //     stock,
-  //   );
+    const menu = await this.menuRepository.findMenuByStoreId(store.storeId);
 
-  //   return {
-  //     menuId: deleteMenu.menuId,
-  //     menuName: deleteMenu.menuName,
-  //     image: deleteMenu.image,
-  //     price: deleteMenu.price,
-  //     stock: deleteMenu.stock,
-  //     createdAt: deleteMenu.createdAt,
-  //     updatedAt: deleteMenu.updatedAt,
-  //   };
-  // };
+    return {
+      storeName: store.storeName,
+      foodType: store.foodType,
+      menu: menu,
+    };
+  };
 
+  // 작업주으ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  deleteMenu = async (userId, menuId) => {
+    // 메뉴 생성
+    const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    console.log(checkStoreId);
+
+    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+    const isMenuNameExists = await this.menuRepository.findMenuById(checkStoreId.storeId, menuId);
+
+    if (!isMenuNameExists) {
+      throw new Error('존재 하지않는 메뉴 이름입니다.');
+    }
+
+    const deleteMenu = await this.menuRepository.deleteMenu(menuId);
+
+    return {
+      menuName: deleteMenu.menuName,
+      image: deleteMenu.image,
+      price: deleteMenu.price,
+      stock: deleteMenu.stock,
+    };
+  };
 }

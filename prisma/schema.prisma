@@ -13,7 +13,7 @@ model User {
   name      String   @map("name")
   password  String   @map("password")
   address   String   @map("address")
-  type      Boolean  @map("type")
+  isOwner   Boolean  @map("isOwner")
   point     Int      @default(100000) @map("point")
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
