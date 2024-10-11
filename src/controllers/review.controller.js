@@ -3,22 +3,20 @@ export class ReviewController {
     this.reviewService = reviewService;
   }
 
-  postReview = async (req, res, next) => {
+  createReview = async (req, res, next) => {
     try {
-      const  {storeId}  = req.params;
-      // const isOwner = req.user.isOwner;
+      const userId = req.user.userId;
+      const storeId = req.params;
+      const isOwner = req.user.isOwner;
+      const orderId = req.order.orderId;
 
       const { comment, rate } = req.body;
 
-      // if (!comment || !rate) {
-      //   return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
-      // }
+      if (!comment || !rate) {
+        return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
+      }
 
-      // if (isOwner !== true) {
-      //   return res.status(401).json({ message: '사장님은 리뷰 못해요!' });
-      // }
-
-      const createdReview = await this.reviewService.createReview( storeId,comment, rate);
+      const createdReview = await this.reviewService.createReview( userId,storeId,comment, rate);
 
       return res.status(201).json({
         message: '리뷰가 정상적으로 작성되었습니다.',
@@ -29,34 +27,34 @@ export class ReviewController {
     }
   };
 
-  //   putReview = async (req, res, next) => {
-  //     try {
-  //       const userId = req.user.userId;
-  //       const type = req.user.type;
-  //       const { comment, rate } = req.body;
-  //       if (!comment || !rate) {
-  //         return res.status(400).json({ message: 'comment ,rate 를 작성해주세요.' });
-  //       }
-  //       const updateReview = await this.reviewService.updateReview(comment, rate);
-  //       return res.status(201).json({ message: '리뷰가 수정되었습니다.', data: updateReview });
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   };
+    putReview = async (req, res, next) => {
+      try {
+        const userId = req.user.userId;
+        const { reviewId,comment, rate } = req.body;
+        if (!comment || !rate) {
+          return res.status(400).json({ message: 'comment ,rate 를 작성해주세요.' });
+        }
+        
+        const updateReview = await this.reviewService.updateReview(userId,reviewId,comment, rate);
+        return res.status(201).json({ message: '리뷰가 수정되었습니다.', data: updateReview });
+      } catch (err) {
+        next(err);
+      }
+    };
 
-  //   deleteReview = async (req, res, next) => {
-  //     try {
-  //       const userId = req.user.userId;
-  //       const type = req.user.type;
-  //       const { reviewId } = req.params;
+    deleteReview = async (req, res, next) => {
+      try {
+        const  userId  = req.user.userId;
+        const {reviewId} = req.body;
 
-  //       if (!reviewId) {
-  //         return res.status(400).json({ message: '에러에요.' });
-  //       }
-  //       await this.reviewService.deleteReview(storeName);
-  //       return res.status(202).json({ message: '리뷰가 삭제 되었습니다.' });
-  //     } catch (err) {
-  //       next(err);
-  //     }
-  //   };
+        if (!reviewId) {
+          return res.status(400).json({ message: '존재하지 않는 리뷰입니다.' });
+        }
+
+        await this.reviewService.deleteReview(userId,reviewId);
+        return res.status(202).json({ message: '리뷰가 삭제 되었습니다.' });
+      } catch (err) {
+        next(err);
+      }
+    };
 }
