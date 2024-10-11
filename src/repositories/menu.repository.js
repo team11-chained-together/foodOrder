@@ -6,16 +6,12 @@ export class MenuRepository {
   findMenuName = async (storeId, menuName) => {
     const menu = await this.prisma.menu.findUnique({
       where: {
-        storeId_menuName: {
-          storeId: +storeId,
-          menuName,
-        },
+        storeId_menuName: { storeId: +storeId, menuName },
       },
     });
     return menu;
   };
 
-  // userId를 사용해서 store 테이블에서 storeId를 가져오기 위한 로직
   findStoreIdByUserId = async (userId) => {
     const menu = await this.prisma.store.findFirst({
       where: { userId: +userId },
@@ -38,44 +34,20 @@ export class MenuRepository {
     return createdMenu;
   };
 
-  updateMenu = async (menuId, menuName, image, price, stock) => {
+  updateMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
+    // TODO: 값 확인해보고 공유하기!
     const updatedMenu = await this.prisma.menu.update({
       where: {
-        menuId: menuId,
+        storeId: +storeId,
+        menuName,
       },
       data: {
-        menuName: menuName,
+        menuName: newMenuName,
         image: image,
         price: price,
         stock: stock,
       },
     });
     return updatedMenu;
-  };
-
-  // storeName으로 가게를 찾기 위한 로직
-  findStoreByStoreName = async (storeName) => {
-    const getStore = await this.prisma.store.findFirst({
-      where: {
-        storeName: storeName,
-      },
-    });
-
-    return getStore;
-  };
-
-  // storeId로 메뉴 테이블에 있는 menuName을 가져오기 위한 로직
-  findMenuByStoreId = async (storeId) => {
-    const getMenu = await this.prisma.menu.findMany({
-      where: { storeId: storeId },
-      select: {
-        menuName: true,
-        image: true,
-        price: true,
-        stock: true,
-      },
-    });
-
-    return getMenu;
   };
 }

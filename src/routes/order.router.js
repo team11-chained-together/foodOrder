@@ -11,4 +11,4 @@ const orderRepository = new OrderRepository(prisma);
 const orderService = new OrderService(orderRepository);
 const orderController = new OrderController(orderService);
 
-router.post('/orders', orderController.postOrder);
+router.post('/orders', authMiddleware, orderController.postOrder);

@@ -3,13 +3,18 @@ export class StoreService {
     this.storeRepository = storeRepository;
   }
 
-  createStore = async (userId, storeName, foodType) => {
+  createStore = async (userId, storeName, foodType, location) => {
     const store = await this.storeRepository.findStoreByUserId(userId);
     if (store) {
       throw new Error('이미 보유하고 있는 식당이 있습니다.');
     }
 
-    const createdStore = await this.storeRepository.createStore(userId, storeName, foodType);
+    const createdStore = await this.storeRepository.createStore(
+      userId,
+      storeName,
+      foodType,
+      location,
+    );
 
     return {
       storeId: createdStore.storeId,
@@ -17,6 +22,7 @@ export class StoreService {
       storeName: createdStore.storeName,
       foodType: createdStore.foodType,
       sales: createdStore.sales,
+      location: createdStore.location,
       createdAt: createdStore.createdAt,
       updatedAt: createdStore.updatedAt,
     };
@@ -77,7 +83,10 @@ export class StoreService {
       userId: store.userId,
       storeName: store.storeName,
       foodType: store.foodType,
-      menu: menu,
+      menuName: menu.menuName,
+      image: menu.image,
+      price: menu.price,
+      stock: menu.stock,
       createdAt: store.createdAt,
     };
   };
