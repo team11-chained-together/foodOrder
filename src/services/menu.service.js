@@ -61,4 +61,39 @@ export class MenuService {
       updatedAt: updatedMenu.updatedAt,
     };
   };
+
+  getMenu = async (storeName) => {
+    const store = await this.menuRepository.findStoreByStoreName(storeName);
+
+    if (!store) {
+      throw new Error('해당하는 음식점이 없습니다.');
+    }
+
+    const menu = await this.menuRepository.findMenuByStoreId(store.storeId);
+
+    return {
+      storeName: store.storeName,
+      foodType: store.foodType,
+      menu: menu,
+    };
+  };
+
+  deleteMenu = async (userId, menuId) => {
+    const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+    const isMenuNameExists = await this.menuRepository.findMenuById(checkStoreId.storeId, menuId);
+
+    if (!isMenuNameExists) {
+      throw new Error('존재 하지않는 메뉴 이름입니다.');
+    }
+
+    const deleteMenu = await this.menuRepository.deleteMenu(menuId);
+
+    return {
+      menuName: deleteMenu.menuName,
+      image: deleteMenu.image,
+      price: deleteMenu.price,
+      stock: deleteMenu.stock,
+    };
+  };
 }
