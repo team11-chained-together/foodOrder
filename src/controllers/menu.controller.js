@@ -27,6 +27,7 @@ export class MenuController {
     }
   };
 
+  // TODO: 업데이트 시 이름만 변경 가능, 나머지는 변경 불가능
   updateMenu = async (req, res, next) => {
     try {
       const userId = req.user.isOwner;
@@ -73,8 +74,6 @@ export class MenuController {
     }
   };
 
-  // 작업중
-  /**메뉴 삭제 */
   deleteMenu = async (req, res, next) => {
     try {
       const userId = req.user.userId;
