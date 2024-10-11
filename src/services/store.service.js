@@ -20,14 +20,6 @@ export class StoreService {
       location:store.location,
       foodType:store.foodType,
       sales:store.sales,
-
-      menu:store.menu.map((menu)=>({
-        menuId:menu.menuId,
-        menuName:menu.menuName,
-        price:menu.price,
-        stock:menu.stock,
-      })),
-
       createdAt:store.createdAt,
       updatedAt:store.updatedAt,
     }));

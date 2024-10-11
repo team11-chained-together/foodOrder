@@ -15,22 +15,9 @@ export class StoreRepository {
           {
             foodType:{contains:search}},
           {
-            location:{contains:search}},
-          {
-            //store 과 menu 사이 1:N관계
-            menu:{
-              //하나 이상 메뉴가 만족하는지 
-              some:{
-                menuName:{contains:search}}
-            }
-          }
-
-        ]
+            location:{contains:search}},       
+          ]
       },
-      //메뉴도 포함.
-      include:{
-        menu:true
-      }
     });
     return stores;
   };
