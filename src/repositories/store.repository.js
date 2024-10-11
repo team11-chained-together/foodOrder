@@ -3,6 +3,38 @@ export class StoreRepository {
     this.prisma = prisma;
   }
 
+  //음식점 검색 기능 -> 음식점 이름,음식이름,지역,푸드타입(피자면 피자)으로 검색
+
+  searchStores = async(search) =>{
+    const stores = await this.prisma.store.findMany({
+      where:{
+        //이중 하나의 값이라도 해당하면 검색
+        OR:[
+          {
+            storeName:{contains:search}},
+          {
+            foodType:{contains:search}},
+          {
+            location:{contains:search}},
+          {
+            //store 과 menu 사이 1:N관계
+            menu:{
+              //하나 이상 메뉴가 만족하는지 
+              some:{
+                menuName:{contains:search}}
+            }
+          }
+
+        ]
+      },
+      //메뉴도 포함.
+      include:{
+        menu:true
+      }
+    });
+    return stores;
+  };
+
   findStoreByUserId = async (userId) => {
     // ORM인 Prisma에서 Posts 모델의 findUnique 메서드를 사용해 데이터를 요청합니다.
     const store = await this.prisma.store.findUnique({
