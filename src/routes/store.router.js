@@ -16,4 +16,6 @@ router.put('/owner/store', authMiddleware, storeController.updateStore);
 router.delete('/owner/store', authMiddleware, storeController.deleteStore);
 router.get('/owner/store', storeController.getStore);
 
+router.get('/stores/search',storeController.searchStores);
+
 export default router;

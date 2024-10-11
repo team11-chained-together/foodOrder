@@ -3,11 +3,12 @@ export class ReviewRepository {
     this.prisma = prisma;
   }
   //리뷰 작성 (생성)
-  createReview = async (userId, comment, rate) => {
+  creatReview = async (userId, comment, rate) => {
     const createdReview = await this.prisma.review.create({
-      data: {
-        userId: +userId,
+      where: {
         storeId: +storeId,
+      },
+      data: {
         comment,
         rate,
       },
@@ -16,7 +17,7 @@ export class ReviewRepository {
   };
 
   //리뷰 수정
-  updateReview = async (reviewId, comment, rate) => {
+  updateReveiw = async (reviewId, comment, rate) => {
     const updatedReview = await this.prisma.review.update({
       where: {
         reviewId: +reviewId,

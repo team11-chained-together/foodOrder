@@ -8,6 +8,7 @@ let mockStoreRepository = {
   findStoreByUserId: jest.fn(),
   findStoreByStoreName: jest.fn(),
   findMenuByStoreId: jest.fn(),
+  searchStores:jest.fn(),
 };
 
 let storeService = new StoreService(mockStoreRepository);
@@ -15,6 +16,28 @@ let storeService = new StoreService(mockStoreRepository);
 describe('Store Service Unit Test', () => {
   beforeEach(() => {
     jest.resetAllMocks();
+  });
+
+  //** Search Store Service Method 테스트 */
+  test('searchStores Method By Success',async()=>{
+    
+    const sampleStore ={
+      storeId: 1,
+      userId: 1,
+      storeName: 'Test StoreName',
+      foodType:'Test Food Type',
+      location:'전북',
+      sales: 100000,
+      createdAt: '2024-09-28T09:35:43.410Z',
+      updatedAt: '2024-09-28T09:35:43.410Z',
+    };
+    
+    mockStoreRepository.searchStores.mockReturnValue([sampleStore]);
+    const searchedStores= await storeService.searchStores('Test search');
+
+    expect(mockStoreRepository.searchStores).toHaveBeenCalledTimes(1);
+    expect(mockStoreRepository.searchStores).toHaveBeenCalledWith('Test search');
+    expect(searchedStores).toEqual([sampleStore]);
   });
 
   /** Create Store Service Method 테스트 */

@@ -52,6 +52,21 @@ export class MenuRepository {
     });
     return updatedMenu;
   };
+  // 업데이트시 이미지링크만 수정 불가능한거 수정요망 10/11 15:31
+
+  deleteMenu = async (menuId) => {
+    const deleteMenu = await this.prisma.menu.delete({
+      where: { menuId: menuId },
+    });
+    return deleteMenu;
+  };
+
+  findMenuById = async (menuId) => {
+    const menu = await this.prisma.menu.findUnique({
+      where: { menuId: menuId },
+    });
+    return menu;
+  };
 
   // storeName으로 가게를 찾기 위한 로직
   findStoreByStoreName = async (storeName) => {
