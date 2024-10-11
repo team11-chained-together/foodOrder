@@ -73,7 +73,7 @@ export class MenuController {
     }
   };
 
-  // 작업주으ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  // 작업중
   /**메뉴 삭제 */
   deleteMenu = async (req, res, next) => {
     try {
