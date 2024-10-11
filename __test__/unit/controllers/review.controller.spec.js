@@ -1,4 +1,4 @@
-import{beforeAll,jest,test} from '@jest/globals';
+import{jest,test} from '@jest/globals';
 import{ReviewController} from '../../../src/controllers/review.controller.js';
 
 const mockReviewService ={
@@ -27,6 +27,7 @@ describe('Review Controller unit test', ()=>{
 
     test('createReview Method By Success', async ()=>{
         const createReviewBodyParams = {
+            storeId:1,
             comment:'JMT',
             rate:3
         };
@@ -36,9 +37,10 @@ describe('Review Controller unit test', ()=>{
           reviewId:1,
           userId:1,
           storeId:1,
-          ...createReviewValue,
-          createdAt:updateReveiw.createdAt,
-          updatedAt:updateReveiw.updatedAt,
+          ...createReviewBodyParams,
+          createdAt:createReviewBodyParams.createdAt,
+          updatedAt:createReviewBodyParams.updatedAt,
+          
         }
         mockReviewService.createReview.mockReturnValue(createReviewValue);
 
@@ -49,7 +51,7 @@ describe('Review Controller unit test', ()=>{
         createReviewBodyParams.userId,
         createReviewBodyParams.storeId,
         createReviewBodyParams.comment,
-        createReviewBodyParamsw.rate,
+        createReviewBodyParams.rate,
         createReviewBodyParams.createdAt,
         createReviewBodyParams.updatedAt,
         );
@@ -59,6 +61,7 @@ describe('Review Controller unit test', ()=>{
 
         expect(mockResponse.json).toHaveBeenCallWith(1);
         expect(mockResponse.json).toHaveBeenCallWith({
+            message: '리뷰가 정상적으로 작성되었습니다.',
             data: createReviewValue
         });
     });
