@@ -13,11 +13,12 @@ export class StoreRepository {
   };
 
   // userId로 가게를 생성하기 위한 로직
-  createStore = async (userId, storeName, foodType) => {
+  createStore = async (userId, storeName, location, foodType) => {
     const createdStore = await this.prisma.store.create({
       data: {
         userId: +userId,
         storeName: storeName,
+        location: location,
         foodType: foodType,
         sales: 0,
       },
