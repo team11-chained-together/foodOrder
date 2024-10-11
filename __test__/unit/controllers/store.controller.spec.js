@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
 import { query } from 'express';
+import cookieParser from 'cookie-parser';
 
 const mockStoreService = {
   searchStores: jest.fn(),
@@ -12,7 +13,8 @@ const mockStoreService = {
 
 const mockRequest = {
   body: jest.fn(),
-  query:{},
+  user: jest.fn(),
+  query: {},
 };
 
 const mockResponse = {
@@ -24,50 +26,49 @@ const mockNext = jest.fn();
 
 const storeController = new StoreController(mockStoreService);
 
-describe('Store Controller Unit Test', () => {
+describe('스토어 컨트롤러 유닛 테스트', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
     mockResponse.status.mockReturnValue(mockResponse);
   });
-  
- // 검색 기능 컨트롤러 부분
- test('searchStores Method By success',async()=>{
 
+  test('가게목록 조회 성공 테스트', async () => {
     const searchQuery = 'Test search';
-    const sampleStore ={
+    const sampleStore = {
       storeId: 1,
       storeName: 'Test StoreName',
       foodType: 'Test Food Type',
       location: '전북',
     };
 
-    mockRequest.query = {search: searchQuery};
+    mockRequest.query = { search: searchQuery };
 
     mockStoreService.searchStores.mockReturnValue([sampleStore]);
 
-    await storeController.searchStores(mockRequest,mockResponse,mockNext);
+    await storeController.searchStores(mockRequest, mockResponse, mockNext);
 
     expect(mockStoreService.searchStores).toHaveBeenCalledTimes(1);
     expect(mockStoreService.searchStores).toHaveBeenCalledWith(searchQuery);
 
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.json).toHaveBeenCalledWith({ data: [sampleStore] });
- });
+  });
 
-  /** Create Store Controller Test */
-  test('createStore Method by Success', async () => {
+  test('가게 만들기 성공 테스트', async () => {
+    const createdStoreUser = { userId: 1, isOwner: true };
     const createStoreRequestBodyParams = {
-      userId: 1,
       storeName: 'Store_name_Success',
+      location: 'Store Location',
       foodType: 'Food_Type_Success',
-      type: true,
     };
+    mockRequest.user = createdStoreUser;
     mockRequest.body = createStoreRequestBodyParams;
 
     // Service 계층에서 구현된 createStore 메서드를 실행했을때, 반환되는 데이터 형식
     const createdStoreReturnValue = {
       storeId: 1,
+      createdStoreUser,
       ...createStoreRequestBodyParams,
       createdAt: new Date().toString,
     };
@@ -75,10 +76,12 @@ describe('Store Controller Unit Test', () => {
     mockStoreService.createStore.mockReturnValue(createdStoreReturnValue);
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
+
     expect(mockStoreService.createStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.createStore).toHaveBeenCalledWith(
-      createStoreRequestBodyParams.userId,
+      createdStoreUser.userId,
       createStoreRequestBodyParams.storeName,
+      createStoreRequestBodyParams.location,
       createStoreRequestBodyParams.foodType,
     );
 
@@ -94,7 +97,7 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Update Store Controller Test */
-  test('updateStore Method by Success', async () => {
+  test('스토어 업데이트 테스트 성공', async () => {
     const updateStoreRequestBodyParams = {
       userId: 1,
       storeName: 'New_Store_name_Success',
@@ -132,7 +135,7 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Delete Store Controller Test */
-  test('deleteStore Method by Success', async () => {
+  test('가게 삭제 테스트 성공', async () => {
     const deleteStoreRequestBodyParams = {
       userId: 1,
       storeName: 'Delete Store Name',
@@ -167,7 +170,7 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Get Store Controller Test */
-  test('getStore Method by Success', async () => {
+  test('스토어 목록 조회 테스트 성공', async () => {
     const getStoreRequestBodyParams = {
       storeName: 'Get Store Name',
     };
@@ -196,7 +199,7 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Created Store Controller Fail Test */
-  test('createStore Method By Invalid Params Error', async () => {
+  test('스토어 생성 시 값이 없으면 에러 발생', async () => {
     mockRequest.body = {
       userId: 1,
       storeName: 'StoreName_InvalidParamsError',
@@ -208,10 +211,12 @@ describe('Store Controller Unit Test', () => {
     expect(mockNext).toHaveBeenCalledWith(new Error('InvalidParamsError'));
   });
 
-  /** 사장님이 아닐때 발생하는 에러 Test*/
-  test('Store Method By Type Error', async () => {
-    mockRequest.body = {
+  test('가게 사장님이 아닐떄 오류 발생', async () => {
+    mockRequest.user = {
       userId: 1,
+      isOwner: false,
+    };
+    mockRequest.body = {
       storeName: 'storeName',
       foodType: 'foodType',
       type: false,
