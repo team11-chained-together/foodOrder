@@ -3,60 +3,60 @@ export class ReviewService {
     this.reviewRepository = reviewRepository;
   }
 
-  //리뷰 작성 (생성)
-  createReview = async (storeId, comment, rate) => {
-    // const review = await this.reviewRepository.findReviewByUserIdStoreId(userId, storeId);
-    // if (review) {
-    //   throw new Error('이미 리뷰를 작성하셨습니다.');
-    // }
+  createReview = async (storeId,comment, rate) => {
+    const ckeckStoreId = await this.reviewRepository.findReviewByUserIdStoreId(storeId);
+    if (ckeckStoreId) {
+      throw new Error('없는 가게 입니다. 다시 확인해주세요.');
+    }
 
-    const createReview = await this.reviewRepository.createReview(storeId, comment, rate);
-
+    const createdReview = await this.reviewRepository.createReview(ckeckStoreId.storeId, comment, rate);
     return {
-      reviewId: createReview.reviewId,
-      storeId: createReview.storeId,
-      comment: createReview.comment,
-      rate: createReview.rate,
-      createdAt: createReview.createdAt,
+      reviewId: createdReview.reviewId,
+      storeId : createdReview.storeId,
+      comment: createdReview.comment,
+      rate: createdReview.rate,
+      order :createdReview.order,
+      createdAt: createdReview.createdAt,
     };
   };
 
-  // //리뷰 수정
-  // updateReview = async(userId,reviewId,comment,rate)=>{
-  //     const review = await this.reviewRepository.findReviewById(reviewId);
-  //     if(!review){
-  //         throw new Error('리뷰를 수정할 수 없습니다');
-  //     }
-  //     await this.reviewRepository.updatedReview(userId,reviewId,comment,rate);
+  
+  updateReview = async(userId,reviewId,comment,rate)=>{
+      const findByuserId = await this.reviewRepository.findReviewByUserIdStoreId(userId)
+      const review = await this.reviewRepository.findReviewById(reviewId);
+      if(findByuserId.userId !== review.reviewId){
+          throw new Error('리뷰를 수정할 수 없습니다');
+      }
+      await this.reviewRepository.updatedReview(reviewId,comment,rate);
 
-  //     const updateReveiw = await this.reviewRepository.findReviewById(reviewId);
+      const updateReveiw = await this.reviewRepository.findReviewById(reviewId);
 
-  //     return{
-  //         reviewId:updateReveiw.reviewId,
-  //         userId:updateReveiw.userId,
-  //         storeId:updateReveiw.storeId,
-  //         comment:updateReveiw.comment,
-  //         rate:updateReveiw.rate,
-  //         createdAt:updateReveiw.createdAt,
-  //         updatedAt:updateReveiw.updatedAt,
-  //     };
-  // };
+      return{
+          reviewId:updateReveiw.reviewId,
+          userId:updateReveiw.userId,
+          storeId:updateReveiw.storeId,
+          comment:updateReveiw.comment,
+          rate:updateReveiw.rate,
+          createdAt:updateReveiw.createdAt,
+          updatedAt:updateReveiw.updatedAt,
+      };
+  };
 
-  // //리뷰 삭제
-  // deleteReview = async(userId,reviewId) =>{
-  //     const review = await this.reviewRepository.findReviewById(reviewId);
+  
+  deleteReview = async(userId,reviewId) =>{
+      const review = await this.reviewRepository.findReviewById(reviewId);
+      //리뷰가 존재하는지 + 리뷰 작성자가 본인이 맞는지 확인
+      if(review.userId !== userId){
+          throw new Error('리뷰를 삭제할 수 없습니다');
+      }
 
-  //     //리뷰가 존재하는지 + 리뷰 작성자가 본인이 맞는지 확인
-  //     if(!review||review.userId!==userId){
-  //         throw new Error('리뷰를 삭제할 수 없습니다');
-  //     }
+      await this.reviewRepository.deleteReview(userId,reviewId);
 
-  //     await this.reviewRepository.deleteReview(userId,reviewId);
-
-  //     return{
-  //         reviewId:review.reviewId,
-  //         storeId:review.storeId,
-  //         comment:review.comment,
-  //     };
-  // };
+      return{
+          userId : review.userId,
+          reviewId:review.reviewId,
+          storeId:review.storeId,
+          comment:review.comment,
+      };
+  };
 }

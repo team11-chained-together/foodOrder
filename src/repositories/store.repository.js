@@ -3,6 +3,25 @@ export class StoreRepository {
     this.prisma = prisma;
   }
 
+  //음식점 검색 기능 -> 음식점 이름,음식이름,지역,푸드타입(피자면 피자)으로 검색
+
+  searchStores = async(search) =>{
+    const stores = await this.prisma.store.findMany({
+      where:{
+        //이중 하나의 값이라도 해당하면 검색
+        OR:[
+          {
+            storeName:{contains:search}},
+          {
+            foodType:{contains:search}},
+          {
+            location:{contains:search}},       
+          ]
+      },
+    });
+    return stores;
+  };
+
   findStoreByUserId = async (userId) => {
     const store = await this.prisma.store.findUnique({
       where: { userId: +userId },

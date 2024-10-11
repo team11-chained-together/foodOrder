@@ -1,7 +1,9 @@
 import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
+import { query } from 'express';
 
 const mockStoreService = {
+  searchStores: jest.fn(),
   createStore: jest.fn(),
   updateStore: jest.fn(),
   deleteStore: jest.fn(),
@@ -10,6 +12,7 @@ const mockStoreService = {
 
 const mockRequest = {
   body: jest.fn(),
+  query:{},
 };
 
 const mockResponse = {
@@ -27,6 +30,30 @@ describe('Store Controller Unit Test', () => {
 
     mockResponse.status.mockReturnValue(mockResponse);
   });
+  
+ // 검색 기능 컨트롤러 부분
+ test('searchStores Method By success',async()=>{
+
+    const searchQuery = 'Test search';
+    const sampleStore ={
+      storeId: 1,
+      storeName: 'Test StoreName',
+      foodType: 'Test Food Type',
+      location: '전북',
+    };
+
+    mockRequest.query = {search: searchQuery};
+
+    mockStoreService.searchStores.mockReturnValue([sampleStore]);
+
+    await storeController.searchStores(mockRequest,mockResponse,mockNext);
+
+    expect(mockStoreService.searchStores).toHaveBeenCalledTimes(1);
+    expect(mockStoreService.searchStores).toHaveBeenCalledWith(searchQuery);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.json).toHaveBeenCalledWith({ data: [sampleStore] });
+ });
 
   /** Create Store Controller Test */
   test('createStore Method by Success', async () => {
