@@ -44,6 +44,7 @@ export class StoreService {
       location: createdStore.location,
       foodType: createdStore.foodType,
       sales: createdStore.sales,
+      location: createdStore.location,
       createdAt: createdStore.createdAt,
       updatedAt: createdStore.updatedAt,
     };
@@ -104,7 +105,10 @@ export class StoreService {
       userId: store.userId,
       storeName: store.storeName,
       foodType: store.foodType,
-      menu: menu,
+      menuName: menu.menuName,
+      image: menu.image,
+      price: menu.price,
+      stock: menu.stock,
       createdAt: store.createdAt,
     };
   };
