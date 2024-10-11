@@ -44,13 +44,22 @@ describe('Review Controller unit test', ()=>{
 
         await reviewController.createReview(mockRequest,mockResponse,mockNext);
         expect(mockReviewService.createReview).toHaveBeenCalledTimes(1);
-        expect(mockReviewService.createReview).toHaveBeenCallWith({
-            data : createdReview
-        });
+        expect(mockReviewService.createReview).toHaveBeenCallWith(
+        createReviewBodyParams.reviewId,
+        createReviewBodyParams.userId,
+        createReviewBodyParams.storeId,
+        createReviewBodyParams.comment,
+        createReviewBodyParamsw.rate,
+        createReviewBodyParams.createdAt,
+        createReviewBodyParams.updatedAt,
+        );
         
         expect(mockRequest.status).toHaveBeenCalledTimes(1);
         expect(mockRequest.status).toHaveBeenCallWith(201);
 
         expect(mockResponse.json).toHaveBeenCallWith(1);
-    })
-})
+        expect(mockResponse.json).toHaveBeenCallWith({
+            data: createReviewValue
+        });
+    });
+});
