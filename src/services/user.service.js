@@ -31,19 +31,19 @@ export class UserService{
             hashedPassword,
             name,
             address,
-            type,
+            isOwner,
         );
 
     return {
         email : createdUser.email,
         name : createdUser.name,
         address : createdUser.address,
-        type : createdUser.type,
+        isOwner : createdUser.isOwner,
         createdAt: createdUser.createdAt,
     };
  };
 
-logIn=async(email,password)=>{
+logIn=async(email,password,res)=>{
     const user = await this.userRepository.findUserByEmail(email);
     //이메일을 통해 사용자 존재여부
     if(!user){
