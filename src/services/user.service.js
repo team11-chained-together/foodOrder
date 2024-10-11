@@ -10,8 +10,6 @@ export class UserService{
     }
 
   signUp = async (email, password, name, address, isOwner) => {
-    signUp = async(email,password,name,address,type)=>{
-
     if(!email || !password){
         throw new Error('email 과 password를 입력해주세요 ');
     }
@@ -80,16 +78,6 @@ logIn=async(email,password)=>{
     return {
       userId: userPoint.userId,
       point: userPoint.point,
-    const token = jwt.sign({
-        userId:user.id,
-        email:user.email
-    },
-        process.env.JWT_SECRET,
-        {excepiresIn:'1h'}
-    );
-    return{
-        message: '로그인 성공',
-        token,
     };
   };
 };
