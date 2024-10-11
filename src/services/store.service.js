@@ -3,6 +3,36 @@ export class StoreService {
     this.storeRepository = storeRepository;
   }
 
+  //음식점 검색 기능
+  searchStores = async(search)=>{
+ 
+    //레퍼지토리에서 검색된 목록가져옴
+    const store = await this.storeRepository.searchStores(search);
+    
+    if(StoreService.length ===0){
+      throw new Error('검색 결과가 없습니다.');
+    }
+    //해당 검색 음식점 정보와 음식점 메뉴 데이터 반환
+    return store.map((store)=>({
+      storeId:store.storeId,
+      userId:store.userId,
+      storeName:store.storeName,
+      location:store.location,
+      foodType:store.foodType,
+      sales:store.sales,
+
+      menu:store.menu.map((menu)=>({
+        menuId:menu.menuId,
+        menuName:menu.menuName,
+        price:menu.price,
+        stock:menu.stock,
+      })),
+
+      createdAt:store.createdAt,
+      updatedAt:store.updatedAt,
+    }));
+  };
+
   createStore = async (userId, storeName, location, foodType) => {
     const store = await this.storeRepository.findStoreByUserId(userId);
     if (store) {
