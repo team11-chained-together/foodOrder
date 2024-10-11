@@ -5,7 +5,7 @@ export class ReviewController {
 
   postReview = async (req, res, next) => {
     try {
-      // const { sotreId } = req.params;
+      const  {storeId}  = req.params;
       // const isOwner = req.user.isOwner;
 
       const { comment, rate } = req.body;
@@ -18,7 +18,7 @@ export class ReviewController {
       //   return res.status(401).json({ message: '사장님은 리뷰 못해요!' });
       // }
 
-      const createdReview = await this.reviewService.createReview( comment, rate);
+      const createdReview = await this.reviewService.createReview( storeId,comment, rate);
 
       return res.status(201).json({
         message: '리뷰가 정상적으로 작성되었습니다.',

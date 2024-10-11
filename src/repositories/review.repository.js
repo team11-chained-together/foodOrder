@@ -13,12 +13,14 @@ export class ReviewRepository {
   //     return findReviewByUserIdStoreId;
   //   };
 
-  createReview = async (comment, rate) => {
+  createReview = async (storeId,comment, rate) => {
     const createdReview = await this.prisma.review.create({
+      where:{
+        storeId:+storeId,
+      },
       data: {
         comment,
         rate,
-        order,
       },
     });
     return createdReview;

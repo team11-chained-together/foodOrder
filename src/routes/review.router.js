@@ -10,7 +10,7 @@ const reviewRepository = new ReviewRepository(prisma);
 const reviewService = new ReviewService(reviewRepository);
 const reviewController = new ReviewController(reviewService);
 
-router.post('/reviews', reviewController.postReview);
+router.post('/reviews/:storeId', reviewController.postReview);
 // router.put('/reviews', reviewController.putReview);
 // router.delete('/reviews/:reviewId', reviewController.deleteReview);
 

@@ -3,18 +3,20 @@ export class ReviewService {
     this.reviewRepository = reviewRepository;
   }
 
-  createReview = async (comment, rate) => {
+  createReview = async (storeId,comment, rate) => {
     // const review = await this.reviewRepository.findReviewByUserIdStoreId(userId, storeId);
     // if (review) {
     //   throw new Error('이미 리뷰를 작성하셨습니다.');
     // }
 
-    const createdReview = await this.reviewRepository.createReview(comment, rate);
-
+    const createdReview = await this.reviewRepository.createReview(storeId,comment, rate);
+a
     return {
       reviewId: createdReview.reviewId,
+      storeId : createdReview.storeId,
       comment: createdReview.comment,
       rate: createdReview.rate,
+      order :createdReview.order,
       createdAt: createdReview.createdAt,
     };
   };
