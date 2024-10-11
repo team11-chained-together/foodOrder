@@ -13,3 +13,4 @@ const reviewController = new ReviewController(reviewService);
 router.post('/reviews', reviewController.postReview);
 // router.put('/reviews', reviewController.updateReview);
 // router.delete('/reviews/:reviewId', reviewController.deleteReview);
+export default router;

@@ -5,16 +5,17 @@ export class ReviewController {
 
   postReview = async (req, res, next) => {
     try {
-      const { sotreId } = req.params;
-      const { type } = user.type;
+      // const sotreId = req.params;
+      const userId = req.user.userId;
+      const isOwner = req.user.isOwner;
 
-      const { comment, rate } = req.body;
+      const { sotreId, comment, rate } = req.body;
 
       if (!comment || !rate) {
         return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
       }
 
-      if (type !== true) {
+      if (isOwner === true) {
         return res.status(401).json({ message: '사장님은 리뷰 못해요!' });
       }
 

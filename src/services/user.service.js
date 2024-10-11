@@ -8,7 +8,7 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  signUp = async (email, password, name, address, isOwner) => {
+  signUp = async ({ email, password, name, address, isOwner }) => {
     //이메일 중복인지 체크하는 부분 existEmail 이 정의되지 않았었음.
     const existEmail = await this.userRepository.checkEmail(email);
     if (existEmail) {

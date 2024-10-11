@@ -53,11 +53,11 @@ export class UserController {
       signUpUser.validate();
 
       const createdUser = await this.userService.signUp({
-        email,
-        password,
-        name,
-        address,
-        isOwner,
+        email: signUpUser.email,
+        password: signUpUser.password,
+        name: signUpUser.name,
+        address: signUpUser.address,
+        isOwner: signUpUser.isOwner,
       });
 
       return res.status(201).json({

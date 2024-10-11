@@ -13,9 +13,10 @@ export class ReviewRepository {
   //     return findReviewByUserIdStoreId;
   //   };
   //리뷰 작성 (생성)
-  creatReview = async (comment, rate) => {
+  creatReview = async (storeId, comment, rate) => {
     const createdReview = await this.prisma.review.create({
       data: {
+        storeId,
         comment,
         rate,
       },

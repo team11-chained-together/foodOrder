@@ -5,6 +5,7 @@ import ErrorHandlingMiddleware from './middlewares/error-handling.middleware.js'
 import storeRouter from './routes/store.router.js';
 import userRouter from './routes/user.router.js';
 import menuRouter from './routes/menu.router.js';
+import reviewRouter from './routes/review.router.js';
 
 const app = express();
 const PORT = 7777;
@@ -13,7 +14,7 @@ app.use(LogMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api', [storeRouter, userRouter, menuRouter]); //라우터 넣는 곳
+app.use('/api', [storeRouter, userRouter, menuRouter, reviewRouter]); //라우터 넣는 곳
 
 app.use(ErrorHandlingMiddleware);
 

@@ -23,7 +23,6 @@ export class StoreController {
       const createdStore = await this.storeService.createStore(
         userId,
         storeName,
-
         location,
         foodType,
       );
