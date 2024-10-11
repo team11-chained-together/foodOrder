@@ -9,6 +9,7 @@ export class UserService{
         this.userRepository = userRepository
     }
 
+  signUp = async (email, password, name, address, isOwner) => {
     signUp = async(email,password,name,address,type)=>{
 
     if(!email || !password){
@@ -23,6 +24,16 @@ export class UserService{
     if (existEmail) {
         throw new Error('이미 존재하는 email 입니다.');
     }
+    //비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, 10);
+    //새로운 유저 생성
+    const createdUser = await this.userRepository.createdUser(
+      email,
+      hashedPassword,
+      name,
+      address,
+      isOwner,
+    );
         //비밀번호 해싱
         const hashedPassword = await bcrypt.hash(password, 10); 
         //새로운 유저 생성
@@ -35,6 +46,11 @@ export class UserService{
         );
 
     return {
+      email: createdUser.email,
+      name: createdUser.name,
+      address: createdUser.address,
+      isOwner: createdUser.isOwner,
+      createdAt: createdUser.createdAt,
         email : createdUser.email,
         name : createdUser.name,
         address : createdUser.address,
@@ -55,6 +71,15 @@ logIn=async(email,password)=>{
         throw new Error('비밀번호가 일치하지 않습니다.');
     }
     //JMT 토큰 생성
+    const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('authorization', `Bearer ${token}`);
+  };
+
+  getUserPoint = async (userId) => {
+    const userPoint = await this.userRepository.getUserPoint(userId);
+    return {
+      userId: userPoint.userId,
+      point: userPoint.point,
     const token = jwt.sign({
         userId:user.id,
         email:user.email

@@ -11,6 +11,6 @@ const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
 router.post('/signup', userController.userSignup);
-router.post('/login', authMiddleware, userController.userLogin);
+router.post('/login', userController.userLogin);
 router.get('/users/:userId', authMiddleware, userController.userPoint);
 export default router;
