@@ -63,6 +63,7 @@ model Order {
   userId    Int         @map("userId")
   menuId    Int         @map("menuId")
   statement Statement   @map("statement")
+  totalPrice Int        @map("totalPrice")
   createdAt DateTime    @default(now()) @map("createdAt")
   orderMenu OrderMenu[]
   review    Review?

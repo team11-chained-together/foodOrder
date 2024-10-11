@@ -9,7 +9,7 @@ export class StoreController {
       const userId = req.user.userId;
       const isOwner = req.user.isOwner;
 
-      const { storeName, foodType, location } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
+      const { storeName, location, foodType } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
 
       // 사장과 손님 확인 작업
       if (isOwner !== true) {
@@ -23,8 +23,9 @@ export class StoreController {
       const createdStore = await this.storeService.createStore(
         userId,
         storeName,
-        foodType,
+
         location,
+        foodType,
       );
 
       return res.status(201).json({ data: createdStore });
