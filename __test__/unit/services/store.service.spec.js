@@ -8,45 +8,43 @@ let mockStoreRepository = {
   findStoreByUserId: jest.fn(),
   findStoreByStoreName: jest.fn(),
   findMenuByStoreId: jest.fn(),
-  searchStores:jest.fn(),
+  searchStores: jest.fn(),
 };
 
 let storeService = new StoreService(mockStoreRepository);
 
-describe('Store Service Unit Test', () => {
+describe('스토어 서비스 유닛 테스트', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  //** Search Store Service Method 테스트 */
-  test('searchStores Method By Success',async()=>{
-    
-    const sampleStore ={
+  test('스토어 검색 성공 테스트', async () => {
+    const sampleStore = {
       storeId: 1,
       userId: 1,
       storeName: 'Test StoreName',
-      foodType:'Test Food Type',
-      location:'전북',
+      foodType: 'Test Food Type',
+      location: '전북',
       sales: 100000,
       createdAt: '2024-09-28T09:35:43.410Z',
       updatedAt: '2024-09-28T09:35:43.410Z',
     };
-    
+
     mockStoreRepository.searchStores.mockReturnValue([sampleStore]);
-    const searchedStores= await storeService.searchStores('Test search');
+    const searchedStores = await storeService.searchStores('Test search');
 
     expect(mockStoreRepository.searchStores).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.searchStores).toHaveBeenCalledWith('Test search');
     expect(searchedStores).toEqual([sampleStore]);
   });
 
-  /** Create Store Service Method 테스트 */
-  test('createStore Method By Success', async () => {
+  test('스토어 생성 성공 테스트', async () => {
     // 반환값 설정
     const sampleStore = {
       storeId: 1,
       userId: 1,
       storeName: 'StoreName Test',
+      location: 'Location Test',
       foodType: 'FoodType Test',
       sales: 0,
       createdAt: '2024-09-28T09:35:43.410Z',
@@ -56,12 +54,18 @@ describe('Store Service Unit Test', () => {
     mockStoreRepository.createStore.mockReturnValue(sampleStore);
 
     // createStore 메소드에서 userId, storeName, FoodType에 해당하는 데이터 넣기
-    const createdStore = await storeService.createStore(1, 'StoreName Test', 'FoodType Test');
+    const createdStore = await storeService.createStore(
+      1,
+      'StoreName Test',
+      'Location Test',
+      'FoodType Test',
+    );
 
     expect(mockStoreRepository.createStore).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.createStore).toHaveBeenCalledWith(
       sampleStore.userId,
       sampleStore.storeName,
+      sampleStore.location,
       sampleStore.foodType,
     );
 
@@ -69,6 +73,7 @@ describe('Store Service Unit Test', () => {
       storeId: sampleStore.storeId,
       userId: sampleStore.userId,
       storeName: sampleStore.storeName,
+      location: sampleStore.location,
       foodType: sampleStore.foodType,
       sales: sampleStore.sales,
       createdAt: sampleStore.createdAt,
@@ -77,7 +82,7 @@ describe('Store Service Unit Test', () => {
   });
 
   /** Update Store Service Method 테스트 */
-  test('updateStore Method By Success', async () => {
+  test('스토어 업데이트 성공 테스트', async () => {
     const sampleStore = {
       storeId: 1,
       userId: 1,
@@ -114,8 +119,7 @@ describe('Store Service Unit Test', () => {
     });
   });
 
-  /** Delete Store Service Method 테스트 */
-  test('deleteStore Method By Success', async () => {
+  test('스토어 삭제 성공 테스트', async () => {
     const sampleStore = {
       storeId: 1,
       userId: 1,
@@ -145,8 +149,7 @@ describe('Store Service Unit Test', () => {
     });
   });
 
-  /** Get Store Service Method 테스트 */
-  test('getStore Method By Success', async () => {
+  test('스토어 목록 조회 성공 테스트', async () => {
     const sampleStore = {
       storeId: 1,
       userId: 1,
@@ -156,7 +159,7 @@ describe('Store Service Unit Test', () => {
     };
 
     mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
-    mockStoreRepository.findMenuByStoreId.mockReturnValue(sampleStore);
+    mockStoreRepository.findMenuByStoreId.mockReturnValue();
     const getStore = await storeService.getStore(sampleStore.storeName);
 
     expect(getStore).toEqual(sampleStore);
@@ -167,8 +170,7 @@ describe('Store Service Unit Test', () => {
     expect(mockStoreRepository.findMenuByStoreId).toHaveBeenCalledWith(sampleStore.storeId);
   });
 
-  /** Create Store Service Method Fail 테스트 */
-  test('createStore Method By Fail', async () => {
+  test('스토어 생성 실패 테스트', async () => {
     const sampleStore = { userId: 1 };
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
@@ -182,8 +184,7 @@ describe('Store Service Unit Test', () => {
     }
   });
 
-  /** Update Store Service Method Fail 테스트 */
-  test('updateStore Method By Fail', async () => {
+  test('스토어 업데이트 성공 테스트', async () => {
     const sampleStore = null;
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
@@ -199,8 +200,7 @@ describe('Store Service Unit Test', () => {
     }
   });
 
-  /** Delete Store Service Method Fail 테스트 */
-  test('deleteStore Method By Fail', async () => {
+  test('스토어 삭제 성공 테스트', async () => {
     const sampleStore = null;
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
@@ -216,8 +216,7 @@ describe('Store Service Unit Test', () => {
     }
   });
 
-  /** Get Store Service Method Fail 테스트 */
-  test('getStore Method By Fail', async () => {
+  test('스토어 생성 실패 테스트', async () => {
     const sampleStore = null;
     mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
 

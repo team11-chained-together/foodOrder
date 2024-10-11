@@ -19,9 +19,12 @@ export class UserOrderService {
       const updateStock = await this.userOrderRepository.updateStock(menuId[i], quantity[i]);
       console.log(`주문수량${i}: ${quantity[i]}`);
       console.log(`변경수량${i}: ${menuId[i]}`);
-      const createOrderMenu = await this.userOrderRepository.createOrderMenu(orderData.orderId, menuId[i], quantity[i])
+      const createOrderMenu = await this.userOrderRepository.createOrderMenu(
+        orderData.orderId,
+        menuId[i],
+        quantity[i],
+      );
     }
-
 
     let index = 0;
     for (const element of menuId) {
@@ -41,7 +44,6 @@ export class UserOrderService {
 
     const createOrder = await this.userOrderRepository.createOrder(storeId, userId, totalPrice);
 
-
     const getOrderMenu = await this.userOrderRepository.getOrderMenu(orderData.orderId);
 
     return {
@@ -50,13 +52,7 @@ export class UserOrderService {
       statement: orderData.statement,
       storeId: orderData.storeId,
       createdAt: orderData.createdAt,
-      orderMenu:{
-        orderMenuId: getOrderMenu.orderMenuId,
-        orderId: getOrderMenu.orderId,
-        menuId: getOrderMenu.menuId,
-        quantity: getOrderMenu.quantity,
-      }
-    }
+      orderMenu: getOrderMenu,
+    };
   };
-
 }
