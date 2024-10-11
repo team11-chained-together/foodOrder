@@ -43,7 +43,7 @@ export class UserService {
     };
   };
 
-  logIn = async (email, password, res) => {
+  logIn = async (email, password) => {
     const user = await this.userRepository.findUserByEmail(email);
     //이메일을 통해 사용자 존재여부
     if (!user) {
@@ -56,7 +56,7 @@ export class UserService {
     }
     //JMT 토큰 생성
     const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.cookie('authorization', `Bearer ${token}`);
+    return token;
   };
 
   getUserPoint = async (userId) => {
