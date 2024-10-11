@@ -3,21 +3,19 @@ export class ReviewService {
     this.reviewRepository = reviewRepository;
   }
 
-  //리뷰 작성 (생성)
-  createReview = async (storeId, comment, rate) => {
+  createReview = async (comment, rate) => {
     // const review = await this.reviewRepository.findReviewByUserIdStoreId(userId, storeId);
     // if (review) {
     //   throw new Error('이미 리뷰를 작성하셨습니다.');
     // }
 
-    const createReview = await this.reviewRepository.createReview(storeId, comment, rate);
+    const createdReview = await this.reviewRepository.createReview(comment, rate);
 
     return {
-      reviewId: createReview.reviewId,
-      storeId: createReview.storeId,
-      comment: createReview.comment,
-      rate: createReview.rate,
-      createdAt: createReview.createdAt,
+      reviewId: createdReview.reviewId,
+      comment: createdReview.comment,
+      rate: createdReview.rate,
+      createdAt: createdReview.createdAt,
     };
   };
 
