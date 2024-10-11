@@ -42,7 +42,8 @@ export class UserController {
         throw new Error('InvalidParamsError');
       }
 
-      await this.userService.logIn(email, password, res);
+      const login = await this.userService.logIn(email, password);
+      res.cookie('authorization', `Bearer ${login}`);
 
       return res.status(201).json({ message: '로그인 성공!' });
     } catch (err) {

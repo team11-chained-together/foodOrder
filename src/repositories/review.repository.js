@@ -2,21 +2,11 @@ export class ReviewRepository {
   constructor(prisma) {
     this.prisma = prisma;
   }
-
-    findReviewByUserIdStoreId = async (userId, storeId) => {
-      const findReviewByUserIdStoreId = await this.prisma.review.findFirst({
-        where: {
-          userId: +userId,
-          storeId: +storeId,
-        },
-      });
-      return findReviewByUserIdStoreId;
-    };
-
-  createReview = async (storeId,comment, rate) => {
+  //리뷰 작성 (생성)
+  createReview = async (userId, comment, rate) => {
     const createdReview = await this.prisma.review.create({
-      where:{
-        storeId:+storeId,
+      where: {
+        storeId: +storeId,
       },
       data: {
         comment,
@@ -25,42 +15,27 @@ export class ReviewRepository {
     });
     return createdReview;
   };
-  findByUserId = async(userId)=>{
-    const findByUserId = await this.prisma.findFirst({
-      where:{userId : +userId},
-    });
-    return findByUserId;
-  }
 
-    updateReview = async (reviewId, comment, rate) => {
-      const updatedReview = await this.prisma.review.update({
-        where: {
-          reviewId: +reviewId,
-        },
-        data: {
-          comment,
-          rate,
-        },
-      });
-      return updatedReview;
-    };
-    
-    findReviewById = async(reviewId)=>{
-      const findReviewById = await this.prisma.review.findFirst({
-        where:{
-          reviewId: +reviewId,
-        }
-      })
-      return findReviewById;
-    }
-    
-    deleteReview = async (userId,reviewId) => {
-      const deleteReview = await this.prisma.review.delete({
-        where: {
-          userId:+userId,
-          reviewId: +reviewId,
-        },
-      });
-      return deleteReview;
-    };
+  //리뷰 수정
+  updateReview = async (reviewId, comment, rate) => {
+    const updatedReview = await this.prisma.review.update({
+      where: {
+        reviewId: +reviewId,
+      },
+      data: {
+        comment,
+        rate,
+      },
+    });
+    return updatedReview;
+  };
+  //리뷰 삭제
+  deleteReview = async (reviewId) => {
+    const deleteReview = await this.prisma.review.delete({
+      where: {
+        reviewId: +reviewId,
+      },
+    });
+    return deleteReview;
+  };
 }

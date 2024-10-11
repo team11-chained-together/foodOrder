@@ -4,25 +4,23 @@ export class StoreController {
   }
 
   //음식점 검색
-  searchStores = async(req,res,next) => {
-    try{
+  searchStores = async (req, res, next) => {
+    try {
       //쿼리 피라미터에서 검색
-      const{search} = req.query;
+      const { search } = req.query;
 
-      if(!search){
+      if (!search) {
         throw new Error('검색 문자를 입력해주세요.');
       }
       //서비스와 연결
 
       const stores = await this.storeService.searchStores(search);
-      
-      return res.status(200).json({data:stores});
-    }catch(err){
+
+      return res.status(200).json({ data: stores });
+    } catch (err) {
       next(err);
     }
   };
-
-
 
   createStore = async (req, res, next) => {
     try {
@@ -32,7 +30,6 @@ export class StoreController {
 
       const { storeName, location, foodType } = req.body; // insomnia 테스트를 위해 userId를 바디값으로 받음
 
-      // 사장과 손님 확인 작업
       if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }

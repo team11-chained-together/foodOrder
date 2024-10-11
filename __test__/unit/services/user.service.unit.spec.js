@@ -44,9 +44,8 @@ describe('userService Unit Test', () => {
       type: true,
     };
 
-    // bcrypt 해시 메서드 Mock 설정
     const hashedPassword = 'hashedPassword';
-    bcrypt.hash.mockResolvedValue(hashedPassword); // bcrypt.hash가 해시된 비밀번호를 반환하도록 설정
+    bcrypt.hash.mockResolvedValue(hashedPassword);
 
     // createdUser 반환 Mock 설정
     mockUserRepository.createdUser.mockResolvedValue({
@@ -67,17 +66,15 @@ describe('userService Unit Test', () => {
       sampleUser.type,
     );
 
-    // createdUser가 한 번 호출되었는지 확인
     expect(mockUserRepository.createdUser).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.createdUser).toHaveBeenCalledWith(
       sampleUser.email,
-      hashedPassword, // 해시된 비밀번호가 전달되는지 확인
+      hashedPassword,
       sampleUser.name,
       sampleUser.address,
       sampleUser.type,
     );
 
-    // 반환된 유저 정보가 예상대로 반환되었는지 확인
     expect(createdUser).toEqual({
       email: sampleUser.email,
       name: sampleUser.name,
