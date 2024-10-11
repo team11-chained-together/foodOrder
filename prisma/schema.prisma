@@ -63,7 +63,6 @@ model Order {
   menuId    Int         @map("menuId")
   statement Statement   @map("statement")
   totalPrice Int        @map("totalPrice")
-  statement Statement   @map("statement")
   createdAt DateTime    @default(now()) @map("createdAt")
   orderMenu OrderMenu[]
   user      User        @relation(fields: [userId], references: [userId], onDelete: Cascade)
