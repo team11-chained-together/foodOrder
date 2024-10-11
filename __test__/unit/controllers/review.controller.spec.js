@@ -46,6 +46,11 @@ describe('Review Controller unit test', ()=>{
         expect(mockReviewService.createReview).toHaveBeenCalledTimes(1);
         expect(mockReviewService.createReview).toHaveBeenCallWith({
             data : createdReview
-        })
+        });
+        
+        expect(mockRequest.status).toHaveBeenCalledTimes(1);
+        expect(mockRequest.status).toHaveBeenCallWith(201);
+
+        expect(mockResponse.json).toHaveBeenCallWith(1);
     })
 })
