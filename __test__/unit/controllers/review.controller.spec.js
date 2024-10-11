@@ -37,10 +37,9 @@ describe('Review Controller unit test', ()=>{
           reviewId:1,
           userId:1,
           storeId:1,
-          ...createReviewBodyParams,
-          createdAt:createReviewBodyParams.createdAt,
-          updatedAt:createReviewBodyParams.updatedAt,
-          
+          ...createReviewValue,
+          createdAt:updateReview.createdAt,
+          updatedAt:updateReview.updatedAt,
         }
         mockReviewService.createReview.mockReturnValue(createReviewValue);
 

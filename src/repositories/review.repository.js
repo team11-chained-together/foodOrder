@@ -25,14 +25,14 @@ export class ReviewRepository {
     });
     return createdReview;
   };
-  findByuserId = async(userId)=>{
-    const findByuserId = await this.prisma.findFirst({
+  findByUserId = async(userId)=>{
+    const findByUserId = await this.prisma.findFirst({
       where:{userId : +userId},
     });
-    return findByuserId;
+    return findByUserId;
   }
 
-    updateReveiw = async (reviewId, comment, rate) => {
+    updateReview = async (reviewId, comment, rate) => {
       const updatedReview = await this.prisma.review.update({
         where: {
           reviewId: +reviewId,
