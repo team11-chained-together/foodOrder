@@ -33,11 +33,10 @@ describe('Review Controller unit test', ()=>{
         mockRequest.body = createReviewBodyParams;
 
         const createReviewValue = {
-            reviewId:1,
+          reviewId:1,
           userId:1,
-          storeId:updateReveiw.storeId,
-          comment:updateReveiw.comment,
-          rate:updateReveiw.rate,
+          storeId:1,
+          ...createReviewValue,
           createdAt:updateReveiw.createdAt,
           updatedAt:updateReveiw.updatedAt,
         }
