@@ -61,7 +61,6 @@ model Order {
   orderId   Int         @id @default(autoincrement()) @map("orderId")
   storeId   Int         @map("storeId")
   userId    Int         @map("userId")
-  menuId    Int         @map("menuId")
   statement Statement   @map("statement")
   totalPrice Int        @map("totalPrice")
   createdAt DateTime    @default(now()) @map("createdAt")
