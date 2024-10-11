@@ -76,4 +76,27 @@ export class MenuService {
       menu: menu,
     };
   };
+
+  // 작업주으ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  deleteMenu = async (userId, menuId) => {
+    // 메뉴 생성
+    const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    console.log(checkStoreId);
+
+    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+    const isMenuNameExists = await this.menuRepository.findMenuById(checkStoreId.storeId, menuId);
+
+    if (!isMenuNameExists) {
+      throw new Error('존재 하지않는 메뉴 이름입니다.');
+    }
+
+    const deleteMenu = await this.menuRepository.deleteMenu(menuId);
+
+    return {
+      menuName: deleteMenu.menuName,
+      image: deleteMenu.image,
+      price: deleteMenu.price,
+      stock: deleteMenu.stock,
+    };
+  };
 }
