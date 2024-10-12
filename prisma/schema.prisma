@@ -14,7 +14,7 @@ model User {
   password  String   @map("password")
   address   String   @map("address")
   isOwner   Boolean  @map("isOwner")
-  point     Int      @default(100000) @map("point")
+  point     Int      @default(1000000) @map("point")
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
   order     Order[]
@@ -60,9 +60,9 @@ model Order {
   orderId   Int         @id @default(autoincrement()) @map("orderId")
   storeId   Int         @map("storeId")
   userId    Int         @map("userId")
-  menuId    Int         @map("menuId")
   statement Statement   @map("statement")
   totalPrice Int        @map("totalPrice")
+  reviewType Boolean    @map("reviewtype")
   createdAt DateTime    @default(now()) @map("createdAt")
   orderMenu OrderMenu[]
   user      User        @relation(fields: [userId], references: [userId], onDelete: Cascade)

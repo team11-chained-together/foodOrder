@@ -5,18 +5,21 @@ export class StoreRepository {
 
   //음식점 검색 기능 -> 음식점 이름,음식이름,지역,푸드타입(피자면 피자)으로 검색
 
-  searchStores = async(search) =>{
+  searchStores = async (search) => {
     const stores = await this.prisma.store.findMany({
-      where:{
+      where: {
         //이중 하나의 값이라도 해당하면 검색
-        OR:[
+        OR: [
           {
-            storeName:{contains:search}},
+            storeName: { contains: search },
+          },
           {
-            foodType:{contains:search}},
+            foodType: { contains: search },
+          },
           {
-            location:{contains:search}},       
-          ]
+            location: { contains: search },
+          },
+        ],
       },
     });
     return stores;
@@ -30,7 +33,6 @@ export class StoreRepository {
     return store;
   };
 
-  // userId로 가게를 생성하기 위한 로직
   createStore = async (userId, storeName, location, foodType) => {
     const createdStore = await this.prisma.store.create({
       data: {
@@ -46,10 +48,11 @@ export class StoreRepository {
     return createdStore;
   };
 
-  updateStore = async (userId, storeName, foodType) => {
+  updateStore = async (userId, storeId, storeName, foodType) => {
     const updatedStore = await this.prisma.store.update({
       where: {
-        userId: +userId,
+        userId: userId,
+        storeId: storeId,
       },
       data: {
         storeName: storeName,
@@ -60,22 +63,19 @@ export class StoreRepository {
     return updatedStore;
   };
 
-  deleteStore = async (userId) => {
+  deleteStore = async (userId, storeId) => {
     const deletedStore = await this.prisma.store.delete({
       where: {
-        userId: +userId,
+        userId: userId,
+        storeId: storeId,
       },
     });
 
     return deletedStore;
   };
 
-  findStoreByStoreName = async (storeName) => {
-    const getStore = await this.prisma.store.findFirst({
-      where: {
-        storeName: storeName,
-      },
-    });
+  findStore = async () => {
+    const getStore = await this.prisma.store.findMany();
 
     return getStore;
   };

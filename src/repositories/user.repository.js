@@ -5,7 +5,7 @@ export class UserRepository {
 
   checkEmail = async (email) => {
     const existingUser = await this.prisma.user.findUnique({
-      where: { email },
+      where: { email: email },
     });
     return existingUser;
   };

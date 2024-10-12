@@ -30,7 +30,7 @@ export class MenuController {
   // TODO: 업데이트 시 이름만 변경 가능, 나머지는 변경 불가능
   updateMenu = async (req, res, next) => {
     try {
-      const userId = req.user.isOwner;
+      const userId = req.user.userId;
       const isOwner = req.user.isOwner;
       const { menuId, menuName, image, price, stock } = req.body;
 
@@ -60,13 +60,13 @@ export class MenuController {
 
   getMenu = async (req, res, next) => {
     try {
-      const { storeName } = req.body;
+      const { storeId } = req.body;
 
-      if (!storeName) {
-        return res.status(200).json({ message: '해당하는 가게이름을 입력 해 주세요.' });
+      if (!storeId) {
+        return res.status(200).json({ message: '해당하는 가게아이디를 입력 해 주세요.' });
       }
 
-      const getMenu = await this.menuService.getMenu(storeName);
+      const getMenu = await this.menuService.getMenu(storeId);
 
       return res.status(200).json({ data: getMenu });
     } catch (err) {
@@ -81,7 +81,6 @@ export class MenuController {
 
       const { menuId } = req.body;
 
-      // 사장과 손님 확인 작업
       if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
       }
