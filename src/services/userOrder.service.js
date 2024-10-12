@@ -1,7 +1,6 @@
 export class UserOrderService {
-  constructor(userOrderRepository, menuRepository) {
+  constructor(userOrderRepository) {
     this.userOrderRepository = userOrderRepository;
-    this.menuRepository = menuRepository;
   }
 
   createUserOrder = async (userId, storeId, menuId, quantity) => {
@@ -11,8 +10,7 @@ export class UserOrderService {
     console.log(menuId.length);
 
     for (const element of menuId) {
-      const menu = await this.menuRepository.findMenuById(element);
-      // 메뉴 가격 * 주문수량
+      const menu = await this.userOrderRepository.getMenuData(element);
       totalPrice += menu.price * quantity[index];
       index++;
 
