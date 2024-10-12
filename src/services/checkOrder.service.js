@@ -19,6 +19,17 @@ export class CheckOrderService {
     };
   };
 
+  checkMyOrder = async (userId) => {
+    const orderData = await this.checkOrderRepository.findOrderIdByUserId(userId);
+    if (!orderData) {
+      throw new Error('주문이 없습니다.');
+    }
+
+    return {
+      orderData: orderData,
+    };
+  };
+
   updateOrderStatement = async (orderId, statement) => {
     const order = await this.checkOrderRepository.findOrderByOrderId(orderId);
     if (!order) {
