@@ -3,10 +3,15 @@ export class ReviewService {
     this.reviewRepository = reviewRepository;
   }
 
-  createReview = async (userId, storeId, comment, rate) => {
-    const checkOrderData = await this.reviewRepository.findOrderDataByUserId(userId, storeId);
+  createReview = async (userId, orderId, comment, rate) => {
+    const checkOrderData = await this.reviewRepository.findOrderDataByOrderId(orderId);
+
     if (!checkOrderData) {
       throw new Error('주문 내역이 없습니다.');
+    }
+
+    if (checkOrderData.statement !== 'DELIVERY_COMPLETE') {
+      throw new Error('배송이 완료되지 않았습니다.');
     }
 
     if (checkOrderData.reviewType === false) {
@@ -15,10 +20,10 @@ export class ReviewService {
 
     const createdReview = await this.reviewRepository.createReview(
       userId,
-      storeId,
+      checkOrderData.storeId,
       comment,
       rate,
-      checkOrderData.orderId,
+      orderId,
     );
     return {
       createdReview,
@@ -45,14 +50,14 @@ export class ReviewService {
     };
   };
 
-  deleteReview = async (userId, reviewId) => {
-    const findReviewData = await this.reviewRepository.findReviewDataByUserId(userId);
+  deleteReview = async (orderId, reviewId) => {
+    const findReviewData = await this.reviewRepository.findOrderDataByOrderId(orderId);
 
     if (findReviewData.reviewId !== reviewId) {
       throw new Error('해당하는 리뷰는 수정할 수 없습니다.');
     }
 
-    const deletedReview = await this.reviewRepository.deleteReview(userId, reviewId);
+    const deletedReview = await this.reviewRepository.deleteReview(reviewId);
 
     return {
       deletedReview,

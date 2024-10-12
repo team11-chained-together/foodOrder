@@ -23,6 +23,15 @@ export class CheckOrderRepository {
     return order;
   };
 
+  findOrderIdByUserId = async (userId) => {
+    const order = await this.prisma.order.findMany({
+      where: { userId: userId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return order;
+  };
+
   findOrderByOrderId = async (orderId) => {
     const order = await this.prisma.order.findUnique({
       where: { orderId: orderId },
