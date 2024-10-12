@@ -1,6 +1,7 @@
 export class ReviewRepository {
-  constructor(prisma) {
+  constructor(prisma, Prisma) {
     this.prisma = prisma;
+    this.Prisma = Prisma;
   }
 
   //TODO: 해당하는 statement 값만 가져오기
@@ -35,15 +36,31 @@ export class ReviewRepository {
     return getMyReviewData;
   };
 
-  createReview = async (userId, storeId, comment, rate) => {
-    const createdReview = await this.prisma.review.create({
-      data: {
-        userId,
-        storeId,
-        comment,
-        rate,
+  createReview = async (userId, storeId, comment, rate, orderId) => {
+    const createdReview = await this.prisma.$transaction(
+      async (tx) => {
+        await tx.review.create({
+          data: {
+            userId: userId,
+            storeId: storeId,
+            comment: comment,
+            rate: rate,
+          },
+        });
+
+        await tx.order.update({
+          where: {
+            orderId: orderId,
+          },
+          data: {
+            reviewType: false,
+          },
+        });
       },
-    });
+      {
+        isolationLevel: this.Prisma.TransactionIsolationLevel.ReadCommitted,
+      },
+    );
     return createdReview;
   };
 

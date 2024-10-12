@@ -14,6 +14,10 @@ export class ReviewController {
         return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
       }
 
+      if (rate >= 1 || rate <= 5) {
+        return res.status(400).json({ message: '가게 리뷰 점수는 1 ~ 5점을 입력해주세요.' });
+      }
+
       const createdReview = await this.reviewService.createReview(userId, storeId, comment, rate);
 
       return res.status(201).json({

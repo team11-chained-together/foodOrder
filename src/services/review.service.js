@@ -9,7 +9,17 @@ export class ReviewService {
       throw new Error('주문 내역이 없습니다.');
     }
 
-    const createdReview = await this.reviewRepository.createReview(userId, storeId, comment, rate);
+    if (checkOrderData.reviewType === false) {
+      throw new Error('이미 리뷰를 작성 하셨습니다.');
+    }
+
+    const createdReview = await this.reviewRepository.createReview(
+      userId,
+      storeId,
+      comment,
+      rate,
+      checkOrderData.orderId,
+    );
     return {
       createdReview,
       order: checkOrderData,
