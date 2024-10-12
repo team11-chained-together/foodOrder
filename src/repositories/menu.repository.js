@@ -48,7 +48,6 @@ export class MenuRepository {
     });
     return updatedMenu;
   };
-  //TODO: 업데이트시 이미지링크만 수정 불가능한거 수정요망 10/11 15:31
 
   deleteMenu = async (menuId) => {
     const deleteMenu = await this.prisma.menu.delete({
@@ -77,13 +76,7 @@ export class MenuRepository {
   findMenuByStoreId = async (storeId) => {
     const getMenu = await this.prisma.menu.findMany({
       where: { storeId: storeId },
-      select: {
-        menuId: true,
-        menuName: true,
-        image: true,
-        price: true,
-        stock: true,
-      },
+      orderBy: { createdAt: 'asc' },
     });
 
     return getMenu;
