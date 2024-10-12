@@ -3,7 +3,7 @@ export class MenuRepository {
     this.prisma = prisma;
   }
 
-  findMenuName = async (storeId, menuName) => {
+  findMenuNameByStoreId = async (storeId, menuName) => {
     const menu = await this.prisma.menu.findUnique({
       where: {
         storeId_menuName: { storeId: +storeId, menuName },
@@ -13,11 +13,11 @@ export class MenuRepository {
   };
 
   findStoreIdByUserId = async (userId) => {
-    const menu = await this.prisma.store.findFirst({
-      where: { userId: +userId },
+    const store = await this.prisma.store.findFirst({
+      where: { userId: userId },
     });
 
-    return menu;
+    return store;
   };
 
   createMenu = async (storeId, menuName, image, price, stock) => {
@@ -34,15 +34,13 @@ export class MenuRepository {
     return createdMenu;
   };
 
-  updateMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
-    // TODO: 값 확인해보고 공유하기!
+  updateMenu = async (menuId, menuName, image, price, stock) => {
     const updatedMenu = await this.prisma.menu.update({
       where: {
-        storeId: +storeId,
-        menuName,
+        menuId: menuId,
       },
       data: {
-        menuName: newMenuName,
+        menuName: menuName,
         image: image,
         price: price,
         stock: stock,
@@ -59,24 +57,23 @@ export class MenuRepository {
     return deleteMenu;
   };
 
-  findMenuById = async (menuId) => {
-    const menu = await this.prisma.menu.findUnique({
-      where: { menuId: menuId },
+  findMenuByMenuId = async (storeId, menuId) => {
+    const menu = await this.prisma.menu.findFirst({
+      where: { storeId: storeId, menuId: menuId },
     });
     return menu;
   };
 
-  findStoreByStoreName = async (storeName) => {
+  findStore = async (storeId) => {
     const getStore = await this.prisma.store.findFirst({
       where: {
-        storeName: storeName,
+        storeId: storeId,
       },
     });
 
     return getStore;
   };
 
-  // storeId로 메뉴 테이블에 있는 menuName을 가져오기 위한 로직
   findMenuByStoreId = async (storeId) => {
     const getMenu = await this.prisma.menu.findMany({
       where: { storeId: storeId },
