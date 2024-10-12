@@ -5,6 +5,7 @@ import ErrorHandlingMiddleware from './middlewares/error-handling.middleware.js'
 import storeRouter from './routes/store.router.js';
 import userRouter from './routes/user.router.js';
 import menuRouter from './routes/menu.router.js';
+import testnodemailer from './routes/testnodemailer.router.js'
 
 import userOrderRouter from './routes/userOrder.router.js';
 import reviewRouter from './routes/review.router.js';
@@ -16,7 +17,7 @@ app.use(LogMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api', [storeRouter, userRouter, menuRouter, userOrderRouter, reviewRouter]); //라우터 넣는 곳
+app.use('/api', [storeRouter, userRouter, menuRouter, userOrderRouter, reviewRouter,testnodemailer]); //라우터 넣는 곳
 
 app.use(ErrorHandlingMiddleware);
 
