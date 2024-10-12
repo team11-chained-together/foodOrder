@@ -8,9 +8,10 @@ class ValidationError extends Error {
 // new ValidationError("이메일 안 맞음")
 
 class SignUpUser {
-  constructor({ email, password, name, address, isOwner }) {
+  constructor({ email, password, confirmPassword, name, address, isOwner }) {
     this.email = email;
     this.password = password;
+    this.confirmPassword = confirmPassword;
     this.name = name;
     this.address = address;
     this.isOwner = isOwner;
@@ -39,6 +40,9 @@ class SignUpUser {
     if (this.password.length < 8) {
       throw new ValidationError('비밀번호를 다시 설정하세요.');
     }
+    if (this.password !== this.confirmPassword) {
+      throw new ValidationError('비밀번호 확인이 일치하지 않습니다.');
+    }
   }
 }
 
@@ -47,18 +51,22 @@ export class UserController {
     this.userService = userService;
   }
 
+  // TODO: email 인증부분 추가
   userSignup = async (req, res, next) => {
     try {
       const signUpUser = new SignUpUser(req.body);
       signUpUser.validate();
 
-      const createdUser = await this.userService.signUp({
-        email: signUpUser.email,
-        password: signUpUser.password,
-        name: signUpUser.name,
-        address: signUpUser.address,
-        isOwner: signUpUser.isOwner,
-      });
+      console.log(signUpUser);
+      console.log(signUpUser.email);
+
+      const createdUser = await this.userService.signUp(
+        signUpUser.email,
+        signUpUser.password,
+        signUpUser.name,
+        signUpUser.address,
+        signUpUser.isOwner,
+      );
 
       return res.status(201).json({
         message: '회원가입 성공!',

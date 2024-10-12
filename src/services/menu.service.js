@@ -4,9 +4,8 @@ export class MenuService {
   }
 
   createMenu = async (userId, menuName, image, price, stock) => {
-    // 메뉴 생성
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
-    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+
     const isMenuNameExists = await this.menuRepository.findMenuName(checkStoreId.storeId, menuName);
 
     if (isMenuNameExists) {
@@ -35,7 +34,7 @@ export class MenuService {
 
   updateMenu = async (userId, menuName, image, price, stock) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
-    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+
     const isMenuNameExists = await this.menuRepository.findMenuName(checkStoreId.storeId, menuName);
 
     if (!isMenuNameExists) {
@@ -72,6 +71,7 @@ export class MenuService {
     const menu = await this.menuRepository.findMenuByStoreId(store.storeId);
 
     return {
+      storeId: store.storeId,
       storeName: store.storeName,
       foodType: store.foodType,
       menu: menu,
@@ -80,7 +80,7 @@ export class MenuService {
 
   deleteMenu = async (userId, menuId) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
-    // getMenu 메서드로 동일한 이름의 메뉴가 존재하는지 확인 필요
+
     const isMenuNameExists = await this.menuRepository.findMenuById(checkStoreId.storeId, menuId);
 
     if (!isMenuNameExists) {
