@@ -6,27 +6,10 @@ export class UserOrderService {
 
   createUserOrder = async (userId, storeId, menuId, quantity) => {
     let totalPrice = 0;
-
-    const orderData = await this.userOrderRepository.getOrderData(userId);
-
-    for (let i = 0; i < menuId.length; i++) {
-      const checkStock = await this.userOrderRepository.getMenuData(menuId[i]);
-
-      if (checkStock.stock < quantity[i]) {
-        throw new Error('주문하신 메뉴의 재고가 부족 합니다.');
-      }
-
-      const updateStock = await this.userOrderRepository.updateStock(menuId[i], quantity[i]);
-      console.log(`주문수량${i}: ${quantity[i]}`);
-      console.log(`변경수량${i}: ${menuId[i]}`);
-      const createOrderMenu = await this.userOrderRepository.createOrderMenu(
-        orderData.orderId,
-        menuId[i],
-        quantity[i],
-      );
-    }
-
     let index = 0;
+
+    console.log(menuId.length);
+
     for (const element of menuId) {
       const menu = await this.menuRepository.findMenuById(element);
       // 메뉴 가격 * 주문수량
@@ -40,9 +23,25 @@ export class UserOrderService {
       }
     }
 
-    const updateCash = await this.userOrderRepository.updateCash(totalPrice, userId, storeId);
+    for (let i = 0; i < menuId.length; i++) {
+      const checkStock = await this.userOrderRepository.getMenuData(menuId[i]);
 
-    const createOrder = await this.userOrderRepository.createOrder(storeId, userId, totalPrice);
+      if (checkStock.stock < quantity[i]) {
+        throw new Error('주문하신 메뉴의 재고가 부족 합니다.');
+      }
+
+      await this.userOrderRepository.updateStock(menuId[i], quantity[i]);
+    }
+
+    await this.userOrderRepository.createOrder(storeId, userId, totalPrice);
+
+    const orderData = await this.userOrderRepository.getOrderData(userId);
+
+    for (let i = 0; i < menuId.length; i++) {
+      await this.userOrderRepository.createOrderMenu(orderData.orderId, menuId[i], quantity[i]);
+    }
+
+    await this.userOrderRepository.updateCash(totalPrice, userId, storeId, orderData.orderId);
 
     const getOrderMenu = await this.userOrderRepository.getOrderMenu(orderData.orderId);
 

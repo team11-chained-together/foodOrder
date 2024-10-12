@@ -4,13 +4,13 @@ export class ReviewService {
   }
 
   createReview = async (storeId, comment, rate) => {
-    const ckeckStoreId = await this.reviewRepository.findReviewByUserIdStoreId(storeId);
-    if (ckeckStoreId) {
+    const checkStoreId = await this.reviewRepository.findReviewByUserIdStoreId(storeId);
+    if (checkStoreId) {
       throw new Error('없는 가게 입니다. 다시 확인해주세요.');
     }
 
     const createdReview = await this.reviewRepository.createReview(
-      ckeckStoreId.storeId,
+      checkStoreId.storeId,
       comment,
       rate,
     );
@@ -25,9 +25,9 @@ export class ReviewService {
   };
 
   updateReview = async (userId, reviewId, comment, rate) => {
-    const findByuserId = await this.reviewRepository.findReviewByUserIdStoreId(userId);
+    const findByUserId = await this.reviewRepository.findReviewByUserIdStoreId(userId);
     const review = await this.reviewRepository.findReviewById(reviewId);
-    if (findByuserId.userId !== review.reviewId) {
+    if (findByUserId.userId !== review.reviewId) {
       throw new Error('리뷰를 수정할 수 없습니다');
     }
     await this.reviewRepository.updatedReview(reviewId, comment, rate);
@@ -47,7 +47,7 @@ export class ReviewService {
 
   deleteReview = async (userId, reviewId) => {
     const review = await this.reviewRepository.findReviewById(reviewId);
-    //리뷰가 존재하는지 + 리뷰 작성자가 본인이 맞는지 확인
+
     if (review.userId !== userId) {
       throw new Error('리뷰를 삭제할 수 없습니다');
     }

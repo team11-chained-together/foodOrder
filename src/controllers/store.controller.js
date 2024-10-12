@@ -91,9 +91,7 @@ export class StoreController {
 
   getStore = async (req, res, next) => {
     try {
-      const { storeName } = req.body;
-
-      const getStore = await this.storeService.getStore(storeName);
+      const getStore = await this.storeService.getStore();
 
       return res.status(200).json({ data: getStore });
     } catch (err) {

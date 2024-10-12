@@ -82,6 +82,7 @@ export class MenuRepository {
     const getMenu = await this.prisma.menu.findMany({
       where: { storeId: storeId },
       select: {
+        menuId: true,
         menuName: true,
         image: true,
         price: true,

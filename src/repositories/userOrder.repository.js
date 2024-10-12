@@ -23,18 +23,19 @@ export class UserOrderRepository {
   getOrderData = async (userId) => {
     const getOrderData = await this.prisma.order.findFirst({
       where: { userId: userId },
+      orderBy: { createdAt: 'desc' },
     });
 
     return getOrderData;
   };
 
   getOrderMenu = async (orderId) => {
-    const getOrderMenu = await this.prisma.orderMenu.findFirst({
-        where: {orderId: orderId},
-    })
-    
+    const getOrderMenu = await this.prisma.orderMenu.findMany({
+      where: { orderId: orderId },
+    });
+
     return getOrderMenu;
-  }
+  };
 
   createOrder = async (storeId, userId, totalPrice) => {
     const createdOrder = await this.prisma.order.create({
@@ -42,7 +43,7 @@ export class UserOrderRepository {
         storeId: storeId,
         userId: userId,
         totalPrice: totalPrice,
-        statement: "PREPARE",
+        statement: 'PREPARE',
       },
     });
     return createdOrder;
@@ -69,9 +70,16 @@ export class UserOrderRepository {
     return updateStock;
   };
 
-  updateCash = async (totalPrice, userId, storeId) => {
+  updateCash = async (totalPrice, userId, storeId, orderId) => {
     const updateCash = await this.prisma.$transaction(
       async (tx) => {
+        await tx.order.update({
+          where: { orderId: orderId },
+          data: {
+            totalPrice: totalPrice,
+          },
+        });
+
         await tx.user.update({
           where: { userId: userId },
           data: {
