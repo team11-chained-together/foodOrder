@@ -14,10 +14,29 @@ export class CheckOrderRepository {
     const order = await this.prisma.order.findMany({
       where: {
         storeId: storeId,
-        statement: 'PREPARE',
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
     return order;
+  };
+
+  findOrderByOrderId = async (orderId) => {
+    const order = await this.prisma.order.findUnique({
+      where: { orderId: orderId },
+    });
+    return order;
+  };
+
+  updateOrderStatement = async (orderId, statement) => {
+    const updatedOrder = await this.prisma.order.update({
+      where: { orderId: +orderId },
+      data: {
+        statement: statement,
+      },
+    });
+    return updatedOrder;
   };
 }
