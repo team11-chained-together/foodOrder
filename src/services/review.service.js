@@ -26,15 +26,22 @@ export class ReviewService {
       orderId,
     );
     return {
-      createdReview,
+      userId: createdReview.userId,
+      storeId: createdReview.storeId,
+      comment: createdReview.comment,
+      rate: createdReview.rate,
       order: checkOrderData,
     };
   };
 
   updateReview = async (userId, reviewId, comment, rate) => {
-    const findReviewData = await this.reviewRepository.findReviewDataByUserId(userId);
+    const findReviewData = await this.reviewRepository.findReviewDataByReviewId(reviewId);
 
-    if (findReviewData.reviewId !== reviewId) {
+    if (!findReviewData) {
+      throw new Error('해당하는 리뷰가 존재하지 않습니다.');
+    }
+
+    if (findReviewData.userId !== userId) {
       throw new Error('해당하는 리뷰는 수정할 수 없습니다');
     }
 
@@ -50,11 +57,14 @@ export class ReviewService {
     };
   };
 
-  deleteReview = async (orderId, reviewId) => {
-    const findReviewData = await this.reviewRepository.findOrderDataByOrderId(orderId);
+  deleteReview = async (userId, reviewId) => {
+    const findReviewData = await this.reviewRepository.findReviewDataByReviewId(reviewId);
+    if (!findReviewData) {
+      throw new Error('해당하는 리뷰가 존재하지 않습니다.');
+    }
 
-    if (findReviewData.reviewId !== reviewId) {
-      throw new Error('해당하는 리뷰는 수정할 수 없습니다.');
+    if (findReviewData.userId !== userId) {
+      throw new Error('해당하는 리뷰는 삭제할 수 없습니다.');
     }
 
     const deletedReview = await this.reviewRepository.deleteReview(reviewId);

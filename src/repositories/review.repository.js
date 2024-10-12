@@ -12,9 +12,9 @@ export class ReviewRepository {
     return orderData;
   };
 
-  findReviewDataByUserId = async (userId) => {
+  findReviewDataByReviewId = async (reviewId) => {
     const reviewData = await this.prisma.review.findFirst({
-      where: { userId: userId },
+      where: { reviewId: reviewId },
     });
 
     return reviewData;
@@ -78,7 +78,7 @@ export class ReviewRepository {
   deleteReview = async (reviewId) => {
     const deleteReview = await this.prisma.review.delete({
       where: {
-        reviewId: +reviewId,
+        reviewId: reviewId,
       },
     });
     return deleteReview;

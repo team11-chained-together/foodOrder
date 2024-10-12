@@ -46,13 +46,14 @@ export class ReviewController {
 
   deleteReview = async (req, res, next) => {
     try {
-      const { reviewId, orderId } = req.body;
+      const userId = req.user.userId;
+      const { reviewId } = req.body;
 
       if (!reviewId) {
         return res.status(400).json({ message: 'reviewId를 입력해 주세요' });
       }
 
-      await this.reviewService.deleteReview(orderId, reviewId);
+      await this.reviewService.deleteReview(userId, reviewId);
       return res.status(202).json({ message: '리뷰가 삭제 되었습니다.' });
     } catch (err) {
       next(err);
