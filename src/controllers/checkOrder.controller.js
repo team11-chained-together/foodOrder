@@ -5,6 +5,7 @@ export class CheckOrderController {
     this.checkOrderService = checkOrderService;
   }
 
+  // TODO: 주문 확인은 고객도 가능해야함
   checkOrder = async (req, res, next) => {
     try {
       const { userId, isOwner } = req.user;

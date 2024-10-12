@@ -12,7 +12,7 @@ export class MenuService {
     );
 
     if (isMenuNameExists) {
-      throw new Error('이미 존재하는 메뉴 이름입니다.');
+      throw new Error('저희 가게에 이미 존재하는 메뉴 이름입니다.');
     }
 
     const createdMenu = await this.menuRepository.createMenu(
@@ -44,7 +44,7 @@ export class MenuService {
     );
 
     if (!isMenuNameExists) {
-      throw new Error('존재하지 않는 메뉴입니다.');
+      throw new Error('저희 가게에 존재하지 않는 메뉴입니다.');
     }
 
     const updatedMenu = await this.menuRepository.updateMenu(menuId, menuName, image, price, stock);
@@ -85,7 +85,7 @@ export class MenuService {
     );
 
     if (!isMenuNameExists) {
-      throw new Error('존재 하지않는 메뉴입니다.');
+      throw new Error('저희 가게에 존재하지 않는 메뉴입니다.');
     }
 
     const deleteMenu = await this.menuRepository.deleteMenu(menuId);
