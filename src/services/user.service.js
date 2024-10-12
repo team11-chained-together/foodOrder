@@ -1,15 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { UserRepository } from '../repositories/user.repository.js';
-
-//회원가입 로직
 export class UserService {
-  //레포지토리 인스턴스 생성
   constructor(userRepository) {
     this.userRepository = userRepository;
   }
 
-  //TODO: 비밀번호 확인 부분 추가
   signUp = async (email, password, name, address, isOwner) => {
     const existEmail = await this.userRepository.checkEmail(email);
 

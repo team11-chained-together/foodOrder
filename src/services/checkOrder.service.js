@@ -24,8 +24,6 @@ export class CheckOrderService {
     if (!order) {
       throw new Error('주문이 없습니다.');
     }
-    if (order.statement === 'De') {
-    }
 
     const updatedOrder = await this.checkOrderRepository.updateOrderStatement(orderId, statement);
 
