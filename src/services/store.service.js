@@ -48,15 +48,23 @@ export class StoreService {
     };
   };
 
-  updateStore = async (userId, storeName, foodType) => {
+  updateStore = async (userId, storeId, storeName, foodType) => {
     const store = await this.storeRepository.findStoreByUserId(userId);
+
     if (!store) {
       throw new Error('보유하고 있는 식당이 없습니다, 식당을 만들어주세요.');
     }
 
-    await this.storeRepository.updateStore(userId, storeName, foodType);
+    if (store.storeId !== storeId) {
+      throw new Error('해당하는 식당의 사장님이 아닙니다.');
+    }
 
-    const updatedStore = await this.storeRepository.findStoreByUserId(userId);
+    const updatedStore = await this.storeRepository.updateStore(
+      userId,
+      storeId,
+      storeName,
+      foodType,
+    );
 
     return {
       userId: updatedStore.userId,
@@ -69,20 +77,24 @@ export class StoreService {
     };
   };
 
-  deleteStore = async (userId, storeName) => {
+  deleteStore = async (userId, storeId) => {
     const store = await this.storeRepository.findStoreByUserId(userId);
 
     if (!store) {
       throw new Error('보유하고 있는 식당이 없습니다.');
     }
 
-    await this.storeRepository.deleteStore(userId, storeName);
+    if (store.storeId !== storeId) {
+      throw new Error('해당하는 식당의 사장님이 아닙니다.');
+    }
+
+    const deletedStore = await this.storeRepository.deleteStore(userId, storeId);
 
     return {
-      storeId: store.storeId,
-      storeName: store.storeName,
-      foodType: store.foodType,
-      sales: store.sales,
+      storeId: deletedStore.storeId,
+      storeName: deletedStore.storeName,
+      foodType: deletedStore.foodType,
+      sales: deletedStore.sales,
     };
   };
 

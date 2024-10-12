@@ -48,10 +48,11 @@ export class StoreRepository {
     return createdStore;
   };
 
-  updateStore = async (userId, storeName, foodType) => {
+  updateStore = async (userId, storeId, storeName, foodType) => {
     const updatedStore = await this.prisma.store.update({
       where: {
-        userId: +userId,
+        userId: userId,
+        storeId: storeId,
       },
       data: {
         storeName: storeName,
@@ -62,10 +63,11 @@ export class StoreRepository {
     return updatedStore;
   };
 
-  deleteStore = async (userId) => {
+  deleteStore = async (userId, storeId) => {
     const deletedStore = await this.prisma.store.delete({
       where: {
-        userId: +userId,
+        userId: userId,
+        storeId: storeId,
       },
     });
 
