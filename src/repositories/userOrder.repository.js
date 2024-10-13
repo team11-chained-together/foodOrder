@@ -37,27 +37,27 @@ export class UserOrderRepository {
     return getOrderMenu;
   };
 
-  createOrder = async (storeId, userId, totalPrice) => {
-    const createdOrder = await this.prisma.order.create({
-      data: {
-        storeId: storeId,
-        userId: userId,
-        totalPrice: totalPrice,
-        statement: 'PREPARE',
-      },
+  createOrder = async (storeId, userId, totalPrice, menuId, quantity) => {
+    const createOrder = await this.prisma.$transaction(async (tx) => {
+      const createdOrder = await tx.order.create({
+        data: {
+          storeId: storeId,
+          userId: userId,
+          totalPrice: totalPrice,
+          statement: 'PREPARE',
+        },
+      });
+      for (let i = 0; i < Array(menuId).length; i++) {
+        await tx.orderMenu.create({
+          data: {
+            orderId: createdOrder.orderId,
+            menuId: menuId[i],
+            quantity: quantity[i],
+          },
+        });
+      }
     });
-    return createdOrder;
-  };
-
-  createOrderMenu = async (orderId, menuId, quantity) => {
-    const createdOrderMenu = await this.prisma.orderMenu.create({
-      data: {
-        orderId,
-        menuId,
-        quantity,
-      },
-    });
-    return createdOrderMenu;
+    return createOrder;
   };
 
   updateStock = async (menuId, quantity) => {
@@ -70,9 +70,18 @@ export class UserOrderRepository {
     return updateStock;
   };
 
-  updateCash = async (totalPrice, userId, storeId, orderId) => {
+  updateCash = async (totalPrice, userId, storeId, orderId, menuId, quantity) => {
     const updateCash = await this.prisma.$transaction(
       async (tx) => {
+        for (let i = 0; i < Array(menuId).length; i++) {
+          await tx.menu.update({
+            where: { menuId: menuId[i] },
+            data: {
+              stock: { decrement: quantity[i] },
+            },
+          });
+        }
+
         await tx.order.update({
           where: { orderId: orderId },
           data: {

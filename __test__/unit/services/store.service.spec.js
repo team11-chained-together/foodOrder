@@ -184,7 +184,7 @@ describe('스토어 서비스 유닛 테스트', () => {
     }
   });
 
-  test('스토어 업데이트 성공 테스트', async () => {
+  test('스토어 업데이트 실패 테스트', async () => {
     const sampleStore = null;
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
@@ -200,7 +200,7 @@ describe('스토어 서비스 유닛 테스트', () => {
     }
   });
 
-  test('스토어 삭제 성공 테스트', async () => {
+  test('스토어 삭제 실패 테스트', async () => {
     const sampleStore = null;
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
 
