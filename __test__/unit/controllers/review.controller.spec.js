@@ -4,10 +4,12 @@ import { ReviewController } from '../../../src/controllers/review.controller.js'
 const mockReviewService = {
   createReview: jest.fn(),
   updateReview: jest.fn(),
+  deleteReview: jest.fn(), 
 };
 
 const mockRequest = {
-  body: jest.fn(),
+  body: {},
+  user:{},
 };
 
 const mockResponse = {
@@ -33,34 +35,32 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
       rate: 3,
     };
     mockRequest.body = createReviewBodyParams;
+    mockRequest.user = { userId: 1 };
 
     const createReviewValue = {
       reviewId: 1,
       userId: 1,
       storeId: 1,
       ...createReviewBodyParams,
-      createdAt: updateReview.createdAt,
-      updatedAt: updateReview.updatedAt,
+      createdAt: new Date().toString(),
+      updatedAt: new Date().toString(),
     };
     mockReviewService.createReview.mockReturnValue(createReviewValue);
 
     await reviewController.createReview(mockRequest, mockResponse, mockNext);
     expect(mockReviewService.createReview).toHaveBeenCalledTimes(1);
     expect(mockReviewService.createReview).toHaveBeenCalledWith(
-      createReviewBodyParams.reviewId,
-      createReviewBodyParams.userId,
-      createReviewBodyParams.storeId,
-      createReviewBodyParams.comment,
-      createReviewBodyParams.rate,
-      createReviewBodyParams.createdAt,
-      createReviewBodyParams.updatedAt,
+        mockRequest.user.userId,
+        createReviewBodyParams.orderId,
+        createReviewBodyParams.comment,
+        createReviewBodyParams.rate,
     );
 
-    expect(mockRequest.status).toHaveBeenCalledTimes(1);
-    expect(mockRequest.status).toHaveBeenCallWith(201);
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(201);
 
-    expect(mockResponse.json).toHaveBeenCallWith(1);
-    expect(mockResponse.json).toHaveBeenCallWith({
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
       message: '리뷰가 정상적으로 작성되었습니다.',
       data: createReviewValue,
     });
@@ -68,12 +68,17 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
 
   test('리뷰 업데이트 성공 테스트', async () => {
     const updateReviewRequestBodyParams = {
-      reviewId: 1,
-      comment: 'JWT123',
-      rate: 2,
+        reviewId: 1,
+        userId: 1,
+        storeId: 1,
+        comment: 'JWT12341234',
+        rate: 4,
+        createdAt: new Date().toString(),
+        updatedAt: new Date().toString(),
     };
 
     mockRequest.body = updateReviewRequestBodyParams;
+    mockRequest.user = { userId: 1 };
 
     const updateReviewReturnValue = {
       reviewId: 1,
@@ -81,30 +86,28 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
       storeId: 1,
       comment: 'JWT12341234',
       rate: 4,
-      createdAt: new Date().toString,
-      updatedAt: new Date().toString,
+      createdAt: new Date().toString(),
+      updatedAt: new Date().toString(),
     };
 
     mockReviewService.updateReview.mockReturnValue(updateReviewReturnValue);
 
-    await reviewController.putReview(mockRequest, mockResponse, mockNext);
+    await reviewController.updateReview(mockRequest, mockResponse, mockNext);
     expect(mockReviewService.updateReview).toHaveBeenCalledTimes(1);
-    expect(mockReviewService.updateReview).toHaveBeenCallWith(
-      updateReviewRequestBodyParams.reviewId,
-      updateReviewRequestBodyParams.userId,
-      updateReviewRequestBodyParams.storeId,
-      updateReviewRequestBodyParams.comment,
-      updateReviewRequestBodyParams.rate,
-      updateReviewRequestBodyParams.createdAt,
-      updateReviewRequestBodyParams.updatedAt,
+    expect(mockReviewService.updateReview).toHaveBeenCalledWith(
+        mockRequest.user.userId,
+        updateReviewRequestBodyParams.reviewId,
+        updateReviewRequestBodyParams.comment,
+        updateReviewRequestBodyParams.rate,
     );
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCallWith(201);
+    expect(mockResponse.status).toHaveBeenCalledWith(201);
 
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
-    expect(mockResponse.json).toHaveBeenCallWith({
-      data: updateReviewReturnValue,
+    expect(mockResponse.json).toHaveBeenCalledWith({
+    message: '리뷰가 수정되었습니다.',
+    data: updateReviewReturnValue,
     });
   });
 
@@ -114,6 +117,7 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
     };
 
     mockRequest.body = deleteReviewRequestBodyParams;
+    mockRequest.user = { userId: 1 };
 
     const deleteReviewReturnValue = {
       userId: 1,
@@ -122,21 +126,20 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
       comment: 'JWT',
     };
 
-    mockReviewService.deleteReview.mockReturnValue(deleteReviewReturnValue);
+    mockReviewService.deleteReview.mockResolvedValue(deleteReviewReturnValue);
     await reviewController.deleteReview(mockRequest, mockResponse, mockNext);
     expect(mockReviewService.deleteReview).toHaveBeenCalledTimes(1);
-    expect(mockReviewService.deleteReview).toHaveBeenCallWith(
-      deleteReviewRequestBodyParams.userId,
-      deleteReviewRequestBodyParams.reviewId,
-      deleteReviewRequestBodyParams.storeId,
-      deleteReviewRequestBodyParams.comment,
+    expect(mockReviewService.deleteReview).toHaveBeenCalledWith(
+        mockRequest.user.userId,
+     deleteReviewRequestBodyParams.reviewId,
     );
-  });
+
   expect(mockResponse.status).toHaveBeenCalledTimes(1);
-  expect(mockResponse.status).toHaveBeenCallWith(200);
+  expect(mockResponse.status).toHaveBeenCalledWith(202);
 
   expect(mockResponse.json).toHaveBeenCalledTimes(1);
-  expect(mockResponse.json).toHaveBeenCallWith({
-    message: '삭제되었습니다.',
+  expect(mockResponse.json).toHaveBeenCalledWith({
+    message : '리뷰가 삭제 되었습니다.',
   });
+});
 });
