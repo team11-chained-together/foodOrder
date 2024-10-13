@@ -20,5 +20,3 @@ export class UserOrderController {
     }
   };
 }
-
-//사용자 데이터 검사

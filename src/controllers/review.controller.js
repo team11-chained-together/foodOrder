@@ -8,17 +8,17 @@ export class ReviewController {
     try {
       const userId = req.user.userId;
 
-      const { storeId, comment, rate } = req.body;
+      const { orderId, comment, rate } = req.body;
 
       if (!comment || !rate) {
         return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
       }
 
-      if (rate >= 1 || rate <= 5) {
+      if (rate < 1 || rate > 5) {
         return res.status(400).json({ message: '가게 리뷰 점수는 1 ~ 5점을 입력해주세요.' });
       }
 
-      const createdReview = await this.reviewService.createReview(userId, storeId, comment, rate);
+      const createdReview = await this.reviewService.createReview(userId, orderId, comment, rate);
 
       return res.status(201).json({
         message: '리뷰가 정상적으로 작성되었습니다.',

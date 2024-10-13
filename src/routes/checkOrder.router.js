@@ -12,6 +12,7 @@ const checkOrderService = new CheckOrderService(checkOrderRepository);
 const checkOrderController = new CheckOrderController(checkOrderService);
 
 router.get('/owner/checkOrder', authMiddleware, checkOrderController.checkOrder);
+router.get('/user/checkOrder', authMiddleware, checkOrderController.checkMyOrder);
 router.put(
   '/owner/updateOrderStatement',
   authMiddleware,

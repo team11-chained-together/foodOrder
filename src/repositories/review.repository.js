@@ -4,19 +4,17 @@ export class ReviewRepository {
     this.Prisma = Prisma;
   }
 
-  //TODO: 해당하는 statement 값만 가져오기
-  findOrderDataByUserId = async (userId, storeId) => {
+  findOrderDataByOrderId = async (orderId) => {
     const orderData = await this.prisma.order.findFirst({
-      where: { userId: userId, storeId: storeId },
-      // select: { statement: 'DELIVERY_COMPLETE' },
+      where: { orderId: orderId },
     });
 
     return orderData;
   };
 
-  findReviewDataByUserId = async (userId) => {
+  findReviewDataByReviewId = async (reviewId) => {
     const reviewData = await this.prisma.review.findFirst({
-      where: { userId: userId },
+      where: { reviewId: reviewId },
     });
 
     return reviewData;
@@ -37,30 +35,15 @@ export class ReviewRepository {
   };
 
   createReview = async (userId, storeId, comment, rate, orderId) => {
-    const createdReview = await this.prisma.$transaction(
-      async (tx) => {
-        await tx.review.create({
-          data: {
-            userId: userId,
-            storeId: storeId,
-            comment: comment,
-            rate: rate,
-          },
-        });
-
-        await tx.order.update({
-          where: {
-            orderId: orderId,
-          },
-          data: {
-            reviewType: false,
-          },
-        });
+    const createdReview = await this.prisma.review.create({
+      data: {
+        userId: userId,
+        storeId: storeId,
+        orderId: orderId,
+        comment: comment,
+        rate: rate,
       },
-      {
-        isolationLevel: this.Prisma.TransactionIsolationLevel.ReadCommitted,
-      },
-    );
+    });
     return createdReview;
   };
 
@@ -77,11 +60,10 @@ export class ReviewRepository {
     return updatedReview;
   };
 
-  deleteReview = async (userId, reviewId) => {
+  deleteReview = async (reviewId) => {
     const deleteReview = await this.prisma.review.delete({
       where: {
-        userId: +userId,
-        reviewId: +reviewId,
+        reviewId: reviewId,
       },
     });
     return deleteReview;

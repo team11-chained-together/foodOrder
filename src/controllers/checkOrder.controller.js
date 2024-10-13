@@ -5,7 +5,6 @@ export class CheckOrderController {
     this.checkOrderService = checkOrderService;
   }
 
-  // TODO: 주문 확인은 고객도 가능해야함
   checkOrder = async (req, res, next) => {
     try {
       const { userId, isOwner } = req.user;
@@ -15,6 +14,18 @@ export class CheckOrderController {
       const checkOrder = await this.checkOrderService.checkOrder(userId);
 
       return res.status(200).json({ data: checkOrder });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  checkMyOrder = async (req, res, next) => {
+    try {
+      const userId = req.user.userId;
+
+      const checkMyOrder = await this.checkOrderService.checkMyOrder(userId);
+
+      return res.status(200).json({ data: checkMyOrder });
     } catch (err) {
       next(err);
     }
