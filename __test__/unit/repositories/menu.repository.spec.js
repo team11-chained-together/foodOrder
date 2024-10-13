@@ -96,7 +96,7 @@ describe('Menu Repository Unit Test', () => {
       menuName: 'Find MenuName Test',
     };
 
-    const findMenuNameData = await menuRepository.findMenuName(
+    const findMenuNameData = await menuRepository.findMenuNameByStoreId(
       findStoreIdParams.storeId,
       findStoreIdParams.menuName,
     );
@@ -104,18 +104,30 @@ describe('Menu Repository Unit Test', () => {
     expect(findMenuNameData).toEqual(mockReturn);
     expect(mockPrisma.menu.findUnique).toHaveBeenCalledTimes(1);
     expect(mockPrisma.menu.findUnique).toHaveBeenCalledWith({
-      where: { storeId: findStoreIdParams.storeId, menuName: findStoreIdParams.menuName },
+      where: { 
+        storeId_menuName: { storeId: findStoreIdParams.storeId, menuName: findStoreIdParams.menuName },
+      },
     });
   });
 
   test('updateMenu Method By Success', async () => {
     // 1.updateMenu 메서드의 반환값을 설정한다.
-    const mockReturn = 'update Menu';
-    mockPrisma.menu.update.mockReturnValue(mockReturn); // 근데 여기는 문자열을 반환값으로 해주네 서비스에서는 sample 객체를 만들어주는데 무슨 차이지
+
+
+    const mockReturn = {
+    menuId: 1,
+    menuName: '더 맛있는 육계장 사발면',
+    image: '변경할 이미지 URL',
+    price: 1200,
+    stock: 100,
+  };
+
+// Prisma의 update 메서드가 mockReturn 객체를 반환하도록 설정
+    mockPrisma.menu.update.mockReturnValue(mockReturn); 
 
     // 2. updateMenu 메서드를 실행하기 위한 storeId, menuName, newMenuName, image, price, stock 데이터 전달
     const updateStoreParams = {
-      storeId: 1,
+      menuId: 1,
       menuName: '육개장 사발면',
       newMenuName: '더 맛있는 육계장 사발면',
       image: '변경할 이미지 URL',
@@ -124,8 +136,7 @@ describe('Menu Repository Unit Test', () => {
     };
 
     const updateMenuData = await menuRepository.updateMenu(
-      updateStoreParams.storeId,
-      updateStoreParams.menuName,
+      updateStoreParams.menuId,
       updateStoreParams.newMenuName,
       updateStoreParams.image,
       updateStoreParams.price,
@@ -135,7 +146,7 @@ describe('Menu Repository Unit Test', () => {
     expect(updateMenuData).toEqual(mockReturn);
     expect(mockPrisma.menu.update).toHaveBeenCalledTimes(1);
     expect(mockPrisma.menu.update).toHaveBeenCalledWith({
-      where: { storeId: updateStoreParams.storeId, menuName: updateStoreParams.menuName },
+      where: { menuId: updateStoreParams.menuId },
       data: {
         menuName: updateStoreParams.newMenuName,
         image: updateStoreParams.image,
