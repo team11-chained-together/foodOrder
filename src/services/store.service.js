@@ -42,7 +42,6 @@ export class StoreService {
       location: createdStore.location,
       foodType: createdStore.foodType,
       sales: createdStore.sales,
-      location: createdStore.location,
       createdAt: createdStore.createdAt,
       updatedAt: createdStore.updatedAt,
     };
@@ -98,8 +97,12 @@ export class StoreService {
     };
   };
 
-  getStore = async () => {
-    const store = await this.storeRepository.findStore();
+  getStore = async (storeName) => {
+    const store = await this.storeRepository.findStoreByStoreName(storeName);
+
+    if(!store){
+      throw new Error('해당하는 음식점이 없습니다.');
+    }
 
     return {
       store: store,

@@ -97,6 +97,7 @@ describe('스토어 서비스 유닛 테스트', () => {
 
     const updatedStore = await storeService.updateStore(
       1,
+      1,
       'New StoreName Test',
       'New FoodType Test',
     );
@@ -104,6 +105,7 @@ describe('스토어 서비스 유닛 테스트', () => {
     expect(mockStoreRepository.updateStore).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.updateStore).toHaveBeenCalledWith(
       sampleStore.userId,
+      sampleStore.storeId,
       sampleStore.storeName,
       sampleStore.foodType,
     );
@@ -133,12 +135,12 @@ describe('스토어 서비스 유닛 테스트', () => {
     mockStoreRepository.findStoreByUserId.mockReturnValue(sampleStore);
     mockStoreRepository.deleteStore.mockReturnValue(sampleStore);
 
-    const deletedStore = await storeService.deleteStore(1, 'Delete StoreName Test');
+    const deletedStore = await storeService.deleteStore(1,1);
 
     expect(mockStoreRepository.deleteStore).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.deleteStore).toHaveBeenCalledWith(
       sampleStore.userId,
-      sampleStore.storeName,
+      sampleStore.storeId,
     );
 
     expect(deletedStore).toEqual({
@@ -151,23 +153,22 @@ describe('스토어 서비스 유닛 테스트', () => {
 
   test('스토어 목록 조회 성공 테스트', async () => {
     const sampleStore = {
-      storeId: 1,
       userId: 1,
+      storeId: 1,
       storeName: 'Get storeName Test',
       foodType: 'Get FoodType Test',
       createdAt: '2024-09-28T09:35:43.410Z',
     };
 
     mockStoreRepository.findStoreByStoreName.mockReturnValue(sampleStore);
-    mockStoreRepository.findMenuByStoreId.mockReturnValue();
+
     const getStore = await storeService.getStore(sampleStore.storeName);
 
-    expect(getStore).toEqual(sampleStore);
+    expect(getStore).toEqual({
+      store:sampleStore,
+    });
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledTimes(1);
     expect(mockStoreRepository.findStoreByStoreName).toHaveBeenCalledWith(sampleStore.storeName);
-
-    expect(mockStoreRepository.findMenuByStoreId).toHaveBeenCalledTimes(1);
-    expect(mockStoreRepository.findMenuByStoreId).toHaveBeenCalledWith(sampleStore.storeId);
   });
 
   test('스토어 생성 실패 테스트', async () => {
