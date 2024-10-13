@@ -1,3 +1,5 @@
+import { StoreValidation } from '../utils/validators/storeValidation.js';
+
 export class StoreController {
   constructor(storeService) {
     this.storeService = storeService;
@@ -21,23 +23,18 @@ export class StoreController {
 
   createStore = async (req, res, next) => {
     try {
-      const userId = req.user.userId;
-      const isOwner = req.user.isOwner;
-      const { storeName, location, foodType } = req.body;
+      // const userId = req.user.userId;
+      // const isOwner = req.user.isOwner;
+      // const { storeName, location, foodType } = req.body;
+      const storeValidation = new StoreValidation(req.user.userId, req.user.isOwner, req.body);
 
-      if (isOwner !== true) {
-        throw new Error('해당하는 유저는 사장님이 아닙니다.');
-      }
-
-      if (!storeName || !foodType) {
-        throw new Error('InvalidParamsError');
-      }
+      storeValidation.validate();
 
       const createdStore = await this.storeService.createStore(
-        userId,
-        storeName,
-        location,
-        foodType,
+        storeValidation.userId,
+        storeValidation.storeName,
+        storeValidation.location,
+        storeValidation.foodType,
       );
 
       return res.status(201).json({ data: createdStore });
@@ -50,7 +47,7 @@ export class StoreController {
     try {
       const userId = req.user.userId;
       const isOwner = req.user.isOwner;
-      const { storeId, storeName, foodType } = req.body;
+      const { storeId, storeName, foodType } = req.body; // location도 수정 가능하게 바꿔야할듯?
 
       if (isOwner !== true) {
         throw new Error('해당하는 유저는 사장님이 아닙니다.');
