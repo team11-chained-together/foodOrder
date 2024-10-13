@@ -63,7 +63,6 @@ export class StoreController {
 
       const updatedStore = await this.storeService.updateStore(
         userId,
-        storeId,
         storeName,
         foodType,
       );
@@ -85,7 +84,10 @@ export class StoreController {
 
       const deletedStore = await this.storeService.deleteStore(userId, storeId);
 
-      return res.status(200).json({ message: '가게 삭제를 완료 하였습니다.', data: deletedStore });
+      return res.status(200).json({ 
+        message: '가게 삭제를 완료 하였습니다.',
+         data: deletedStore,
+         });
     } catch (err) {
       next(err);
     }
@@ -93,7 +95,8 @@ export class StoreController {
 
   getStore = async (req, res, next) => {
     try {
-      const getStore = await this.storeService.getStore();
+      const {storeName} = req.body;
+      const getStore = await this.storeService.getStore(storeName);
 
       return res.status(200).json({ data: getStore });
     } catch (err) {

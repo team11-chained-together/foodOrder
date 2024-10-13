@@ -99,10 +99,14 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
   /** Update Store Controller Test */
   test('스토어 업데이트 테스트 성공', async () => {
     const updateStoreRequestBodyParams = {
-      userId: 1,
+      storeId: 1,
       storeName: 'New_Store_name_Success',
       foodType: 'New_Food_Type_Success',
-      type: true,
+    };
+
+    mockRequest.user = {
+      userId:1,
+      isOwner: true,
     };
 
     mockRequest.body = updateStoreRequestBodyParams;
@@ -110,15 +114,17 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     // Service 계층에서 구현된 updateStore 메서드를 실행했을때, 반환되는 데이터 형식
     const updatedStoreReturnValue = {
       ...updateStoreRequestBodyParams,
-      updatedAt: new Date().toString,
+      userId:1,
+      updatedAt: new Date().toString(),
     };
 
     mockStoreService.updateStore.mockReturnValue(updatedStoreReturnValue);
 
     await storeController.updateStore(mockRequest, mockResponse, mockNext);
+
     expect(mockStoreService.updateStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.updateStore).toHaveBeenCalledWith(
-      updateStoreRequestBodyParams.userId,
+      mockRequest.user.userId,
       updateStoreRequestBodyParams.storeName,
       updateStoreRequestBodyParams.foodType,
     );
@@ -138,9 +144,13 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
   test('가게 삭제 테스트 성공', async () => {
     const deleteStoreRequestBodyParams = {
       userId: 1,
-      storeName: 'Delete Store Name',
-      type: true,
+      storeId: 1,
     };
+
+    mockRequest.user ={
+      userId:1,
+      isOwner:true,
+    }
 
     mockRequest.body = deleteStoreRequestBodyParams;
 
@@ -154,7 +164,7 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     expect(mockStoreService.deleteStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.deleteStore).toHaveBeenCalledWith(
       deleteStoreRequestBodyParams.userId,
-      deleteStoreRequestBodyParams.storeName,
+      deleteStoreRequestBodyParams.storeId,
     );
 
     // Response status
@@ -171,12 +181,13 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
 
   /** Get Store Controller Test */
   test('스토어 목록 조회 테스트 성공', async () => {
+    
     const getStoreRequestBodyParams = {
       storeName: 'Get Store Name',
     };
-
+  
     mockRequest.body = getStoreRequestBodyParams;
-
+  
     const getStoreReturnValue = {
       ...getStoreRequestBodyParams,
     };
