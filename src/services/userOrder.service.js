@@ -7,8 +7,6 @@ export class UserOrderService {
     let totalPrice = 0;
     let index = 0;
 
-    console.log(menuId.length);
-
     for (const element of menuId) {
       const menu = await this.userOrderRepository.getMenuData(element);
       totalPrice += menu.price * quantity[index];
@@ -27,19 +25,20 @@ export class UserOrderService {
       if (checkStock.stock < quantity[i]) {
         throw new Error('주문하신 메뉴의 재고가 부족 합니다.');
       }
-
-      await this.userOrderRepository.updateStock(menuId[i], quantity[i]);
     }
 
-    await this.userOrderRepository.createOrder(storeId, userId, totalPrice);
+    await this.userOrderRepository.createOrder(storeId, userId, totalPrice, menuId, quantity);
 
     const orderData = await this.userOrderRepository.getOrderData(userId);
 
-    for (let i = 0; i < menuId.length; i++) {
-      await this.userOrderRepository.createOrderMenu(orderData.orderId, menuId[i], quantity[i]);
-    }
-
-    await this.userOrderRepository.updateCash(totalPrice, userId, storeId, orderData.orderId);
+    await this.userOrderRepository.updateCash(
+      totalPrice,
+      userId,
+      storeId,
+      orderData.orderId,
+      menuId,
+      quantity,
+    );
 
     const getOrderMenu = await this.userOrderRepository.getOrderMenu(orderData.orderId);
 

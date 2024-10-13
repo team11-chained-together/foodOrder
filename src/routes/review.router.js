@@ -15,7 +15,7 @@ const reviewController = new ReviewController(reviewService);
 router.post('/reviews', authMiddleware, reviewController.createReview);
 router.put('/reviews', authMiddleware, reviewController.updateReview);
 router.delete('/reviews', authMiddleware, reviewController.deleteReview);
-router.get('/reviews', reviewController.getReview);
+router.get('/reviews/store', reviewController.getReview);
 router.get('/reviews/my', authMiddleware, reviewController.getMyReview);
 
 export default router;
