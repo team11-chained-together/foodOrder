@@ -96,6 +96,7 @@ describe('Store Repository Unit Test', () => {
     const createStoreData = await storeRepository.createStore(
       createStoreParams.userId,
       createStoreParams.storeName,
+      createStoreParams.location,
       createStoreParams.foodType,
       createStoreParams.sales,
     );
@@ -111,6 +112,7 @@ describe('Store Repository Unit Test', () => {
       data: {
         userId: createStoreParams.userId,
         storeName: createStoreParams.storeName,
+        location: createStoreParams.location,
         foodType: createStoreParams.foodType,
         sales: createStoreParams.sales,
       },
@@ -125,12 +127,14 @@ describe('Store Repository Unit Test', () => {
     // 2. updateStore 메서드를 실행하기 위한 userId, storeName, foodType의 데이터를 전달한다.
     const updateStoreParams = {
       userId: 1,
+      storeId: 1, 
       storeName: 'createStoreName',
       foodType: 'createFoodType',
     };
 
     const updateStoreData = await storeRepository.updateStore(
       updateStoreParams.userId,
+      updateStoreParams.storeId,
       updateStoreParams.storeName,
       updateStoreParams.foodType,
     );
@@ -144,6 +148,7 @@ describe('Store Repository Unit Test', () => {
     expect(mockPrisma.store.update).toHaveBeenCalledWith({
       where: {
         userId: updateStoreParams.userId,
+        storeId: updateStoreParams.storeId,
       },
       data: {
         storeName: updateStoreParams.storeName,
@@ -204,7 +209,16 @@ describe('Store Repository Unit Test', () => {
 
   test('findMenuByStoreId Method', async () => {
     // 1. findMenuByStoreId 메서드의 반환값을 설정
-    const mockReturn = 'get StoreId';
+    const mockReturn = [
+      {
+        menuId: 1,
+        menuName: '육개장',
+        image: '이미지 URL',
+        price: 5000,
+        stock: 20,
+      },
+    ];
+
     mockPrisma.menu.findMany.mockReturnValue(mockReturn);
 
     // 2. findMenuByStoreId 메서드를 실행하기 위한 storeId 전달
@@ -220,7 +234,14 @@ describe('Store Repository Unit Test', () => {
 
     expect(mockPrisma.menu.findMany).toHaveBeenCalledWith({
       where: {
-        storeId: getMenuParams.storeId,
+        storeId: getMenuParams.storeId, 
+      },
+      select:{
+        menuId: true,
+        menuName: true,
+        image: true,
+        price: true,
+        stock: true,
       },
     });
   });
