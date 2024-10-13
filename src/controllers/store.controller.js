@@ -23,7 +23,6 @@ export class StoreController {
     try {
       const userId = req.user.userId;
       const isOwner = req.user.isOwner;
-
       const { storeName, location, foodType } = req.body;
 
       if (isOwner !== true) {
