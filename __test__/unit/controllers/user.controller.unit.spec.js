@@ -32,11 +32,12 @@ describe('UserController Unit Test', () => {
   // 회원가입 성공
   test('signUp Method by Success', async () => {
     const signUpRequestBodyParams = {
-      email: 'asdasdasdasdfsadffdfdff',
+      email: 'SH@example.com',
       password: 'aaaa4321',
+      confirmPassword: 'aaaa4321',
       name: '홍길동',
       address: 'seoul',
-      type: true,
+      isOwner: true,
     };
 
     mockRequest.body = signUpRequestBodyParams;
@@ -52,9 +53,10 @@ describe('UserController Unit Test', () => {
     expect(mockUserService.signUp).toHaveBeenCalledWith(
       signUpRequestBodyParams.email,
       signUpRequestBodyParams.password,
+      signUpRequestBodyParams.confirmPassword,
       signUpRequestBodyParams.name,
       signUpRequestBodyParams.address,
-      signUpRequestBodyParams.type,
+      signUpRequestBodyParams.isOwner,
     );
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
@@ -81,23 +83,28 @@ describe('UserController Unit Test', () => {
   // 로그인 성공
   test('logIn Method by Successs', async () => {
     const logInRequestBodyParams = {
-      email: 'asdfasdfasdf',
+      email: 'SH@example.com',
       password: 'aaaa43321',
-      res: { json: mockResponse.json, status: mockResponse.status },
     };
     mockRequest.body = logInRequestBodyParams;
 
-    const logInReturnValue = {
-      message: '로그인 성공',
-    };
+    const logInReturnValue = 'mockedToken';
     mockUserService.logIn.mockReturnValue(logInReturnValue);
 
+    mockResponse.cookie = jest.fn();
+
     await userController.userLogin(mockRequest, mockResponse, mockNext);
+    
     expect(mockUserService.logIn).toHaveBeenCalledTimes(1);
     expect(mockUserService.logIn).toHaveBeenCalledWith(
       logInRequestBodyParams.email,
       logInRequestBodyParams.password,
-      logInRequestBodyParams.res,
+    );
+
+    expect(mockResponse.cookie).toHaveBeenCalledTimes(1); // 쿠키 설정 확인
+    expect(mockResponse.cookie).toHaveBeenCalledWith(
+      'authorization',
+      `Bearer ${logInReturnValue}`
     );
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
@@ -105,7 +112,7 @@ describe('UserController Unit Test', () => {
 
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({ message: '로그인 성공!' });
-  });
+});
 
   //포인트 성공
   test('getUserPoint', async () => {
