@@ -46,7 +46,7 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
 
     await reviewController.createReview(mockRequest, mockResponse, mockNext);
     expect(mockReviewService.createReview).toHaveBeenCalledTimes(1);
-    expect(mockReviewService.createReview).toHaveBeenCallWith(
+    expect(mockReviewService.createReview).toHaveBeenCalledWith(
       createReviewBodyParams.reviewId,
       createReviewBodyParams.userId,
       createReviewBodyParams.storeId,
