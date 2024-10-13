@@ -133,6 +133,3 @@ dist
 #
 .idea
 
-# config nodemailer
-config
-
