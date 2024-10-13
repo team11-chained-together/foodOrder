@@ -8,6 +8,7 @@ import menuRouter from './routes/menu.router.js';
 import checkOrderRouter from './routes/checkOrder.router.js';
 import userOrderRouter from './routes/userOrder.router.js';
 import reviewRouter from './routes/review.router.js';
+import storeRankingRouter from './routes/storeRanking.router.js';
 
 const app = express();
 const PORT = 7777;
@@ -23,6 +24,7 @@ app.use('/api', [
   userOrderRouter,
   reviewRouter,
   checkOrderRouter,
+  storeRankingRouter,
 ]); //라우터 넣는 곳
 
 app.use(ErrorHandlingMiddleware);

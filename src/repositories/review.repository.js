@@ -35,30 +35,15 @@ export class ReviewRepository {
   };
 
   createReview = async (userId, storeId, comment, rate, orderId) => {
-    const createdReview = await this.prisma.$transaction(
-      async (tx) => {
-        await tx.review.create({
-          data: {
-            userId: userId,
-            storeId: storeId,
-            comment: comment,
-            rate: rate,
-          },
-        });
-
-        await tx.order.update({
-          where: {
-            orderId: orderId,
-          },
-          data: {
-            reviewType: false,
-          },
-        });
+    const createdReview = await this.prisma.review.create({
+      data: {
+        userId: userId,
+        storeId: storeId,
+        orderId: orderId,
+        comment: comment,
+        rate: rate,
       },
-      {
-        isolationLevel: this.Prisma.TransactionIsolationLevel.ReadCommitted,
-      },
-    );
+    });
     return createdReview;
   };
 
