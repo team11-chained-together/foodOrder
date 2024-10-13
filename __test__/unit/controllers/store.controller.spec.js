@@ -214,7 +214,7 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     mockRequest.body = {
       userId: 1,
       storeName: 'StoreName_InvalidParamsError',
-      type: true,
+      isOwner: true,
     };
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
@@ -230,7 +230,7 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     mockRequest.body = {
       storeName: 'storeName',
       foodType: 'foodType',
-      type: false,
+      isOwner: false,
     };
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
