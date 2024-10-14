@@ -8,12 +8,9 @@ export class NodeMailerService {
       return randomNum;
     };
     const number = generateRandomNumber(111111, 999999);
-<<<<<<< HEAD
     req.session.number = number;
-    const mailoption = await this.transporter.sendMail({
-=======
+
     await this.transporter.sendMail({
->>>>>>> dev
       from: 'foodOrder',
       to: email,
       subject: '인증번호를 보내드립니다.',
