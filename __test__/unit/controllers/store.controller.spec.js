@@ -2,6 +2,13 @@ import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
 import { query } from 'express';
 import cookieParser from 'cookie-parser';
+import {
+  StoreValidation,
+  UpdateStoreValidation,
+  DeleteStoreValidation,
+  GetStoreValidation,
+  SearchStoreValidation,
+} from '../utils/validators/storeValidator.js';
 
 const mockStoreService = {
   searchStores: jest.fn(),
@@ -25,6 +32,7 @@ const mockResponse = {
 const mockNext = jest.fn();
 
 const storeController = new StoreController(mockStoreService);
+new SearchStoreValidation(mockRequest.query) //목킹
 
 describe('스토어 컨트롤러 유닛 테스트', () => {
   beforeEach(() => {
@@ -44,7 +52,8 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
 
     mockRequest.query = { search: searchQuery };
 
-    mockStoreService.searchStores.mockReturnValue([sampleStore]);
+
+    mockStoreService.searchStores.mockResolvedValue([sampleStore]);//sampleStore가 비동기함수이면 mockReturnValue 대신 mockResolvedValue 사용해야함
 
     await storeController.searchStores(mockRequest, mockResponse, mockNext);
 
