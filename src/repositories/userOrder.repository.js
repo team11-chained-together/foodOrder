@@ -3,6 +3,13 @@ export class UserOrderRepository {
     this.prisma = prisma;
     this.Prisma = Prisma;
   }
+  getStoreData = async (storeId) => {
+    const store = await this.prisma.store.findFirst({
+      where: { storeId: storeId },
+    });
+
+    return store;
+  };
 
   getMenuData = async (menuId) => {
     const menuPrice = await this.prisma.menu.findFirst({

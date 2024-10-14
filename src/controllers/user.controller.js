@@ -52,7 +52,6 @@ export class UserController {
     this.userService = userService;
   }
 
-  // TODO: email 인증부분 추가
   userSignup = async (req, res, next) => {
     try {
       const emailCode = req.session.emailCode;
@@ -76,6 +75,7 @@ export class UserController {
       //   return res.status(400).json({
       //     message: err.message,
       //   });
+      //   return err.message
       // }
       next(err);
     }
