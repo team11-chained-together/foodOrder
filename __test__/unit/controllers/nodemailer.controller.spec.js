@@ -1,9 +1,9 @@
 import {jest,test} from '@jest/globals';
 import {NodeMailerController} from '../../../src/controllers/nodemailer.controller.js';
-import {TestNodValidator} from '../../../src/utils/validators/testnodeMailerValidator.js'
+import {NodeMailerValidator} from '../../../src/utils/validators/nodeMailerValidator.js'
 
 const mockNodemailerService = {
-    NodeMailerValidator : jest.fn()
+    nodemailer : jest.fn()
 };
 
 const mockNext = jest.fn();
@@ -14,6 +14,7 @@ describe('노드메일러 컨트롤러 유닛 테스트', ()=>{
 
     const mockRequest = {
         body:{},
+        session:{},
     }
 
     const mockResponse = {
@@ -27,7 +28,7 @@ describe('노드메일러 컨트롤러 유닛 테스트', ()=>{
     });
 
     test('노드메일러 메일 전송 컨트롤러 유닛 테스트' ,async () =>{
-        new TestNodValidator(mockRequest.body)
+        new NodeMailerValidator(mockRequest.body)
         const nodemailerBodyParams = {
             email : "test@test.com"
         };
@@ -36,11 +37,11 @@ describe('노드메일러 컨트롤러 유닛 테스트', ()=>{
         const nodemailerReturnValue = {
             number : 1234,
         }
-        mockNodemailerService.NodeMailerValidator.mockReturnValue(nodemailerReturnValue)
+        mockNodemailerService.nodemailer.mockReturnValue(nodemailerReturnValue)
 
         await nodeMailerController.nodemailer(mockRequest,mockResponse,mockRequest);
-        expect(mockNodemailerService.NodeMailerValidator).toHaveBeenCalledTimes(1);
-        expect(mockNodemailerService.NodeMailerValidator).toHaveBeenCalledWith(
+        expect(mockNodemailerService.nodemailer).toHaveBeenCalledTimes(1);
+        expect(mockNodemailerService.nodemailer).toHaveBeenCalledWith(
             nodemailerBodyParams.email
         )
 
