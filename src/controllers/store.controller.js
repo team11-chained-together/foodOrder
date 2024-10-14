@@ -2,7 +2,6 @@ import {
   StoreValidation,
   UpdateStoreValidation,
   DeleteStoreValidation,
-  GetStoreValidation,
   SearchStoreValidation,
 } from '../utils/validators/storeValidator.js';
 
@@ -13,7 +12,7 @@ export class StoreController {
 
   searchStores = async (req, res, next) => {
     try {
-      const storeValidation = new SearchStoreValidation(req.query);//<-----------------------------
+      const storeValidation = new SearchStoreValidation(req.query);
       storeValidation.validate();
       const stores = await this.storeService.searchStores(storeValidation.search);
       console.log(stores);
@@ -27,7 +26,11 @@ export class StoreController {
 
   createStore = async (req, res, next) => {
     try {
-      const storeValidation = new StoreValidation(req.user.userId, req.user.isOwner, req.body);
+      const storeValidation = new StoreValidation(
+        req.user.userId, 
+        req.user.isOwner, 
+        req.body
+      );
 
       storeValidation.validate();
 

@@ -11,7 +11,12 @@ export class ReviewController {
       const createReview = new CreateReview(req.body);
       createReview.validate();
 
-      const createdReview = await this.reviewService.createReview(userId, orderId, comment, rate);
+      const createdReview = await this.reviewService.createReview(
+        userId,
+         createReview.orderId, 
+         createReview.comment, 
+         createReview.rate,
+        );
 
       return res.status(201).json({
         message: '리뷰가 정상적으로 작성되었습니다.',
@@ -28,7 +33,8 @@ export class ReviewController {
       const updateReview = new UpdateReview(req.body);
       updateReview.validate();
 
-      const updatedReview = await this.reviewService.updateReview(userId, reviewId, comment, rate);
+      const updatedReview = await this.reviewService.updateReview(
+        userId, updateReview.reviewId, updateReview.comment, updateReview.rate);
       return res.status(201).json({ message: '리뷰가 수정되었습니다.', data: updatedReview });
     } catch (err) {
       next(err);
@@ -41,7 +47,10 @@ export class ReviewController {
       const deleteReview = new DeleteReview(req.body);
       deleteReview.validate();
 
-      await this.reviewService.deleteReview(userId, reviewId);
+      await this.reviewService.deleteReview(
+        userId, 
+        deleteReview.reviewId,
+      );
       return res.status(202).json({ message: '리뷰가 삭제 되었습니다.' });
     } catch (err) {
       next(err);
