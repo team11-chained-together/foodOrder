@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import LogMiddleware from './middlewares/log.middleware.js';
 import ErrorHandlingMiddleware from './middlewares/error-handling.middleware.js';
@@ -18,6 +19,16 @@ const PORT = 7777;
 app.use(LogMiddleware);
 app.use(express.json());
 app.use(cookieParser());
+
+// 세션 설정
+app.use(
+  session({
+    secret: 'your-secret-key', // 세션 암호화 키
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // HTTPS 사용 시 true로 설정
+  }),
+);
 
 app.use('/api', [
   storeRouter,

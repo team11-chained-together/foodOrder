@@ -56,16 +56,13 @@ export class UserController {
   // TODO: email 인증부분 추가
   userSignup = async (req, res, next) => {
     try {
-      const signUpUser = new SignUpUser(req.body);
+      const emailCode = req.session.emailCode;
+      const signUpUser = new SignUpUser(req.body, emailCode);
       signUpUser.validate();
-
-      console.log(signUpUser);
-      console.log(signUpUser.email);
 
       const createdUser = await this.userService.signUp(
         signUpUser.email,
         signUpUser.password,
-        signUpUser.confirmPassword,
         signUpUser.name,
         signUpUser.address,
         signUpUser.isOwner,

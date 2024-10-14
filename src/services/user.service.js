@@ -11,7 +11,6 @@ export class UserService {
     if (existEmail) {
       throw new Error('이미 존재하는 email 입니다.');
     }
-    console.log('service : ' + existEmail);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
