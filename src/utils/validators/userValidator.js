@@ -1,10 +1,10 @@
 import { ValidationError } from '../errors/ValidationError.js';
 
 export class SignUpUser {
-  constructor({ email, password, confirmPassword, name, address, isOwner }) {
+  constructor({ email, emailcode, password, confirmPassword, name, address, isOwner }) {
     this.email = email;
     this.password = password;
-    this.confirmPassword = confirmPassword;
+    this.emailcode, (this.confirmPassword = confirmPassword);
     this.name = name;
     this.address = address;
     this.isOwner = isOwner;
