@@ -2,6 +2,12 @@ import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
 import { query } from 'express';
 import cookieParser from 'cookie-parser';
+import {
+  StoreValidation,
+  UpdateStoreValidation,
+  DeleteStoreValidation,
+  SearchStoreValidation,
+} from '../../../src/utils/validators/storeValidator'
 
 const mockStoreService = {
   searchStores: jest.fn(),
@@ -11,22 +17,26 @@ const mockStoreService = {
   getStore: jest.fn(),
 };
 
-const mockRequest = {
-  body: jest.fn(),
-  user: jest.fn(),
-  query: {},
-};
+const mockNext = jest.fn();
+
+// const searchStoreValidation= new SearchStoreValidation(mockRequest.query) 
+
+
+describe('스토어 컨트롤러 유닛 테스트', () => {
+
+  const storeController = new StoreController(mockStoreService);
+
+  const mockRequest = {
+    body: {},
+    user: {},
+    query: {},
+  };
 
 const mockResponse = {
   status: jest.fn(),
   json: jest.fn(),
 };
 
-const mockNext = jest.fn();
-
-const storeController = new StoreController(mockStoreService);
-
-describe('스토어 컨트롤러 유닛 테스트', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -44,7 +54,8 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
 
     mockRequest.query = { search: searchQuery };
 
-    mockStoreService.searchStores.mockReturnValue([sampleStore]);
+
+    mockStoreService.searchStores.mockResolvedValue([sampleStore]);//sampleStore가 비동기함수이면 mockReturnValue 대신 mockResolvedValue 사용해야함
 
     await storeController.searchStores(mockRequest, mockResponse, mockNext);
 
@@ -58,6 +69,8 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
   test('가게 만들기 성공 테스트', async () => {
     const createdStoreUser = { userId: 1, isOwner: true };
     const createStoreRequestBodyParams = {
+      userId:1,
+      storeId:1,
       storeName: 'Store_name_Success',
       location: 'Store Location',
       foodType: 'Food_Type_Success',
@@ -98,10 +111,13 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
 
   /** Update Store Controller Test */
   test('스토어 업데이트 테스트 성공', async () => {
+    const storeUpdateValidation = new UpdateStoreValidation(mockRequest.body)
     const updateStoreRequestBodyParams = {
-      storeId: 1,
+      userId: 1,
+      isOwner : true,
       storeName: 'New_Store_name_Success',
       foodType: 'New_Food_Type_Success',
+      location:'TestLocation',
     };
 
     mockRequest.user = {
@@ -114,7 +130,9 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     // Service 계층에서 구현된 updateStore 메서드를 실행했을때, 반환되는 데이터 형식
     const updatedStoreReturnValue = {
       ...updateStoreRequestBodyParams,
-      userId:1,
+      storeId:1,
+      sales:0,
+      createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     };
 
@@ -127,6 +145,7 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
       mockRequest.user.userId,
       updateStoreRequestBodyParams.storeName,
       updateStoreRequestBodyParams.foodType,
+      updateStoreRequestBodyParams.location,
     );
 
     // Response status

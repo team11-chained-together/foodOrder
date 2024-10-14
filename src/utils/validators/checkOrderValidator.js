@@ -33,11 +33,12 @@ export class UpdatedOrderStatement {
       throw new ValidationError('사장님만 접근 가능한 페이지입니다.');
     }
   }
+
   validateStatement() {
     if (
-      statement !== 'PREPARE' &&
-      statement !== 'IN_DELIVERY' &&
-      statement !== 'DELIVERY_COMPLETE'
+      this.statement !== 'PREPARE' &&
+      this.statement !== 'IN_DELIVERY' &&
+      this.statement !== 'DELIVERY_COMPLETE'
     ) {
       throw new ValidationError('올바른 상태값을 입력해주세요.');
     }

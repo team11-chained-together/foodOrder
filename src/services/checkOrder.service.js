@@ -1,3 +1,8 @@
+import {
+  CheckOrderValidation,
+  CheckMyOrderValidation,
+  UpdateOrderStatementValidation,
+} from '../utils/validators/service/checkOrderValidator.js';
 export class CheckOrderService {
   constructor(checkOrderRepository) {
     this.checkOrderRepository = checkOrderRepository;
@@ -5,14 +10,12 @@ export class CheckOrderService {
 
   checkOrder = async (userId) => {
     const storeData = await this.checkOrderRepository.findStorIdByUserId(userId);
-    if (!storeData) {
-      throw new Error('상점이 없습니다. 상점을 만들어주세요.');
-    }
+    const storeValidation = new CheckOrderValidation(storeData);
+    storeValidation.validate();
 
     const orderData = await this.checkOrderRepository.findOrderIdByStoreId(storeData.storeId);
-    if (!orderData) {
-      throw new Error('주문이 없습니다.');
-    }
+    const orderValidation = new CheckOrderValidation(orderData);
+    orderValidation.validate();
 
     return {
       orderData: orderData,
@@ -21,22 +24,25 @@ export class CheckOrderService {
 
   checkMyOrder = async (userId) => {
     const orderData = await this.checkOrderRepository.findOrderIdByUserId(userId);
-    if (!orderData) {
-      throw new Error('주문이 없습니다.');
-    }
+    const myOrderValidation = new CheckMyOrderValidation(orderData);
+    myOrderValidation.validate();
 
     return {
       orderData: orderData,
     };
   };
 
-  updateOrderStatement = async (orderId, statement) => {
+  updateOrderStatement = async (userId, orderId, statement) => {
+    const store = await this.checkOrderRepository.findStorIdByUserId(userId);
     const order = await this.checkOrderRepository.findOrderByOrderId(orderId);
-    if (!order) {
-      throw new Error('주문이 없습니다.');
-    }
+    const updateOrderStatementValidation = new UpdateOrderStatementValidation(store, order);
+    updateOrderStatementValidation.validate();
 
-    const updatedOrder = await this.checkOrderRepository.updateOrderStatement(orderId, statement);
+    const updatedOrder = await this.checkOrderRepository.updateOrderStatement(
+      orderId,
+      store.storeId,
+      statement,
+    );
 
     return {
       updatedOrder: updatedOrder,

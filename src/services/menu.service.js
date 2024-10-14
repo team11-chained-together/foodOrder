@@ -1,3 +1,9 @@
+import {
+  CreateMenuValidation,
+  UpdateMenuValidation,
+  GetMenuValidation,
+} from '../utils/validators/service/menuValidator.js';
+
 export class MenuService {
   constructor(menuRepository) {
     this.menuRepository = menuRepository;
@@ -11,9 +17,8 @@ export class MenuService {
       menuName,
     );
 
-    if (isMenuNameExists) {
-      throw new Error('저희 가게에 이미 존재하는 메뉴 이름입니다.');
-    }
+    const createMenuValidation = new CreateMenuValidation(isMenuNameExists);
+    createMenuValidation.validate();
 
     const createdMenu = await this.menuRepository.createMenu(
       checkStoreId.storeId,
@@ -43,9 +48,8 @@ export class MenuService {
       menuId,
     );
 
-    if (!isMenuNameExists) {
-      throw new Error('저희 가게에 존재하지 않는 메뉴입니다.');
-    }
+    const updateMenuValidation = new UpdateMenuValidation(isMenuNameExists);
+    updateMenuValidation.validate();
 
     const updatedMenu = await this.menuRepository.updateMenu(menuId, menuName, image, price, stock);
 
@@ -62,9 +66,8 @@ export class MenuService {
   getMenu = async (storeId) => {
     const store = await this.menuRepository.findStore(storeId);
 
-    if (!store) {
-      throw new Error('해당하는 음식점이 없습니다.');
-    }
+    const getStoreValidation = new GetMenuValidation(store);
+    getStoreValidation.validate();
 
     const menu = await this.menuRepository.findMenuByStoreId(storeId);
 
@@ -84,9 +87,8 @@ export class MenuService {
       menuId,
     );
 
-    if (!isMenuNameExists) {
-      throw new Error('저희 가게에 존재하지 않는 메뉴입니다.');
-    }
+    const deleteMenuValidation = new UpdateMenuValidation(isMenuNameExists);
+    deleteMenuValidation.validate();
 
     const deleteMenu = await this.menuRepository.deleteMenu(menuId);
 
