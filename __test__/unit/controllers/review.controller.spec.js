@@ -1,50 +1,50 @@
 import { jest, test } from '@jest/globals';
 import { ReviewController } from '../../../src/controllers/review.controller.js';
+import{CreateReview,UpdateReview,DeleteReview} from '../../../src/utils/validators/reviewValidator.js';
 
 const mockReviewService = {
   createReview: jest.fn(),
   updateReview: jest.fn(),
   deleteReview: jest.fn(), 
 };
-
-const mockRequest = {
-  body: {},
-  user:{},
-};
-
-const mockResponse = {
-  json: jest.fn(),
-  status: jest.fn(),
-};
-
 const mockNext = jest.fn();
 
-const reviewController = new ReviewController(mockReviewService);
 
 describe('리뷰 컨트롤러 유닛 테스트', () => {
+
+  const reviewController = new ReviewController(mockReviewService); 
+  
+  const mockRequest = {
+    body:{},
+    user:{},
+  };
+  
+  const mockResponse = {
+    json: jest.fn(),
+    status: jest.fn(),
+  };
   beforeEach(() => {
     jest.resetAllMocks();
-
     mockResponse.status.mockReturnValue(mockResponse);
   });
-
+  
   test('리뷰 작성 성공 테스트', async () => {
+    const reviewCreateValidation = new CreateReview(mockRequest.body)
     const createReviewBodyParams = {
-      storeId: 1,
       orderId:1,
       comment: 'JMT',
       rate: 3,
     };
+    
     mockRequest.body = createReviewBodyParams;
-    mockRequest.user = { userId: 1 };
+    mockRequest.user.userId = 1;
 
     const createReviewValue = {
-      reviewId: 1,
       userId: 1,
       storeId: 1,
-      ...createReviewBodyParams,
-      createdAt: new Date().toString(),
-      updatedAt: new Date().toString(),
+      comment: "Test Comment",
+      rate: 3,
+      order: {order:3},
     };
     mockReviewService.createReview.mockReturnValue(createReviewValue);
 
@@ -68,6 +68,7 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
   });
 
   test('리뷰 업데이트 성공 테스트', async () => {
+const reviewUpdateValidation = new UpdateReview(mockRequest.body);
     const updateReviewRequestBodyParams = {
         reviewId: 1,
         userId: 1,
@@ -113,6 +114,8 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
   });
 
   test('리뷰 삭제 성공 테스트', async () => {
+    
+const reviewDeleteValidation = new DeleteReview(mockRequest.body);
     const deleteReviewRequestBodyParams = {
       reviewId: 1,
     };
