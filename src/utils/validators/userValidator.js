@@ -14,7 +14,7 @@ export class SignUpUser {
 
   validate() {
     this.validateEmail();
-    this.validationEmailCode();
+    this.validateEmailCode();
     this.validatePassword();
     this.validateName();
     this.validateAddress();
@@ -31,7 +31,7 @@ export class SignUpUser {
     }
   }
 
-  validationEmailCode() {
+  validateEmailCode() {
     if (this.code !== this.emailCode) {
       throw new ValidationError('이메일 인증 코드가 다릅니다.');
     }
@@ -58,6 +58,30 @@ export class SignUpUser {
   validateAddress() {
     if (!this.address) {
       throw new ValidationError('주소를 입력하세요.');
+    }
+  }
+}
+
+export class SignInUser {
+  constructor({ email, password }) {
+    this.email = email;
+    this.password = password;
+  }
+
+  validate() {
+    this.validateEmail();
+    this.validatePassword();
+  }
+
+  validateEmail() {
+    if (!this.email) {
+      throw new ValidationError('이메일을 입력하세요.');
+    }
+  }
+
+  validatePassword() {
+    if (!this.password) {
+      throw new ValidationError('비밀번호를 입력하세요.');
     }
   }
 }

@@ -1,16 +1,19 @@
-import nodemailer from 'nodemailer';
-export class TestNodeMailerService {
+export class NodeMailerService {
   constructor(transporter) {
     this.transporter = transporter;
   }
-  testnodemailer = async (email) => {
+  nodemailer = async (email) => {
     const generateRandomNumber = (min, max) => {
       const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
       return randomNum;
     };
     const number = generateRandomNumber(111111, 999999);
-
+<<<<<<< HEAD
+    req.session.number = number;
     const mailoption = await this.transporter.sendMail({
+=======
+    await this.transporter.sendMail({
+>>>>>>> dev
       from: 'foodOrder',
       to: email,
       subject: '인증번호를 보내드립니다.',

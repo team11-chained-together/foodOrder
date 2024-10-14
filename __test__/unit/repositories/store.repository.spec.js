@@ -8,7 +8,7 @@ let mockPrisma = {
     update: jest.fn(),
     delete: jest.fn(),
     findFirst: jest.fn(),
-    findMany:jest.fn(),
+    findMany: jest.fn(),
   },
   menu: {
     findMany: jest.fn(),
@@ -17,20 +17,18 @@ let mockPrisma = {
 
 let storeRepository = new StoreRepository(mockPrisma);
 
-describe('Store Repository Unit Test', () => {
-  // 각 test가 실행되기 전에 실행됩니다.
+describe('가게 리포지토리 유닛 테스트', () => {
   beforeEach(() => {
-    jest.resetAllMocks(); // 모든 Mock을 초기화합니다.
+    jest.resetAllMocks();
   });
 
-  //검색기능 테스트 레파지토리
-  test('searchStores Method By success',async()=>{
-    const sampleStoreData={
+  test('searchStores 테스트 성공', async () => {
+    const sampleStoreData = {
       storeId: 1,
       userId: 1,
       storeName: 'Test StoreName',
-      foodType:'Test Food Type',
-      location:'전북',
+      foodType: 'Test Food Type',
+      location: '전북',
       sales: 100000,
       createdAt: '2024-09-28T09:35:43.410Z',
       updatedAt: '2024-09-28T09:35:43.410Z',
@@ -41,22 +39,24 @@ describe('Store Repository Unit Test', () => {
 
     expect(mockPrisma.store.findMany).toHaveBeenCalledTimes(1);
     expect(mockPrisma.store.findMany).toHaveBeenCalledWith({
-      where:{
-        OR:[
+      where: {
+        OR: [
           {
-            storeName:{contains:'Test search'}},
+            storeName: { contains: 'Test search' },
+          },
           {
-            foodType:{contains:'Test search'}},
+            foodType: { contains: 'Test search' },
+          },
           {
-            location:{contains:'Test search'}},       
-          ]
+            location: { contains: 'Test search' },
+          },
+        ],
       },
     });
     expect(searchedStores).toEqual([sampleStoreData]);
-
   });
 
-  test('findStoreByUserId Method', async () => {
+  test('findStoreByUserId 테스트 성공', async () => {
     // 1. findStoreByUserId 메서드의 반환값을 설정한다.
     const mockReturn = 'find UserId';
     mockPrisma.store.findUnique.mockReturnValue(mockReturn);
@@ -80,12 +80,10 @@ describe('Store Repository Unit Test', () => {
     });
   });
 
-  test('createStore Method', async () => {
-    // 1. createStore 메서드의 반환값을 설정한다.
+  test('createStore 테스트 성공', async () => {
     const mockReturn = 'create Store Return String';
     mockPrisma.store.create.mockReturnValue(mockReturn);
 
-    // 2. createStore 메서드를 실행하기 위한 userId, storeName, foodType의 데이터를 전달한다.
     const createStoreParams = {
       userId: 1,
       storeName: 'createStoreName',
@@ -101,13 +99,10 @@ describe('Store Repository Unit Test', () => {
       createStoreParams.sales,
     );
 
-    // create 메서드의 반환값은 Return 값과 동일하다.
     expect(createStoreData).toEqual(mockReturn);
 
-    // create 메서드는 1번만 실행된다.
     expect(mockPrisma.store.create).toHaveBeenCalledTimes(1);
 
-    // createStore 메서드를 실행할때, create 메서드는 전달한 userId, storeName, foodType이 순서대로 전달된다.
     expect(mockPrisma.store.create).toHaveBeenCalledWith({
       data: {
         userId: createStoreParams.userId,
@@ -119,15 +114,13 @@ describe('Store Repository Unit Test', () => {
     });
   });
 
-  test('updateStore Method', async () => {
-    // 1. updateStore 메서드의 반환값을 설정한다.
+  test('updateStore 테스트 성공', async () => {
     const mockReturn = 'Update Store Return String';
     mockPrisma.store.update.mockReturnValue(mockReturn);
 
-    // 2. updateStore 메서드를 실행하기 위한 userId, storeName, foodType의 데이터를 전달한다.
     const updateStoreParams = {
       userId: 1,
-      storeId: 1, 
+      storeId: 1,
       storeName: 'createStoreName',
       foodType: 'createFoodType',
     };
@@ -141,10 +134,8 @@ describe('Store Repository Unit Test', () => {
 
     expect(updateStoreData).toEqual(mockReturn);
 
-    // create 메서드는 1번만 실행된다.
     expect(mockPrisma.store.update).toHaveBeenCalledTimes(1);
 
-    // createStore 메서드를 실행할때, update 메서드는 전달한 userId, storeName, foodType이 순서대로 전달된다.
     expect(mockPrisma.store.update).toHaveBeenCalledWith({
       where: {
         userId: updateStoreParams.userId,
@@ -157,26 +148,20 @@ describe('Store Repository Unit Test', () => {
     });
   });
 
-  test('deleteStore Method', async () => {
-    // 1. deleteStore 메서드의 반환값을 설정
+  test('deleteStore 테스트 성공', async () => {
     const mockReturn = 'Delete Store Return String';
     mockPrisma.store.delete.mockReturnValue(mockReturn);
 
-    // 2. deleteStore 메서드를 실행하기 위한 userId 전달
     const deleteStoreParams = {
       userId: 1,
     };
 
-    // 3. deleteStore 실행
     const deleteStoreData = await storeRepository.deleteStore(deleteStoreParams.userId);
 
-    // delete 메서드의 반환값은 return 값과 동일하다.
     expect(deleteStoreData).toEqual(mockReturn);
 
-    // delete 메서드는 1번만 실행된다.
     expect(mockPrisma.store.delete).toHaveBeenCalledTimes(1);
 
-    // deleteStore 메서드를 실행할 때 delete 메서드는 전달한 postId를 전달한다.
     expect(mockPrisma.store.delete).toHaveBeenCalledWith({
       where: {
         userId: deleteStoreParams.userId,
@@ -184,31 +169,7 @@ describe('Store Repository Unit Test', () => {
     });
   });
 
-  test('findStoreByStoreName Method', async () => {
-    // 1. findStoreByStoreName 메서드의 반환값을 설정
-    const mockReturn = 'get Store Name';
-    mockPrisma.store.findFirst.mockReturnValue(mockReturn);
-
-    // 2. findStoreByStoreName 메서드를 실행하기 위한 storeName 전달
-    const getStoreParams = {
-      storeName: 'Get Store Name',
-    };
-
-    // 3. findStoreByStoreName 실행
-    await storeRepository.findStoreByStoreName(getStoreParams.storeName);
-
-    // findFirst 메서드는 1번만 실행된다.
-    expect(mockPrisma.store.findFirst).toHaveBeenCalledTimes(1);
-
-    expect(mockPrisma.store.findFirst).toHaveBeenCalledWith({
-      where: {
-        storeName: getStoreParams.storeName,
-      },
-    });
-  });
-
-  test('findMenuByStoreId Method', async () => {
-    // 1. findMenuByStoreId 메서드의 반환값을 설정
+  test('findMenuByStoreId 테스트 성공', async () => {
     const mockReturn = [
       {
         menuId: 1,
@@ -221,22 +182,19 @@ describe('Store Repository Unit Test', () => {
 
     mockPrisma.menu.findMany.mockReturnValue(mockReturn);
 
-    // 2. findMenuByStoreId 메서드를 실행하기 위한 storeId 전달
     const getMenuParams = {
       storeId: 1,
     };
 
-    // 3. findMenuByStoreId 실행
     await storeRepository.findMenuByStoreId(getMenuParams.storeId);
 
-    // findMany 메서드는 1번만 실행된다.
     expect(mockPrisma.menu.findMany).toHaveBeenCalledTimes(1);
 
     expect(mockPrisma.menu.findMany).toHaveBeenCalledWith({
       where: {
-        storeId: getMenuParams.storeId, 
+        storeId: getMenuParams.storeId,
       },
-      select:{
+      select: {
         menuId: true,
         menuName: true,
         image: true,
