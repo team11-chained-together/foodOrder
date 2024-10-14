@@ -65,7 +65,7 @@ describe('체크오더 컨트롤러 유닛 테스트', () => {
     expect(mockCheckOrderService.checkMyOrder).toHaveBeenCalledWith(mockRequest.user.userId);
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCalledWith(201);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
 
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
