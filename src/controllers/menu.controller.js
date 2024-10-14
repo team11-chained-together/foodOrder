@@ -1,3 +1,5 @@
+import { CreateMenu, UpdateMenu, DeleteMenu, GetMenu } from '../utils/validators/menuValidator.js';
+
 export class MenuController {
   constructor(menuService) {
     this.menuService = menuService;
@@ -6,18 +8,8 @@ export class MenuController {
   createMenu = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const isOwner = req.user.isOwner;
-
-      const { menuName, image, price, stock } = req.body;
-
-      // 사장과 손님 확인 작업
-      if (isOwner !== true) {
-        throw new Error('해당하는 유저는 사장님이 아닙니다.');
-      }
-
-      if (!menuName || !image || !price || !stock) {
-        throw new Error('InvalidParamsError');
-      }
+      const createMenu = new CreateMenu(isOwner, req.body);
+      createMenu.validate();
 
       const createdMenu = await this.menuService.createMenu(userId, menuName, image, price, stock);
 
@@ -27,21 +19,11 @@ export class MenuController {
     }
   };
 
-  // TODO: 업데이트 시 이름만 변경 가능, 나머지는 변경 불가능
   updateMenu = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const isOwner = req.user.isOwner;
-      const { menuId, menuName, image, price, stock } = req.body;
-
-      // 사장과 손님 확인 작업
-      if (isOwner !== true) {
-        return res.status(400).json({ message: '해당하는 유저는 사장님이 아닙니다.' });
-      }
-
-      if (!menuId) {
-        return res.status(400).json({ message: '변경할 메뉴아이디를 입력해 주세요.' });
-      }
+      const updatedMenu = new UpdateMenu(req.user.isOwner, req.body);
+      updatedMenu.validate();
 
       const updateMenu = await this.menuService.updateMenu(
         userId,
@@ -60,15 +42,12 @@ export class MenuController {
 
   getMenu = async (req, res, next) => {
     try {
-      const { storeId } = req.body;
+      const getMenu = new GetMenu(req.body);
+      getMenu.validate();
 
-      if (!storeId) {
-        return res.status(200).json({ message: '해당하는 가게아이디를 입력 해 주세요.' });
-      }
+      const menu = await this.menuService.getMenu(storeId);
 
-      const getMenu = await this.menuService.getMenu(storeId);
-
-      return res.status(200).json({ data: getMenu });
+      return res.status(200).json({ data: menu });
     } catch (err) {
       next(err);
     }
@@ -77,17 +56,12 @@ export class MenuController {
   deleteMenu = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const isOwner = req.user.isOwner;
-
-      const { menuId } = req.body;
-
-      if (isOwner !== true) {
-        throw new Error('해당하는 유저는 사장님이 아닙니다.');
-      }
+      const deletedMenu = new DeleteMenu(req.user.isOwner, req.body);
+      deletedMenu.validate();
 
       const deleteMenu = await this.menuService.deleteMenu(userId, menuId);
 
-      return res.status(201).json({ data: deleteMenu });
+      return res.status(204).json({ data: deleteMenu });
     } catch (err) {
       next(err);
     }
