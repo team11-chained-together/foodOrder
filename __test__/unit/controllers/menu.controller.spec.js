@@ -1,6 +1,6 @@
 import { beforeAll, describe, jest, test } from '@jest/globals';
 import { MenuController } from '../../../src/controllers/menu.controller';
-
+import {CreateMenu,UpdateMenu} from '../../../src/utils/validators/menuValidator.js'
 const mockMenuService = {
   createMenu: jest.fn(),
   updateMenu: jest.fn(),
@@ -20,19 +20,20 @@ const mockResponse = {
 const mockNext = jest.fn();
 
 const menuController = new MenuController(mockMenuService);
+new CreateMenu(mockRequest.user.isOwner,mockRequest.body)
+new UpdateMenu(mockRequest.user.isOwner,mockRequest.body)
 
-describe('Menu Controller Unit Test', () => {
+describe('메뉴 컨트롤러 유닛 테스트', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
     mockResponse.status.mockReturnValue(mockResponse);
   });
 
-  /** Create Menu Controller Test*/
-  test('createMenu Method By Success', async () => {
+  test('메뉴 생성 성공 유닛 테스트', async () => {
     const createMenuRequestBodyParams = {
       userId: 1,
-      type: true,
+      isOwner: true,
       menuName: '훌랄라 치킨',
       image: '치킨 이미지',
       price: 10000,
@@ -52,9 +53,11 @@ describe('Menu Controller Unit Test', () => {
     mockMenuService.createMenu.mockReturnValue(createdMenuReturnValue);
 
     await menuController.createMenu(mockRequest, mockResponse, mockNext);
+    
     expect(mockMenuService.createMenu).toHaveBeenCalledTimes(1);
     expect(mockMenuService.createMenu).toHaveBeenCalledWith(
-      mockRequest.user.userId,
+
+      mockRequest.user.isOwner,
       createMenuRequestBodyParams.menuName,
       createMenuRequestBodyParams.image,
       createMenuRequestBodyParams.price,
@@ -72,10 +75,9 @@ describe('Menu Controller Unit Test', () => {
     });
   });
 
-  test('updateMethod By Success', async () => {
+  test('메뉴 업데이트 성공 유닛 테스트', async () => {
     const updateMenuRequestBodyParams = {
       userId: 1,
-      isOwner: true,
       menuId:1,
       menuName: '수정할 메뉴이름',
       image: '수정할 이미지 URL',
@@ -100,6 +102,7 @@ describe('Menu Controller Unit Test', () => {
     expect(mockMenuService.updateMenu).toHaveBeenCalledTimes(1);
     expect(mockMenuService.updateMenu).toHaveBeenCalledWith(
       mockRequest.user.userId,
+      mockRequest.user.isOwner,
       updateMenuRequestBodyParams.menuId,
       updateMenuRequestBodyParams.menuName,
       updateMenuRequestBodyParams.image,

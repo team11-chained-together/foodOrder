@@ -31,6 +31,7 @@ describe('리뷰 컨트롤러 유닛 테스트', () => {
   test('리뷰 작성 성공 테스트', async () => {
     const createReviewBodyParams = {
       storeId: 1,
+      orderId:1,
       comment: 'JMT',
       rate: 3,
     };

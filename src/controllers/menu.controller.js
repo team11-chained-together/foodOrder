@@ -7,11 +7,12 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      const userId = req.user.userId;
-      const createMenu = new CreateMenu(isOwner, req.body);
+      
+      const createMenu = new CreateMenu(req.user.isOwner, req.body);
       createMenu.validate();
 
-      const createdMenu = await this.menuService.createMenu(userId, menuName, image, price, stock);
+
+      const createdMenu = await this.menuService.createMenu(req.user.isOwner, createMenu.menuName, createMenu.image, createMenu.price, createMenu.stock);
 
       return res.status(201).json({ data: createdMenu });
     } catch (err) {
@@ -27,11 +28,11 @@ export class MenuController {
 
       const updateMenu = await this.menuService.updateMenu(
         userId,
-        menuId,
-        menuName,
-        image,
-        price,
-        stock,
+        updateMenu.menuId,
+        updateMenu.menuName,
+        updateMenu.image,
+        updateMenu.price,
+        updateMenu.stock,
       );
 
       return res.status(200).json({ data: updateMenu });
