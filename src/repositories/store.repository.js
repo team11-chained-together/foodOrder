@@ -5,7 +5,7 @@ export class StoreRepository {
 
   //음식점 검색 기능 -> 음식점 이름,음식이름,지역,푸드타입(피자면 피자)으로 검색
 
-  searchStores = async (search) => {
+  searchStores = async (search, storeId) => {
     const stores = await this.prisma.store.findMany({
       where: {
         //이중 하나의 값이라도 해당하면 검색
@@ -19,10 +19,22 @@ export class StoreRepository {
           {
             location: { contains: search },
           },
+          {
+            storeId: { contains: storeId },
+          },
         ],
       },
     });
     return stores;
+  };
+
+  searchMenu = async (search) => {
+    const menu = await this.prisma.menu.findMany({
+      where: {
+        menuName: search,
+      },
+    });
+    return menu;
   };
 
   findStoreByUserId = async (userId) => {

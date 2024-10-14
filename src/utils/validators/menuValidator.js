@@ -71,14 +71,14 @@ export class DeleteMenu {
 }
 
 export class GetMenu {
-  constructor({ storId }) {
-    this.storId = storId;
+  constructor({ storeId }) {
+    this.storeId = storeId;
   }
   validate() {
     this.validateGetStore();
   }
   validateGetStore() {
-    if (!this.storId) {
+    if (!this.storeId) {
       throw new ValidationError('해당하는 가게아이디를 입력 해 주세요.');
     }
   }

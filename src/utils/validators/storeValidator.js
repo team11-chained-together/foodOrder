@@ -92,22 +92,6 @@ export class DeleteStoreValidation {
   }
 }
 
-export class GetStoreValidation {
-  constructor({ storeName }) {
-    this.storeName = storeName;
-  }
-
-  validate() {
-    this.storeNameValidate();
-  }
-
-  storeNameValidate() {
-    if (!this.storeName) {
-      throw new ValidationError('검색할 상점 이름을 입력해주세요.');
-    }
-  }
-}
-
 export class SearchStoreValidation {
   constructor({ search }) {
     this.search = search;
