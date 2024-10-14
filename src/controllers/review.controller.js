@@ -3,7 +3,6 @@ export class ReviewController {
     this.reviewService = reviewService;
   }
 
-  //TODO: 리뷰는 한번 밖에 작성 못함
   createReview = async (req, res, next) => {
     try {
       const userId = req.user.userId;
