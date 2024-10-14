@@ -45,8 +45,7 @@
 //     }
 //   }
 // }
-import { SignUpUser } from '../utils/validators/userValidator.js';
-import { SignInUser } from '../utils/validators/signInValidator.js';
+import { SignUpUser, SignInUser } from '../utils/validators/userValidator.js';
 
 export class UserController {
   constructor(userService) {

@@ -1,3 +1,5 @@
+import { CreateReview, UpdateReview, DeleteReview } from '../utils/validators/reviewValidator.js';
+
 export class ReviewController {
   constructor(reviewService) {
     this.reviewService = reviewService;
@@ -6,16 +8,8 @@ export class ReviewController {
   createReview = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-
-      const { orderId, comment, rate } = req.body;
-
-      if (!comment || !rate) {
-        return res.status(400).json({ message: ' comment, rate를 작성해주세요.' });
-      }
-
-      if (rate < 1 || rate > 5) {
-        return res.status(400).json({ message: '가게 리뷰 점수는 1 ~ 5점을 입력해주세요.' });
-      }
+      const createReview = new CreateReview(req.body);
+      createReview.validate();
 
       const createdReview = await this.reviewService.createReview(userId, orderId, comment, rate);
 
@@ -31,13 +25,11 @@ export class ReviewController {
   updateReview = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const { reviewId, comment, rate } = req.body;
-      if (!reviewId) {
-        return res.status(400).json({ message: '해당하는 리뷰아이디를 입력해 주세요.' });
-      }
+      const updateReview = new UpdateReview(req.body);
+      updateReview.validate();
 
-      const updateReview = await this.reviewService.updateReview(userId, reviewId, comment, rate);
-      return res.status(201).json({ message: '리뷰가 수정되었습니다.', data: updateReview });
+      const updatedReview = await this.reviewService.updateReview(userId, reviewId, comment, rate);
+      return res.status(201).json({ message: '리뷰가 수정되었습니다.', data: updatedReview });
     } catch (err) {
       next(err);
     }
@@ -46,11 +38,8 @@ export class ReviewController {
   deleteReview = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const { reviewId } = req.body;
-
-      if (!reviewId) {
-        return res.status(400).json({ message: 'reviewId를 입력해 주세요' });
-      }
+      const deleteReview = new DeleteReview(req.body);
+      deleteReview.validate();
 
       await this.reviewService.deleteReview(userId, reviewId);
       return res.status(202).json({ message: '리뷰가 삭제 되었습니다.' });
