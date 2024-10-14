@@ -8,7 +8,7 @@ export class MenuController {
   createMenu = async (req, res, next) => {
     try {
       const userId = req.user.userId;
-      const createMenu = new CreateMenu(isOwner, req.body);
+      const createMenu = new CreateMenu(req.user.isOwner, req.body);
       createMenu.validate();
 
       const createdMenu = await this.menuService.createMenu(

@@ -10,7 +10,7 @@ export class UserOrderValidation {
   validate() {
     this.storeValidate();
     this.menuIdValidate();
-    this.quantity();
+    this.quantityValidate();
   }
 
   storeValidate() {

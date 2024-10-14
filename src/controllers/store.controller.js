@@ -14,6 +14,7 @@ export class StoreController {
   searchStores = async (req, res, next) => {
     try {
       const storeValidation = new SearchStoreValidation(req.query);
+      storeValidation.validate();
 
       const stores = await this.storeService.searchStores(storeValidation.search);
 

@@ -4,11 +4,8 @@ export class StoreService {
   }
 
   searchStores = async (search) => {
-    const menu = await this.storeRepository.searchMenu(search);
     console.log(search);
-    console.log(menu);
-    console.log(menu.storeId);
-    const store = await this.storeRepository.searchStores(search, menu.storeId);
+    const store = await this.storeRepository.searchStores(search);
 
     if (store.length === 0) {
       throw new Error('검색 결과가 없습니다.');
