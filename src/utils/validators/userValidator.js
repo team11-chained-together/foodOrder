@@ -1,8 +1,10 @@
 import { ValidationError } from '../errors/ValidationError.js';
 
 export class SignUpUser {
-  constructor({ email, password, confirmPassword, name, address, isOwner }) {
+  constructor({ email, password, code, confirmPassword, name, address, isOwner }, emailCode) {
     this.email = email;
+    this.code = code;
+    this.emailCode = emailCode;
     this.password = password;
     this.confirmPassword = confirmPassword;
     this.name = name;
@@ -12,6 +14,7 @@ export class SignUpUser {
 
   validate() {
     this.validateEmail();
+    this.validationEmailCode();
     this.validatePassword();
     this.validateName();
     this.validateAddress();
@@ -25,6 +28,12 @@ export class SignUpUser {
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     if (!investigateEmail.test(this.email)) {
       throw new ValidationError('이메일 형식에 맞게 입력해주세요.');
+    }
+  }
+
+  validationEmailCode() {
+    if (this.code !== this.emailCode) {
+      throw new ValidationError('이메일 인증 코드가 다릅니다.');
     }
   }
 
