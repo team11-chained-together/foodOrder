@@ -1,3 +1,10 @@
+import {
+  CheckStoreValidation,
+  CheckMenuValidation,
+  PointValidation,
+  StockValidation,
+} from '../utils/validators/service/userOrderValidator.js';
+
 export class UserOrderService {
   constructor(userOrderRepository) {
     this.userOrderRepository = userOrderRepository;
@@ -8,18 +15,12 @@ export class UserOrderService {
     let index = 0;
 
     const checkStore = await this.userOrderRepository.getStoreData(storeId);
-    if (!checkStore) {
-      throw new Error('해당하는 가게가 존재하지 않습니다.');
-    }
-
+    const checkStoreValidation = new CheckStoreValidation(checkStore);
+    checkStoreValidation.validate();
     for (let i = 0; i < Array(menuId).length; i++) {
       const checkMenu = await this.userOrderRepository.getMenuData(menuId[i]);
-      if (!checkMenu) {
-        throw new Error('해당하는 메뉴가 존재하지 않습니다.');
-      }
-      if (checkMenu.stock === 0) {
-        throw new Error('해당하는 메뉴의 재고가 없습니다.');
-      }
+      const checkMenuValidation = new CheckMenuValidation(checkMenu);
+      checkMenuValidation.validate;
     }
 
     for (const element of menuId) {
@@ -28,18 +29,15 @@ export class UserOrderService {
       index++;
 
       const user = await this.userOrderRepository.getUserPoint(userId);
-
-      if (user.point < totalPrice) {
-        throw new Error('잔액이 부족합니다.');
-      }
+      const pointValidation = new PointValidation(totalPrice, user);
+      pointValidation.validate();
     }
 
     for (let i = 0; i < menuId.length; i++) {
       const checkStock = await this.userOrderRepository.getMenuData(menuId[i]);
-
-      if (checkStock.stock < quantity[i]) {
-        throw new Error('주문하신 메뉴의 재고가 부족 합니다.');
-      }
+      let quantityData = quantity[i];
+      const stockValidation = new StockValidation(checkStock, quantityData);
+      stockValidation.validate();
     }
 
     await this.userOrderRepository.createOrder(storeId, userId, totalPrice, menuId, quantity);

@@ -33,10 +33,15 @@ export class CheckOrderController {
 
   updateOrderStatement = async (req, res, next) => {
     try {
+      const userId = req.user.userId;
       const updatedOrderStatement = new UpdatedOrderStatement(req.user.isOwner, req.body);
       updatedOrderStatement.validate();
 
-      const updateOrder = await this.checkOrderService.updateOrderStatement(orderId, statement);
+      const updateOrder = await this.checkOrderService.updateOrderStatement(
+        userId,
+        updatedOrderStatement.orderId,
+        updatedOrderStatement.statement,
+      );
 
       return res.status(200).json({ data: updateOrder });
     } catch (error) {
