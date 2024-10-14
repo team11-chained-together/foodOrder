@@ -7,12 +7,17 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      
+      const userId = req.user.userId;
       const createMenu = new CreateMenu(req.user.isOwner, req.body);
       createMenu.validate();
 
-
-      const createdMenu = await this.menuService.createMenu(req.user.isOwner, createMenu.menuName, createMenu.image, createMenu.price, createMenu.stock);
+      const createdMenu = await this.menuService.createMenu(
+        userId,
+        createMenu.menuName,
+        createMenu.image,
+        createMenu.price,
+        createMenu.stock,
+      );
 
       return res.status(201).json({ data: createdMenu });
     } catch (err) {
@@ -28,11 +33,11 @@ export class MenuController {
 
       const updateMenu = await this.menuService.updateMenu(
         userId,
-        updateMenu.menuId,
-        updateMenu.menuName,
-        updateMenu.image,
-        updateMenu.price,
-        updateMenu.stock,
+        updatedMenu.menuId,
+        updatedMenu.menuName,
+        updatedMenu.image,
+        updatedMenu.price,
+        updatedMenu.stock,
       );
 
       return res.status(200).json({ data: updateMenu });
@@ -46,7 +51,7 @@ export class MenuController {
       const getMenu = new GetMenu(req.body);
       getMenu.validate();
 
-      const menu = await this.menuService.getMenu(storeId);
+      const menu = await this.menuService.getMenu(getMenu.storeId);
 
       return res.status(200).json({ data: menu });
     } catch (err) {
@@ -60,7 +65,7 @@ export class MenuController {
       const deletedMenu = new DeleteMenu(req.user.isOwner, req.body);
       deletedMenu.validate();
 
-      const deleteMenu = await this.menuService.deleteMenu(userId, menuId);
+      const deleteMenu = await this.menuService.deleteMenu(userId, deletedMenu.menuId);
 
       return res.status(204).json({ data: deleteMenu });
     } catch (err) {

@@ -7,6 +7,21 @@ export class UserOrderService {
     let totalPrice = 0;
     let index = 0;
 
+    const checkStore = await this.userOrderRepository.getStoreData(storeId);
+    if (!checkStore) {
+      throw new Error('해당하는 가게가 존재하지 않습니다.');
+    }
+
+    for (let i = 0; i < Array(menuId).length; i++) {
+      const checkMenu = await this.userOrderRepository.getMenuData(menuId[i]);
+      if (!checkMenu) {
+        throw new Error('해당하는 메뉴가 존재하지 않습니다.');
+      }
+      if (checkMenu.stock === 0) {
+        throw new Error('해당하는 메뉴의 재고가 없습니다.');
+      }
+    }
+
     for (const element of menuId) {
       const menu = await this.userOrderRepository.getMenuData(element);
       totalPrice += menu.price * quantity[index];
