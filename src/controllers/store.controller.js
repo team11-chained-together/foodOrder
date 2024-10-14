@@ -2,7 +2,6 @@ import {
   StoreValidation,
   UpdateStoreValidation,
   DeleteStoreValidation,
-  GetStoreValidation,
   SearchStoreValidation,
 } from '../utils/validators/storeValidator.js';
 
@@ -11,9 +10,10 @@ export class StoreController {
     this.storeService = storeService;
   }
 
+  // 키워드 검색
   searchStores = async (req, res, next) => {
     try {
-      const storeValidation = new SearchStoreValidation(req.search);
+      const storeValidation = new SearchStoreValidation(req.query);
 
       const stores = await this.storeService.searchStores(storeValidation.search);
 
@@ -79,12 +79,10 @@ export class StoreController {
     }
   };
 
+  // 전체 상점 조회
   getStore = async (req, res, next) => {
     try {
-      const storeValidation = new GetStoreValidation(req.body);
-      storeValidation.validate();
-
-      const getStore = await this.storeService.getStore(storeValidation.storeName);
+      const getStore = await this.storeService.getStore();
 
       return res.status(200).json({
         data: getStore,

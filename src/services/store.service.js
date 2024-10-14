@@ -4,9 +4,13 @@ export class StoreService {
   }
 
   searchStores = async (search) => {
-    const store = await this.storeRepository.searchStores(search);
+    const menu = await this.storeRepository.searchMenu(search);
+    console.log(search);
+    console.log(menu);
+    console.log(menu.storeId);
+    const store = await this.storeRepository.searchStores(search, menu.storeId);
 
-    if (StoreService.length === 0) {
+    if (store.length === 0) {
       throw new Error('검색 결과가 없습니다.');
     }
 
@@ -89,11 +93,12 @@ export class StoreService {
     };
   };
 
-  getStore = async (storeName) => {
-    const store = await this.storeRepository.findStoreByStoreName(storeName);
+  // 모든 가게 목록 조회
+  getStore = async () => {
+    const store = await this.storeRepository.findStore();
 
     if (!store) {
-      throw new Error('해당하는 음식점이 없습니다.');
+      throw new Error('존재하는 음식점이 없습니다.');
     }
 
     return {
