@@ -1,16 +1,21 @@
 import { beforeAll, describe, jest, test } from '@jest/globals';
 import { MenuController } from '../../../src/controllers/menu.controller';
-import {CreateMenu,UpdateMenu,DeleteMenu,GetMenu} from '../../../src/utils/validators/controller/menuValidator.js'
+import {
+  CreateMenu,
+  UpdateMenu,
+  DeleteMenu,
+  GetMenu,
+} from '../../../src/utils/validators/controller/menuValidator.js';
 const mockMenuService = {
   createMenu: jest.fn(),
   updateMenu: jest.fn(),
   deleteMenu: jest.fn(),
-  getMenu:jest.fn(),
+  getMenu: jest.fn(),
 };
 
 const mockRequest = {
   body: {},
-  user:{},
+  user: {},
 };
 
 const mockResponse = {
@@ -21,9 +26,9 @@ const mockResponse = {
 const mockNext = jest.fn();
 
 const menuController = new MenuController(mockMenuService);
-new CreateMenu(mockRequest.user.isOwner,mockRequest.body);
-new UpdateMenu(mockRequest.user.isOwner,mockRequest.body);
-new DeleteMenu(mockRequest.user.isOwner,mockRequest.body);
+new CreateMenu(mockRequest.user.isOwner, mockRequest.body);
+new UpdateMenu(mockRequest.user.isOwner, mockRequest.body);
+new DeleteMenu(mockRequest.user.isOwner, mockRequest.body);
 new GetMenu(mockRequest.body);
 describe('메뉴 컨트롤러 유닛 테스트', () => {
   beforeEach(() => {
@@ -55,7 +60,7 @@ describe('메뉴 컨트롤러 유닛 테스트', () => {
     mockMenuService.createMenu.mockReturnValue(createdMenuReturnValue);
 
     await menuController.createMenu(mockRequest, mockResponse, mockNext);
-    
+
     expect(mockMenuService.createMenu).toHaveBeenCalledTimes(1);
     expect(mockMenuService.createMenu).toHaveBeenCalledWith(
       mockRequest.user.userId,
@@ -120,64 +125,63 @@ describe('메뉴 컨트롤러 유닛 테스트', () => {
       data: updatedMenuReturnValue,
     });
   });
-  test('메뉴 삭제 성공 유닛 테스트', async()=>{
+  test('메뉴 삭제 성공 유닛 테스트', async () => {
     const deletedMenuBodyParams = {
-      menuId : 1,
-    }
+      menuId: 1,
+    };
     mockRequest.body = deletedMenuBodyParams;
     mockRequest.user = { userId: 1, isOwner: true };
 
     const deletedMenuReturnValue = {
-      menuId :1,
-      menuName : 'menuName',
-      image:"image",
-      price:1000,
-      stock:10,
-    }
+      menuId: 1,
+      menuName: 'menuName',
+      image: 'image',
+      price: 1000,
+      stock: 10,
+    };
 
-    mockMenuService.deleteMenu.mockReturnValue(deletedMenuReturnValue)
-    await  menuController.deleteMenu(mockRequest, mockResponse, mockNext);
+    mockMenuService.deleteMenu.mockReturnValue(deletedMenuReturnValue);
+    await menuController.deleteMenu(mockRequest, mockResponse, mockNext);
     expect(mockMenuService.deleteMenu).toHaveBeenCalledTimes(1);
     expect(mockMenuService.deleteMenu).toHaveBeenCalledWith(
       mockRequest.user.userId,
-      deletedMenuBodyParams.menuId
-    )
-
-    expect(mockResponse.status).toHaveBeenCalledTimes(1);
-    expect(mockResponse.status).toHaveBeenCalledWith(204);
-
-    expect(mockResponse.json).toHaveBeenCalledTimes(1);
-    expect(mockResponse.json).toHaveBeenCalledWith({
-      data: deletedMenuReturnValue
-    })
-  })
-  test('해당가게 메뉴 조회 성공 유닛 테스트', async()=>{
-    const getMenuBodyParams = {
-      storeId:1,
-    }
-    mockRequest.body = getMenuBodyParams;
-    mockRequest.user = {userId:1, isOwner :true};
-
-    const getMenuReturnValue = {
-      storeId:1,
-      storeName:"storeName",
-      foodType:"foodType",
-      menu:"menu",
-    }
-
-    mockMenuService.getMenu.mockReturnValue(getMenuReturnValue);
-    await menuController.getMenu(mockRequest,mockResponse,mockNext);
-    expect(mockMenuService.getMenu).toHaveBeenCalledTimes(1);
-    expect(mockMenuService.getMenu).toHaveBeenCalledWith(
-      getMenuBodyParams.storeId
-    )
+      deletedMenuBodyParams.menuId,
+    );
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
 
-    expect(mockResponse.json).toHaveBeenCalledTimes(1)
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
-      data:getMenuReturnValue
+      message: '메뉴 삭제를 성공하였습니다.',
+      data: deletedMenuReturnValue,
     });
-    })
+  });
+  test('해당가게 메뉴 조회 성공 유닛 테스트', async () => {
+    const getMenuBodyParams = {
+      storeId: 1,
+    };
+    mockRequest.body = getMenuBodyParams;
+    mockRequest.user = { userId: 1, isOwner: true };
+
+    const getMenuReturnValue = {
+      storeId: 1,
+      storeName: 'storeName',
+      foodType: 'foodType',
+      menu: 'menu',
+    };
+
+    mockMenuService.getMenu.mockReturnValue(getMenuReturnValue);
+    await menuController.getMenu(mockRequest, mockResponse, mockNext);
+    expect(mockMenuService.getMenu).toHaveBeenCalledTimes(1);
+    expect(mockMenuService.getMenu).toHaveBeenCalledWith(getMenuBodyParams.storeId);
+
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: getMenuReturnValue,
+    });
+  });
 });

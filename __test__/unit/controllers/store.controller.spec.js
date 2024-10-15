@@ -7,8 +7,8 @@ import {
   UpdateStoreValidation,
   DeleteStoreValidation,
   SearchStoreValidation,
-} from '../../../src/utils/validators/controller/storeValidator.js'
-
+} from '../../../src/utils/validators/controller/storeValidator.js';
+import { ValidationError } from '../../../src/utils/errors/ValidationError.js';
 const mockStoreService = {
   searchStores: jest.fn(),
   createStore: jest.fn(),
@@ -19,11 +19,9 @@ const mockStoreService = {
 
 const mockNext = jest.fn();
 
-// const searchStoreValidation= new SearchStoreValidation(mockRequest.query) 
-
+// const searchStoreValidation= new SearchStoreValidation(mockRequest.query)
 
 describe('스토어 컨트롤러 유닛 테스트', () => {
-
   const storeController = new StoreController(mockStoreService);
 
   const mockRequest = {
@@ -32,11 +30,11 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
     query: {},
   };
 
-const mockResponse = {
-  status: jest.fn(),
-  json: jest.fn(),
-}; 
-  
+  const mockResponse = {
+    status: jest.fn(),
+    json: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -54,8 +52,7 @@ const mockResponse = {
 
     mockRequest.query = { search: searchQuery };
 
-
-    mockStoreService.searchStores.mockResolvedValue([sampleStore]);//sampleStore가 비동기함수이면 mockReturnValue 대신 mockResolvedValue 사용해야함
+    mockStoreService.searchStores.mockResolvedValue([sampleStore]); //sampleStore가 비동기함수이면 mockReturnValue 대신 mockResolvedValue 사용해야함
 
     await storeController.searchStores(mockRequest, mockResponse, mockNext);
 
@@ -69,8 +66,8 @@ const mockResponse = {
   test('가게 만들기 성공 테스트', async () => {
     const createdStoreUser = { userId: 1, isOwner: true };
     const createStoreRequestBodyParams = {
-      userId:1,
-      storeId:1,
+      userId: 1,
+      storeId: 1,
       storeName: 'Store_name_Success',
       location: 'Store Location',
       foodType: 'Food_Type_Success',
@@ -111,17 +108,21 @@ const mockResponse = {
 
   /** Update Store Controller Test */
   test('스토어 업데이트 테스트 성공', async () => {
-    const storeUpdateValidation = new UpdateStoreValidation(mockRequest.body)
+    const storeUpdateValidation = new UpdateStoreValidation(
+      mockRequest.user.userId,
+      mockRequest.user.isOwner,
+      mockRequest.body,
+    );
     const updateStoreRequestBodyParams = {
       userId: 1,
-      isOwner : true,
+      isOwner: true,
       storeName: 'New_Store_name_Success',
       foodType: 'New_Food_Type_Success',
-      location:'TestLocation',
+      location: 'TestLocation',
     };
 
     mockRequest.user = {
-      userId:1,
+      userId: 1,
       isOwner: true,
     };
 
@@ -130,8 +131,8 @@ const mockResponse = {
     // Service 계층에서 구현된 updateStore 메서드를 실행했을때, 반환되는 데이터 형식
     const updatedStoreReturnValue = {
       ...updateStoreRequestBodyParams,
-      storeId:1,
-      sales:0,
+      storeId: 1,
+      sales: 0,
       createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     };
@@ -144,8 +145,8 @@ const mockResponse = {
     expect(mockStoreService.updateStore).toHaveBeenCalledWith(
       mockRequest.user.userId,
       updateStoreRequestBodyParams.storeName,
-      updateStoreRequestBodyParams.foodType,
       updateStoreRequestBodyParams.location,
+      updateStoreRequestBodyParams.foodType,
     );
 
     // Response status
@@ -166,10 +167,10 @@ const mockResponse = {
       storeId: 1,
     };
 
-    mockRequest.user ={
-      userId:1,
-      isOwner:true,
-    }
+    mockRequest.user = {
+      userId: 1,
+      isOwner: true,
+    };
 
     mockRequest.body = deleteStoreRequestBodyParams;
 
@@ -200,13 +201,12 @@ const mockResponse = {
 
   /** Get Store Controller Test */
   test('스토어 목록 조회 테스트 성공', async () => {
-    
     const getStoreRequestBodyParams = {
       storeName: 'Get Store Name',
     };
-  
+
     mockRequest.body = getStoreRequestBodyParams;
-  
+
     const getStoreReturnValue = {
       ...getStoreRequestBodyParams,
     };
@@ -228,17 +228,22 @@ const mockResponse = {
     });
   });
 
-  /** Created Store Controller Fail Test */
   test('스토어 생성 시 값이 없으면 에러 발생', async () => {
-    mockRequest.body = {
-      userId: 1,
-      storeName: 'StoreName_InvalidParamsError',
-      isOwner: true,
-    };
+    mockRequest.body = {};
+    mockRequest.user = { userId: 1, isOwner: true };
+
+    const storeValidationSpy = jest
+      .spyOn(StoreValidation.prototype, 'validate')
+      .mockImplementation(() => {
+        throw new Error('validationError: 상점 이름을 입력해주세요.');
+      });
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
 
-    expect(mockNext).toHaveBeenCalledWith(new Error('InvalidParamsError'));
+    expect(storeValidationSpy).toHaveBeenCalledTimes(1);
+    expect(mockNext).toHaveBeenCalledWith(new Error('validationError: 상점 이름을 입력해주세요.'));
+
+    storeValidationSpy.mockRestore();
   });
 
   test('가게 사장님이 아닐떄 오류 발생', async () => {
@@ -256,6 +261,8 @@ const mockResponse = {
     await storeController.updateStore(mockRequest, mockResponse, mockNext);
     await storeController.deleteStore(mockRequest, mockResponse, mockNext);
 
-    expect(mockNext).toHaveBeenCalledWith(new Error('해당하는 유저는 사장님이 아닙니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(1, new ValidationError('사장님만 이용가능합니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(2, new ValidationError('사장님만 이용가능합니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(3, new ValidationError('사장님만 이용가능합니다.'));
   });
 });

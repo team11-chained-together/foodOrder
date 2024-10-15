@@ -79,12 +79,6 @@ export class StoreRepository {
     return deletedStore;
   };
 
-  findStore = async () => {
-    const getStore = await this.prisma.store.findMany();
-
-    return getStore;
-  };
-
   findMenuByStoreId = async (storeId) => {
     const getMenu = await this.prisma.menu.findMany({
       where: { storeId: storeId },
@@ -98,5 +92,11 @@ export class StoreRepository {
     });
 
     return getMenu;
+  };
+
+  findStore = async () => {
+    const getStore = await this.prisma.store.findMany();
+
+    return getStore;
   };
 }

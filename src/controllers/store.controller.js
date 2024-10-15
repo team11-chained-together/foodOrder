@@ -68,7 +68,10 @@ export class StoreController {
       const storeValidation = new DeleteStoreValidation(req.user.userId, req.user.isOwner);
       storeValidation.validate();
 
-      const deletedStore = await this.storeService.deleteStore(storeValidation.userId);
+      const deletedStore = await this.storeService.deleteStore(
+        storeValidation.userId,
+        req.body.storeId,
+      );
 
       return res.status(200).json({
         message: '가게 삭제를 완료 하였습니다.',
@@ -81,10 +84,11 @@ export class StoreController {
 
   getStore = async (req, res, next) => {
     try {
-      const getStore = await this.storeService.getStore();
+      const storeName = req.body.storeName;
+      const getStored = await this.storeService.getStore(storeName);
 
       return res.status(200).json({
-        data: getStore,
+        data: getStored,
       });
     } catch (err) {
       next(err);
