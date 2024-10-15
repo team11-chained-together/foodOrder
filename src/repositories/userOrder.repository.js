@@ -68,7 +68,7 @@ export class UserOrderRepository {
     return createOrder;
   };
 
-  updateCash = async (totalPrice, userId, storeId, orderId, menuId, quantity) => {
+  updateCash = async (totalPrice, userId, storeId, menuId, quantity) => {
     const updateCash = await this.prisma.$transaction(
       async (tx) => {
         for (let i = 0; i < menuId.length; i++) {

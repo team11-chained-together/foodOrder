@@ -27,7 +27,7 @@ app.use(
     secret: SESSION_KEY, // 세션 암호화 키
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, expires: 30000 }, // HTTPS 사용 시 true로 설정
+    cookie: { secure: false, maxAge: 5 * 60 * 1000 }, // HTTPS 사용 시 true로 설정
   }),
 );
 

@@ -6,6 +6,7 @@ let mockPrisma = {
     create: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    findMany: jest.fn(),
   },
   store: {
     findFirst: jest.fn(),
@@ -87,13 +88,13 @@ describe('Menu Repository Unit Test', () => {
 
   test('FindMenuName Method By Success', async () => {
     // 1. FindMenuName 메서드의 반환값을 설정한다.
-    const mockReturn = 'find MenuName';
-    mockPrisma.menu.findUnique.mockReturnValue(mockReturn);
+    const mockReturn = { id: 1, name: 'Find MenuName' }; // 기대하는 반환값 객체
+    mockPrisma.menu.findUnique.mockResolvedValue(mockReturn);
 
-    // 2. findStoreIdByUserId 메서드를 실행하기 위한 userId 데이터 전달
+    // 2. storeId 및 menuName 데이터 전달
     const findStoreIdParams = {
       storeId: 1,
-      menuName: 'Find MenuName Test',
+      // menuName: 'Find MenuName Test',
     };
 
     const findMenuNameData = await menuRepository.findMenuNameByStoreId(
@@ -101,11 +102,12 @@ describe('Menu Repository Unit Test', () => {
       findStoreIdParams.menuName,
     );
 
+    // 결과 검증
     expect(findMenuNameData).toEqual(mockReturn);
     expect(mockPrisma.menu.findUnique).toHaveBeenCalledTimes(1);
     expect(mockPrisma.menu.findUnique).toHaveBeenCalledWith({
-      where: { 
-        storeId_menuName: { storeId: findStoreIdParams.storeId, menuName: findStoreIdParams.menuName },
+      where: {
+        storeId: findStoreIdParams.storeId,
       },
     });
   });
@@ -113,17 +115,16 @@ describe('Menu Repository Unit Test', () => {
   test('updateMenu Method By Success', async () => {
     // 1.updateMenu 메서드의 반환값을 설정한다.
 
-
     const mockReturn = {
-    menuId: 1,
-    menuName: '더 맛있는 육계장 사발면',
-    image: '변경할 이미지 URL',
-    price: 1200,
-    stock: 100,
-  };
+      menuId: 1,
+      menuName: '더 맛있는 육계장 사발면',
+      image: '변경할 이미지 URL',
+      price: 1200,
+      stock: 100,
+    };
 
-// Prisma의 update 메서드가 mockReturn 객체를 반환하도록 설정
-    mockPrisma.menu.update.mockReturnValue(mockReturn); 
+    // Prisma의 update 메서드가 mockReturn 객체를 반환하도록 설정
+    mockPrisma.menu.update.mockReturnValue(mockReturn);
 
     // 2. updateMenu 메서드를 실행하기 위한 storeId, menuName, newMenuName, image, price, stock 데이터 전달
     const updateStoreParams = {

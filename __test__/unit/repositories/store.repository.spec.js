@@ -33,7 +33,7 @@ describe('가게 리포지토리 유닛 테스트', () => {
       createdAt: '2024-09-28T09:35:43.410Z',
       updatedAt: '2024-09-28T09:35:43.410Z',
     };
-    mockPrisma.store.findMany.mockReturnValue([sampleStoreData]);
+    mockPrisma.store.findMany.mockResolvedValue([sampleStoreData]);
 
     const searchedStores = await storeRepository.searchStores('Test search');
 
@@ -50,7 +50,17 @@ describe('가게 리포지토리 유닛 테스트', () => {
           {
             location: { contains: 'Test search' },
           },
+          {
+            menu: {
+              some: {
+                menuName: { contains: 'Test search' },
+              },
+            },
+          },
         ],
+      },
+      include: {
+        menu: true,
       },
     });
     expect(searchedStores).toEqual([sampleStoreData]);
@@ -116,20 +126,20 @@ describe('가게 리포지토리 유닛 테스트', () => {
 
   test('updateStore 테스트 성공', async () => {
     const mockReturn = 'Update Store Return String';
-    mockPrisma.store.update.mockReturnValue(mockReturn);
+    mockPrisma.store.update.mockResolvedValue(mockReturn);
 
     const updateStoreParams = {
       userId: 1,
-      storeId: 1,
       storeName: 'createStoreName',
       foodType: 'createFoodType',
+      location: 'updateLocation',
     };
 
     const updateStoreData = await storeRepository.updateStore(
       updateStoreParams.userId,
-      updateStoreParams.storeId,
       updateStoreParams.storeName,
       updateStoreParams.foodType,
+      updateStoreParams.location,
     );
 
     expect(updateStoreData).toEqual(mockReturn);
@@ -139,11 +149,11 @@ describe('가게 리포지토리 유닛 테스트', () => {
     expect(mockPrisma.store.update).toHaveBeenCalledWith({
       where: {
         userId: updateStoreParams.userId,
-        storeId: updateStoreParams.storeId,
       },
       data: {
         storeName: updateStoreParams.storeName,
         foodType: updateStoreParams.foodType,
+        location: updateStoreParams.location,
       },
     });
   });
@@ -180,13 +190,15 @@ describe('가게 리포지토리 유닛 테스트', () => {
       },
     ];
 
-    mockPrisma.menu.findMany.mockReturnValue(mockReturn);
+    mockPrisma.menu.findMany.mockResolvedValue(mockReturn);
 
     const getMenuParams = {
       storeId: 1,
     };
 
-    await storeRepository.findMenuByStoreId(getMenuParams.storeId);
+    const findStoreData = await storeRepository.findMenuByStoreId(getMenuParams.storeId);
+
+    expect(findStoreData).toEqual(mockReturn);
 
     expect(mockPrisma.menu.findMany).toHaveBeenCalledTimes(1);
 
@@ -202,5 +214,16 @@ describe('가게 리포지토리 유닛 테스트', () => {
         stock: true,
       },
     });
+  });
+
+  test('가게 찾기 테스트 성공', async () => {
+    const mockReturn = 'find store!';
+    mockPrisma.store.findMany.mockResolvedValue(mockReturn);
+
+    const findStoreData = await storeRepository.findStore();
+
+    expect(findStoreData).toEqual(mockReturn);
+    expect(mockPrisma.store.findMany).toHaveBeenCalledTimes(1);
+    expect(mockPrisma.store.findMany).toHaveBeenCalledWith();
   });
 });
