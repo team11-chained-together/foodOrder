@@ -37,14 +37,7 @@ export class UserOrderService {
 
     const orderData = await this.userOrderRepository.getOrderData(userId);
 
-    await this.userOrderRepository.updateCash(
-      totalPrice,
-      userId,
-      storeId,
-      orderData.orderId,
-      menuId,
-      quantity,
-    );
+    await this.userOrderRepository.updateCash(totalPrice, userId, storeId, menuId, quantity);
 
     const getOrderMenu = await this.userOrderRepository.getOrderMenu(orderData.orderId);
 

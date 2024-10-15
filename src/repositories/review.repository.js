@@ -41,7 +41,7 @@ export class ReviewRepository {
     return getMyReviewData;
   };
 
-  createReview = async (userId, storeId, comment, rate, orderId) => {
+  createReview = async (userId, storeId, orderId, comment, rate) => {
     const createdReview = await this.prisma.review.create({
       data: {
         userId: userId,
