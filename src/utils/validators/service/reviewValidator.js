@@ -32,14 +32,12 @@ export class CreateReviewValidation {
 }
 
 export class UpdateReviewValidation {
-  constructor(findReviewData, userId) {
+  constructor(findReviewData) {
     this.findReviewData = findReviewData;
-    this.userId = userId;
   }
 
   validate() {
     this.validateFindReviewData();
-    this.validateFindReviewDataUserId();
   }
 
   validateFindReviewData() {
@@ -47,8 +45,19 @@ export class UpdateReviewValidation {
       throw new ValidationError('해당하는 리뷰가 존재하지 않습니다.');
     }
   }
+}
 
-  validateFindReviewDataUserId() {
+export class UpdateReviewUserIdValidation {
+  constructor(findReviewData, userId) {
+    this.findReviewData = findReviewData;
+    this.userId = userId;
+  }
+
+  validate() {
+    this.validateUpdateReviewUserId();
+  }
+
+  validateUpdateReviewUserId() {
     if (this.findReviewData.userId !== this.userId) {
       throw new ValidationError('해당하는 리뷰는 수정할 수 없습니다');
     }
@@ -79,24 +88,32 @@ export class DeleteReviewValidation {
   }
 }
 
-export class GetReviewValidation {
-  constructor(getReviewData, findStoreData) {
-    this.getReviewData = getReviewData;
+export class FindStoreData {
+  constructor(findStoreData) {
     this.findStoreData = findStoreData;
   }
 
   validate() {
-    this.validateGetReviewStoreId();
-    this.validateGetReview();
+    this.validateFindStoreData();
   }
 
-  validateGetReviewStoreId() {
+  validateFindStoreData() {
     if (!this.findStoreData) {
-      throw new ValidationError('해당하는 가게는 존재하지 않습니다.');
+      throw new ValidationError('해당하는 가게는 존재 하지 않습니다.');
     }
   }
+}
 
-  validateGetReview() {
+export class GetReviewDataValidation {
+  constructor(getReviewData) {
+    this.getReviewData = getReviewData;
+  }
+
+  validate() {
+    this.validateGetReviewData();
+  }
+
+  validateGetReviewData() {
     if (this.getReviewData.length === 0) {
       throw new ValidationError('해당하는 가게에 대한 리뷰가 없습니다.');
     }
