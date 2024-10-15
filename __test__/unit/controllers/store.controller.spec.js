@@ -35,8 +35,8 @@ describe('스토어 컨트롤러 유닛 테스트', () => {
 const mockResponse = {
   status: jest.fn(),
   json: jest.fn(),
-};
-
+}; 
+  
   beforeEach(() => {
     jest.resetAllMocks();
 
