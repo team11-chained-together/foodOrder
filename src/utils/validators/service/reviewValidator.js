@@ -1,18 +1,26 @@
 import { ValidationError } from '../../errors/ValidationError.js';
 
 export class CreateReviewValidation {
-  constructor(checkOrderData) {
+  constructor(checkOrderData, userId) {
     this.checkOrderData = checkOrderData;
+    this.userId = userId;
   }
 
   validate() {
     this.validateCheckOrderData();
+    this.validateCheckUserId();
     this.validateCheckOrderStatement();
   }
 
   validateCheckOrderData() {
-    if (!this.checkOrderData) {
+    if (this.checkOrderData.length === 0) {
       throw new ValidationError('주문 내역이 없습니다.');
+    }
+  }
+
+  validateCheckUserId() {
+    if (this.checkOrderData.userId !== this.userId) {
+      throw new ValidationError('해당 주문에 대하여 리뷰를 작성 할 수 없습니다.');
     }
   }
 

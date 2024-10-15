@@ -12,11 +12,8 @@ export class ReviewService {
   createReview = async (userId, orderId, comment, rate) => {
     const checkOrderData = await this.reviewRepository.findOrderDataByOrderId(orderId);
 
-    const checkOrderValidation = new CreateReviewValidation(checkOrderData);
+    const checkOrderValidation = new CreateReviewValidation(checkOrderData, userId);
     checkOrderValidation.validate();
-
-    const checkOrderStatementValidation = new CreateReviewValidation(checkOrderData);
-    checkOrderStatementValidation.validate();
 
     const createdReview = await this.reviewRepository.createReview(
       userId,
