@@ -2,6 +2,7 @@ import {
   CheckOrderValidation,
   CheckMyOrderValidation,
   UpdateOrderStatementValidation,
+  CheckOrderDataValidation,
 } from '../utils/validators/service/checkOrderValidator.js';
 export class CheckOrderService {
   constructor(checkOrderRepository) {
@@ -14,7 +15,7 @@ export class CheckOrderService {
     storeValidation.validate();
 
     const orderData = await this.checkOrderRepository.findOrderIdByStoreId(storeData.storeId);
-    const orderValidation = new CheckOrderValidation(orderData);
+    const orderValidation = new CheckOrderDataValidation(orderData);
     orderValidation.validate();
 
     return {

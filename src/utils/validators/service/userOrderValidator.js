@@ -58,7 +58,7 @@ export class PointValidation {
   }
 
   pointValidate() {
-    if (this.point < this.totalPrice) {
+    if (this.user.point < this.totalPrice) {
       throw new ValidationError('잔액이 부족합니다.');
     }
   }

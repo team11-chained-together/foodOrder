@@ -7,8 +7,15 @@ export class CreateReviewValidation {
   }
 
   validate() {
+    this.validateCheckOrder();
     this.validateCheckUserId();
     this.validateCheckOrderStatement();
+  }
+
+  validateCheckOrder() {
+    if (!this.checkOrderData) {
+      throw new ValidationError('주문 내역이 없습니다.');
+    }
   }
 
   validateCheckUserId() {

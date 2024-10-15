@@ -28,7 +28,6 @@ export class UserController {
       //   return res.status(400).json({
       //     message: err.message,
       //   });
-      //   return err.message
       // }
       next(err);
     }

@@ -43,7 +43,7 @@ export class StoreValidation {
 
   storeValidate() {
     if (!this.store) {
-      throw new Error('보유하고 있는 가게가 없습니다, 가게를 만들어주세요.');
+      throw new ValidationError('보유하고 있는 가게가 없습니다, 가게를 만들어주세요.');
     }
   }
 }

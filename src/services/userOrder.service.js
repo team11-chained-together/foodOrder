@@ -12,28 +12,19 @@ export class UserOrderService {
 
   createUserOrder = async (userId, storeId, menuId, quantity) => {
     let totalPrice = 0;
-    let index = 0;
 
-    //TODO: 해당하는 메뉴가 없을때 오류가 생성되지 않음
     const checkStore = await this.userOrderRepository.getStoreData(storeId);
     const checkStoreValidation = new CheckStoreValidation(checkStore);
     checkStoreValidation.validate();
     for (let i = 0; i < Array(menuId).length; i++) {
       const checkMenu = await this.userOrderRepository.getMenuData(menuId[i]);
-      console.log(checkMenu);
+      totalPrice += checkMenu.price * quantity[i];
       const checkMenuValidation = new CheckMenuValidation(checkMenu, storeId);
       checkMenuValidation.validate();
     }
-
-    for (const element of menuId) {
-      const menu = await this.userOrderRepository.getMenuData(element);
-      totalPrice += menu.price * quantity[index];
-      index++;
-
-      const user = await this.userOrderRepository.getUserPoint(userId);
-      const pointValidation = new PointValidation(totalPrice, user);
-      pointValidation.validate();
-    }
+    const user = await this.userOrderRepository.getUserPoint(userId);
+    const pointValidation = new PointValidation(totalPrice, user);
+    pointValidation.validate();
 
     for (let i = 0; i < menuId.length; i++) {
       const checkStock = await this.userOrderRepository.getMenuData(menuId[i]);
