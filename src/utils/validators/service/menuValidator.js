@@ -43,7 +43,7 @@ export class GetMenuValidation {
 
   validateStore() {
     if (!this.store) {
-      throw new ValidationError('해당하는 음식점이 없습니다.');
+      throw new ValidationError('해당하는 가게가 없습니다.');
     }
   }
 }

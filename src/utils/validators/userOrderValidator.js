@@ -15,18 +15,18 @@ export class UserOrderValidation {
 
   storeValidate() {
     if (!this.storeId) {
-      throw new ValidationError(' 상점 ID를 입력해주세요');
+      throw new ValidationError('상점 ID를 입력해주세요.');
     }
   }
 
   menuIdValidate() {
     if (!this.menuId) {
-      throw new ValidationError('메뉴 ID를 입력해주세요');
+      throw new ValidationError('메뉴 ID를 입력해주세요.');
     }
   }
   quantityValidate() {
     if (!this.quantity) {
-      throw new ValidationError('수량을 입력해주세요');
+      throw new ValidationError('수량을 입력해주세요.');
     }
   }
 }

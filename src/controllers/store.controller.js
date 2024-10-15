@@ -81,10 +81,7 @@ export class StoreController {
 
   getStore = async (req, res, next) => {
     try {
-      const storeValidation = new GetStoreValidation(req.body);
-      storeValidation.validate();
-
-      const getStore = await this.storeService.getStore(storeValidation.storeName);
+      const getStore = await this.storeService.getStore();
 
       return res.status(200).json({
         data: getStore,
@@ -94,4 +91,3 @@ export class StoreController {
     }
   };
 }
-//수정
