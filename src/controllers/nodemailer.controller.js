@@ -1,5 +1,5 @@
 import expressSession from 'express-session';
-import { NodeMailerValidator } from '../utils/validators/nodeMailerValidator.js';
+import { NodeMailerValidator } from '../utils/validators/controller/nodeMailerValidator.js';
 
 export class NodeMailerController {
   constructor(nodeMailerService) {

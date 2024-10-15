@@ -1,4 +1,4 @@
-import { CreateMenu, UpdateMenu, DeleteMenu, GetMenu } from '../utils/validators/menuValidator.js';
+import { CreateMenu, UpdateMenu, DeleteMenu, GetMenu } from '../utils/validators/controller/menuValidator.js';
 
 export class MenuController {
   constructor(menuService) {

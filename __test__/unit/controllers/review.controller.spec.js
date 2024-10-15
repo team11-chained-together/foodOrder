@@ -1,6 +1,6 @@
 import { jest, test } from '@jest/globals';
 import { ReviewController } from '../../../src/controllers/review.controller.js';
-import{CreateReview,UpdateReview,DeleteReview} from '../../../src/utils/validators/reviewValidator.js';
+import{CreateReview,UpdateReview,DeleteReview} from '../../../src/utils/validators/controller/reviewValidator.js';
 
 const mockReviewService = {
   createReview: jest.fn(),

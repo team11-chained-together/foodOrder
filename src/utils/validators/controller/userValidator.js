@@ -1,4 +1,4 @@
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../../errors/ValidationError.js';
 
 export class SignUpUser {
   constructor({ email, password, code, confirmPassword, name, address, isOwner }, emailCode) {

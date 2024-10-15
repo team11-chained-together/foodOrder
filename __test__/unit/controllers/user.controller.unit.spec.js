@@ -1,7 +1,7 @@
 import { jest, test, expect } from '@jest/globals';
 import { UserController } from '../../../src/controllers/user.controller';
 import { UserService } from '../../../src/services/user.service';
-import { SignUpUser } from '../../../src/utils/validators/userValidator';
+import { SignUpUser } from '../../../src/utils/validators/controller/userValidator.js';
 
 const mockUserService = {
   signUp: jest.fn(),

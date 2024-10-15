@@ -1,4 +1,4 @@
-import { SignUpUser, SignInUser } from '../utils/validators/userValidator.js';
+import { SignUpUser, SignInUser } from '../utils/validators/controller/userValidator.js';
 
 export class UserController {
   constructor(userService) {

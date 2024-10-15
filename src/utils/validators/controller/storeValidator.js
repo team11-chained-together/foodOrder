@@ -1,4 +1,4 @@
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../../errors/ValidationError.js';
 
 export class StoreValidation {
   constructor(userId, isOwner, { storeName, location, foodType }) {
