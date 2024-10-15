@@ -59,14 +59,15 @@ export class StoreService {
     const updatedStore = await this.storeRepository.updateStore(
       userId,
       storeName,
-      foodType,
       location,
+      foodType,
     );
 
     return {
       userId: updatedStore.userId,
       storeId: updatedStore.storeId,
       storeName: updatedStore.storeName,
+      location: updatedStore.location,
       foodType: updatedStore.foodType,
       sales: updatedStore.sales,
       createdAt: updatedStore.createdAt,

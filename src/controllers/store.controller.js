@@ -54,8 +54,8 @@ export class StoreController {
       const updatedStore = await this.storeService.updateStore(
         storeValidation.userId,
         storeValidation.storeName,
-        storeValidation.foodType,
         storeValidation.location,
+        storeValidation.foodType,
       );
       return res.status(200).json({ data: updatedStore });
     } catch (err) {

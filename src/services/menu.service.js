@@ -1,5 +1,6 @@
 import {
   CreateMenuValidation,
+  CreateIsMenuNameValidation,
   UpdateMenuValidation,
   GetMenuValidation,
 } from '../utils/validators/service/menuValidator.js';
@@ -19,7 +20,7 @@ export class MenuService {
       menuName,
     );
 
-    const createMenuValidation = new CreateMenuValidation(isMenuNameExists);
+    const createMenuValidation = new CreateIsMenuNameValidation(isMenuNameExists);
     createMenuValidation.validate();
 
     const createdMenu = await this.menuRepository.createMenu(

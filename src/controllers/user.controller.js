@@ -35,6 +35,7 @@ export class UserController {
 
   userLogin = async (req, res, next) => {
     try {
+      // TODO: 로그인시 @ 없어지면 오류
       const loginUser = new SignInUser(req.body);
       loginUser.validate();
 

@@ -16,7 +16,7 @@ export class UserOrderService {
     const checkStore = await this.userOrderRepository.getStoreData(storeId);
     const checkStoreValidation = new CheckStoreValidation(checkStore);
     checkStoreValidation.validate();
-    for (let i = 0; i < Array(menuId).length; i++) {
+    for (let i = 0; i < menuId.length; i++) {
       const checkMenu = await this.userOrderRepository.getMenuData(menuId[i]);
       totalPrice += checkMenu.price * quantity[i];
       const checkMenuValidation = new CheckMenuValidation(checkMenu, storeId);
