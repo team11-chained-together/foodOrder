@@ -10,7 +10,7 @@ export class CreateMenuValidation {
   }
 
   validateIsMenuNameExists() {
-    if (!this.isMenuNameExists) {
+    if (this.isMenuNameExists) {
       throw new ValidationError('저희 가게에 이미 존재하는 메뉴 이름입니다.');
     }
   }
