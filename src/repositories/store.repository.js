@@ -41,7 +41,6 @@ export class StoreRepository {
         location: location,
         foodType: foodType,
         sales: 0,
-        location: location,
       },
     });
 

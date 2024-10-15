@@ -26,7 +26,8 @@ app.use(
     secret: 'your-secret-key', // 세션 암호화 키
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // HTTPS 사용 시 true로 설정
+    cookie: { secure: false ,
+    }, // HTTPS 사용 시 true로 설정
   }),
 );
 
