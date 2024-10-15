@@ -2,14 +2,12 @@ import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { ReviewRepository } from '../../../src/repositories/review.repository';
 
 let mockPrisma = {
-  user: {
-    create: jest.fn(),
-    findUnique: jest.fn(),
+  review: {
     findFirst: jest.fn(),
   },
 };
 
-let userRepository = new UserRepository(mockPrisma);
+let reviewRepository = new ReviewRepository(mockPrisma);
 
 describe('리뷰 리포지토리 유닛 테스트', () => {
   beforeEach(() => {
@@ -20,5 +18,13 @@ describe('리뷰 리포지토리 유닛 테스트', () => {
     const mockReturn = {
       orderId: 1,
     };
+
+    mockPrisma.review.findFirst.mockReturnValue(mockReturn);
+
+    const findFirstOrderId = { orderId: 1 };
+
+    const findOrderData = await review;
+
+    expect();
   });
 });
