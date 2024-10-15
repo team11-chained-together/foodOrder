@@ -56,7 +56,6 @@ export class StoreController {
         storeValidation.storeName,
         storeValidation.location,
         storeValidation.foodType,
-        storeValidation.location,
       );
       return res.status(200).json({ data: updatedStore });
     } catch (err) {

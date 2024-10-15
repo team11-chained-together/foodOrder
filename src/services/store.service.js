@@ -59,8 +59,8 @@ export class StoreService {
     const updatedStore = await this.storeRepository.updateStore(
       userId,
       storeName,
-      foodType,
       location,
+      foodType,
     );
 
     return {
