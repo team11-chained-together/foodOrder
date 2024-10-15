@@ -1,20 +1,28 @@
 import { ValidationError } from '../../errors/ValidationError.js';
 
 export class CreateMenuValidation {
-  constructor(checkStoreId, isMenuNameExists) {
+  constructor(checkStoreId) {
     this.checkStoreId = checkStoreId;
-    this.isMenuNameExists = isMenuNameExists;
   }
 
   validate() {
     this.validateCheckStoreId();
-    this.validateIsMenuNameExists();
   }
 
   validateCheckStoreId() {
     if (!this.checkStoreId) {
       throw new ValidationError('해당하는 가게가 없습니다.');
     }
+  }
+}
+
+export class CreateIsMenuNameValidation {
+  constructor(isMenuNameExists) {
+    this.isMenuNameExists = isMenuNameExists;
+  }
+
+  validate() {
+    this.validateIsMenuNameExists();
   }
 
   validateIsMenuNameExists() {
