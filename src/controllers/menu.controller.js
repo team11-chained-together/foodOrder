@@ -1,4 +1,9 @@
-import { CreateMenu, UpdateMenu, DeleteMenu, GetMenu } from '../utils/validators/controller/menuValidator.js';
+import {
+  CreateMenu,
+  UpdateMenu,
+  DeleteMenu,
+  GetMenu,
+} from '../utils/validators/controller/menuValidator.js';
 
 export class MenuController {
   constructor(menuService) {
@@ -66,8 +71,7 @@ export class MenuController {
       deletedMenu.validate();
 
       const deleteMenu = await this.menuService.deleteMenu(userId, deletedMenu.menuId);
-
-      return res.status(204).json({ data: deleteMenu });
+      return res.status(200).json({ message: '메뉴 삭제를 성공하였습니다.', data: deleteMenu });
     } catch (err) {
       next(err);
     }

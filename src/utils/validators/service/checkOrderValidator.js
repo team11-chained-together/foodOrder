@@ -1,14 +1,12 @@
 import { ValidationError } from '../../errors/ValidationError.js';
 
 export class CheckOrderValidation {
-  constructor(storeData, orderData) {
+  constructor(storeData) {
     this.storeData = storeData;
-    this.orderData = orderData;
   }
 
   validate() {
     this.validateStoreData();
-    this.validateOrderData();
   }
 
   validateStoreData() {
@@ -16,10 +14,20 @@ export class CheckOrderValidation {
       throw new ValidationError('상점이 없습니다. 상점을 만들어주세요.');
     }
   }
+}
+
+export class CheckOrderDataValidation {
+  constructor(orderData) {
+    this.orderData = orderData;
+  }
+
+  validate() {
+    this.validateOrderData();
+  }
 
   validateOrderData() {
-    if (!this.orderData) {
-      throw new ValidationError('주문이 없습니다.');
+    if (this.orderData.length === 0) {
+      throw new ValidationError('사장님의 가게에 주문이 없습니다.');
     }
   }
 }
