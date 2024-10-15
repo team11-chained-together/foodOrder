@@ -6,17 +6,17 @@ import {
 } from '../utils/validators/storeValidator.js';
 
 export class StoreController {
-  constructor(storeService) {
+  constructor(storeService) {3
     this.storeService = storeService;
   }
 
-  // 키워드 검색
   searchStores = async (req, res, next) => {
     try {
       const storeValidation = new SearchStoreValidation(req.query);
       storeValidation.validate();
-
       const stores = await this.storeService.searchStores(storeValidation.search);
+      console.log(stores);
+      
 
       return res.status(200).json({ data: stores });
     } catch (err) {
@@ -26,7 +26,11 @@ export class StoreController {
 
   createStore = async (req, res, next) => {
     try {
-      const storeValidation = new StoreValidation(req.user.userId, req.user.isOwner, req.body);
+      const storeValidation = new StoreValidation(
+        req.user.userId, 
+        req.user.isOwner, 
+        req.body
+      );
 
       storeValidation.validate();
 
@@ -80,10 +84,12 @@ export class StoreController {
     }
   };
 
-  // 전체 상점 조회
   getStore = async (req, res, next) => {
     try {
-      const getStore = await this.storeService.getStore();
+      const storeValidation = new GetStoreValidation(req.body);
+      storeValidation.validate();
+
+      const getStore = await this.storeService.getStore(storeValidation.storeName);
 
       return res.status(200).json({
         data: getStore,

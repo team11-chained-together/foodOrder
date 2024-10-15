@@ -14,6 +14,7 @@ export class UserController {
       const createdUser = await this.userService.signUp(
         signUpUser.email,
         signUpUser.password,
+        signUpUser.confirmPassword,
         signUpUser.name,
         signUpUser.address,
         signUpUser.isOwner,

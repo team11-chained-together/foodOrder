@@ -1,6 +1,8 @@
 import { jest, test, expect } from '@jest/globals';
 import { UserController } from '../../../src/controllers/user.controller';
 import { UserService } from '../../../src/services/user.service';
+import{ SignUpUser } from '../../../src/utils/validators/userValidator';
+
 
 const mockUserService = {
   signUp: jest.fn(),
@@ -10,6 +12,7 @@ const mockUserService = {
 
 const mockRequest = {
   body: jest.fn(),
+  session : jest.fn()
 };
 
 const mockResponse = {
@@ -19,6 +22,8 @@ const mockResponse = {
 
 const mockNext = jest.fn();
 
+const emailCode = mockRequest.session.emailCode;
+const signUpValidation = new SignUpUser(mockRequest.body, emailCode);
 const userController = new UserController(mockUserService);
 
 // 초기화
@@ -41,6 +46,7 @@ describe('UserController Unit Test', () => {
     };
 
     mockRequest.body = signUpRequestBodyParams;
+
     const signUpReturnValue = {
       userId: 1,
       ...signUpRequestBodyParams,
@@ -48,7 +54,7 @@ describe('UserController Unit Test', () => {
     };
     mockUserService.signUp.mockReturnValue(signUpReturnValue);
 
-    await userController.userSignup(mockRequest, mockResponse);
+    await userController.userSignup(mockRequest, mockResponse,mockNext);
     expect(mockUserService.signUp).toHaveBeenCalledTimes(1);
     expect(mockUserService.signUp).toHaveBeenCalledWith(
       signUpRequestBodyParams.email,
