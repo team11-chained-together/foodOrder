@@ -73,12 +73,14 @@ export class MenuRepository {
     return getStore;
   };
 
-  findMenuByStoreId = async (storeId) => {
-    const getMenu = await this.prisma.menu.findMany({
-      where: { storeId: storeId },
-      orderBy: { createdAt: 'asc' },
+  findMenuNameByStoreId = async (storeId) => {
+    // const getMenu = await this.prisma.menu.findMany({
+    const getMenu = await this.prisma.menu.findUnique({
+      where: {
+        storeId: storeId,
+      },
+      // orderBy: { createdAt: 'asc' },
     });
-
     return getMenu;
   };
 }

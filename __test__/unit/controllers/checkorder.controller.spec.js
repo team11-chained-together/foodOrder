@@ -3,7 +3,7 @@ import { CheckOrderController } from '../../../src/controllers/checkOrder.contro
 import {
   CheckedOrder,
   UpdatedOrderStatement,
-} from '../../../src/utils/validators/checkOrderValidator.js';
+} from '../../../src/utils/validators/controller/checkOrderValidator.js';
 
 const mockCheckOrderService = {
   checkOrder: jest.fn(),
@@ -63,10 +63,10 @@ describe('체크오더 컨트롤러 유닛 테스트', () => {
     expect(mockCheckOrderService.checkMyOrder).toHaveBeenCalledTimes(1);
     expect(mockCheckOrderService.checkMyOrder).toHaveBeenCalledWith(mockRequest.user.userId);
 
-    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledTimes(2);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
 
-    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledTimes(2);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: checkMyOrderReturnValue,
     });
