@@ -22,7 +22,7 @@ export class SignUpUser {
 
   validateEmail() {
     if (!this.email) {
-      throw new ValidationError('이메일을 입력하세요.');
+      throw new ValidationError('이메일을 입력해주세요.');
     }
     const investigateEmail =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -39,10 +39,10 @@ export class SignUpUser {
 
   validatePassword() {
     if (!this.password) {
-      throw new ValidationError('비밀번호를 입력하세요.');
+      throw new ValidationError('비밀번호를 입력해주세요.');
     }
     if (this.password.length < 8) {
-      throw new ValidationError('비밀번호를 다시 설정하세요.');
+      throw new ValidationError('비밀번호는 8자리 이상으로 작성해 주세요.');
     }
     if (this.password !== this.confirmPassword) {
       throw new ValidationError('비밀번호 확인이 일치하지 않습니다.');
@@ -51,13 +51,13 @@ export class SignUpUser {
 
   validateName() {
     if (!this.name) {
-      throw new ValidationError('이름을 입력하세요.');
+      throw new ValidationError('이름을 입력해주세요.');
     }
   }
 
   validateAddress() {
     if (!this.address) {
-      throw new ValidationError('주소를 입력하세요.');
+      throw new ValidationError('주소를 입력해주세요.');
     }
   }
 }
@@ -75,13 +75,13 @@ export class SignInUser {
 
   validateEmail() {
     if (!this.email) {
-      throw new ValidationError('이메일을 입력하세요.');
+      throw new ValidationError('이메일을 입력해주세요.');
     }
   }
 
   validatePassword() {
     if (!this.password) {
-      throw new ValidationError('비밀번호를 입력하세요.');
+      throw new ValidationError('비밀번호를 입력해주세요.');
     }
   }
 }

@@ -27,7 +27,7 @@ export class CreateStoreValidation {
 
   validateStore() {
     if (this.store) {
-      throw new ValidationError('이미 보유하고 있는 식당이 있습니다.');
+      throw new ValidationError('이미 보유하고 있는 가게가 있습니다.');
     }
   }
 }
@@ -43,7 +43,7 @@ export class StoreValidation {
 
   storeValidate() {
     if (!this.store) {
-      throw new Error('보유하고 있는 식당이 없습니다, 식당을 만들어주세요.');
+      throw new Error('보유하고 있는 가게가 없습니다, 가게를 만들어주세요.');
     }
   }
 }
@@ -58,8 +58,8 @@ export class GetStoreValidation {
   }
 
   getStoreValidate() {
-    if (!this.store) {
-      throw new ValidationError('등록된 식당이 없습니다.');
+    if (this.store.length === 0) {
+      throw new ValidationError('등록된 가게가 없습니다.');
     }
   }
 }
