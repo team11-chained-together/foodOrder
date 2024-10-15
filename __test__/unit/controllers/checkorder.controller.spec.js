@@ -4,7 +4,6 @@ import {
   CheckedOrder,
   UpdatedOrderStatement,
 } from '../../../src/utils/validators/checkOrderValidator.js';
-import { json } from 'express';
 
 const mockCheckOrderService = {
   checkOrder: jest.fn(),
@@ -70,6 +69,38 @@ describe('체크오더 컨트롤러 유닛 테스트', () => {
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({
       data: checkMyOrderReturnValue,
+    });
+  });
+
+  test('배달현황 업데이트 성공 유닛 테스트', async () => {
+    new UpdatedOrderStatement(mockRequest.user.isOwner, mockRequest.body);
+    mockRequest.user = { userId: 1 };
+    const updateOrderBodyParams = {
+      orderId: 1,
+      statement: 'PREPARE',
+    };
+    mockRequest.body = updateOrderBodyParams;
+
+    const updateOrderReturnValue = {
+      oderId: 1,
+      storeId: 1,
+      statement: 'PREPARE',
+    };
+    mockCheckOrderService.updateOrderStatement.mockReturnValue(updateOrderReturnValue);
+    await checkeOrderController.updateOrderStatement(mockRequest, mockResponse, mockNext);
+    expect(mockCheckOrderService.updateOrderStatement).toHaveBeenCalledTimes(1);
+    expect(mockCheckOrderService.updateOrderStatement).toHaveBeenCalledWith(
+      mockRequest.user.userId,
+      updateOrderBodyParams.orderId,
+      updateOrderBodyParams.statement,
+    );
+
+    expect(mockResponse.status).toHaveBeenCalledTimes(1);
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+
+    expect(mockResponse.json).toHaveBeenCalledTimes(1);
+    expect(mockResponse.json).toHaveBeenCalledWith({
+      data: updateOrderReturnValue,
     });
   });
 });
