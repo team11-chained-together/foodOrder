@@ -10,7 +10,7 @@ export class SearchStoreValidation {
   }
 
   validateStore() {
-    if (store.length === 0) {
+    if (this.store.length === 0) {
       throw new ValidationError('검색 결과가 없습니다.');
     }
   }
