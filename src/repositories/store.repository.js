@@ -3,12 +3,9 @@ export class StoreRepository {
     this.prisma = prisma;
   }
 
-  //음식점 검색 기능 -> 음식점 이름,음식이름,지역,푸드타입(피자면 피자)으로 검색
-
   searchStores = async (search) => {
     const stores = await this.prisma.store.findMany({
       where: {
-        //이중 하나의 값이라도 해당하면 검색
         OR: [
           {
             storeName: { contains: search },
@@ -19,7 +16,17 @@ export class StoreRepository {
           {
             location: { contains: search },
           },
+          {
+            menu: {
+              some: {
+                menuName: { contains: search },
+              },
+            },
+          },
         ],
+      },
+      include: {
+        menu: true,
       },
     });
     return stores;
@@ -47,26 +54,25 @@ export class StoreRepository {
     return createdStore;
   };
 
-  updateStore = async (userId, storeId, storeName, foodType) => {
+  updateStore = async (userId, storeName, foodType, location) => {
     const updatedStore = await this.prisma.store.update({
       where: {
         userId: userId,
-        storeId: storeId,
       },
       data: {
         storeName: storeName,
         foodType: foodType,
+        location: location,
       },
     });
 
     return updatedStore;
   };
 
-  deleteStore = async (userId, storeId) => {
+  deleteStore = async (userId) => {
     const deletedStore = await this.prisma.store.delete({
       where: {
         userId: userId,
-        storeId: storeId,
       },
     });
 

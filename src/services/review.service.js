@@ -1,3 +1,11 @@
+import {
+  CreateReviewValidation,
+  UpdateReviewValidation,
+  DeleteReviewValidation,
+  GetReviewValidation,
+  GetMyReviewValidation,
+} from '../utils/validators/service/reviewValidator.js';
+
 export class ReviewService {
   constructor(reviewRepository) {
     this.reviewRepository = reviewRepository;
@@ -6,13 +14,8 @@ export class ReviewService {
   createReview = async (userId, orderId, comment, rate) => {
     const checkOrderData = await this.reviewRepository.findOrderDataByOrderId(orderId);
 
-    if (!checkOrderData) {
-      throw new Error('주문 내역이 없습니다.');
-    }
-
-    if (checkOrderData.statement !== 'DELIVERY_COMPLETE') {
-      throw new Error('배송이 완료되지 않았습니다.');
-    }
+    const checkOrderValidation = new CreateReviewValidation(checkOrderData, userId);
+    checkOrderValidation.validate();
 
     const createdReview = await this.reviewRepository.createReview(
       userId,
@@ -33,13 +36,11 @@ export class ReviewService {
   updateReview = async (userId, reviewId, comment, rate) => {
     const findReviewData = await this.reviewRepository.findReviewDataByReviewId(reviewId);
 
-    if (!findReviewData) {
-      throw new Error('해당하는 리뷰가 존재하지 않습니다.');
-    }
+    const findReviewDataValidation = new UpdateReviewValidation(findReviewData);
+    findReviewDataValidation.validate();
 
-    if (findReviewData.userId !== userId) {
-      throw new Error('해당하는 리뷰는 수정할 수 없습니다');
-    }
+    const findReviewDataUserId = new UpdateReviewValidation(findReviewData.userId, userId);
+    findReviewDataUserId.validate();
 
     const updateReview = await this.reviewRepository.updateReview(reviewId, comment, rate);
 
@@ -55,13 +56,11 @@ export class ReviewService {
 
   deleteReview = async (userId, reviewId) => {
     const findReviewData = await this.reviewRepository.findReviewDataByReviewId(reviewId);
-    if (!findReviewData) {
-      throw new Error('해당하는 리뷰가 존재하지 않습니다.');
-    }
+    const findReviewDataValidation = new DeleteReviewValidation(findReviewData);
+    findReviewDataValidation.validate();
 
-    if (findReviewData.userId !== userId) {
-      throw new Error('해당하는 리뷰는 삭제할 수 없습니다.');
-    }
+    const findReviewDataUserIdValidation = new DeleteReviewValidation(findReviewData, userId);
+    findReviewDataUserIdValidation.validate();
 
     const deletedReview = await this.reviewRepository.deleteReview(reviewId);
 
@@ -71,8 +70,13 @@ export class ReviewService {
   };
 
   getReview = async (storeId) => {
-    const getReviewData = await this.reviewRepository.findReviewData(storeId);
+    const findStoreData = await this.reviewRepository.findStoreData(storeId);
+    const findStoreDataValidation = new GetReviewValidation(findStoreData);
+    findStoreDataValidation.validate();
 
+    const getReviewData = await this.reviewRepository.findReviewData(storeId);
+    const getReviewDataValidation = new GetReviewValidation(getReviewData);
+    getReviewDataValidation.validate();
     return {
       getReviewData,
     };
@@ -80,6 +84,8 @@ export class ReviewService {
 
   getMyReview = async (userId) => {
     const getMyReviewData = await this.reviewRepository.findMyReviewData(userId);
+    const getMyReviewDataValidation = new GetMyReviewValidation(getMyReviewData);
+    getMyReviewDataValidation.validate();
 
     return { getMyReviewData };
   };

@@ -1,59 +1,10 @@
-// class ValidationError extends Error {
-//   constructor(message) {
-//     super(message);
-//     this.name = 'ValidationError';
-//   }
-// }
-
-// // new ValidationError("이메일 안 맞음")
-
-// class SignUpUser {
-//   constructor({ email, password, confirmPassword, name, address, isOwner }) {
-//     this.email = email;
-//     this.password = password;
-//     this.confirmPassword = confirmPassword;
-//     this.name = name;
-//     this.address = address;
-//     this.isOwner = isOwner;
-//   }
-
-//   validate() {
-//     this.validateEmail();
-//     this.validatePassword();
-//   }
-
-//   validateEmail() {
-//     if (!this.email) {
-//       throw new ValidationError('email를 입력하세요.');
-//     }
-//     const investigateEmail =
-//       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-//     if (!investigateEmail.test(this.email)) {
-//       throw new ValidationError('이메일 형식에 맞게 입력해주세요.');
-//     }
-//   }
-
-//   validatePassword() {
-//     if (!this.password) {
-//       throw new ValidationError('password를 입력하세요.');
-//     }
-//     if (this.password.length < 8) {
-//       throw new ValidationError('비밀번호를 다시 설정하세요.');
-//     }
-//     if (this.password !== this.confirmPassword) {
-//       throw new ValidationError('비밀번호 확인이 일치하지 않습니다.');
-//     }
-//   }
-// }
-import { SignUpUser } from '../utils/validators/userValidator.js';
-import { SignInUser } from '../utils/validators/signInValidator.js';
+import { SignUpUser, SignInUser } from '../utils/validators/userValidator.js';
 
 export class UserController {
   constructor(userService) {
     this.userService = userService;
   }
 
-  // TODO: email 인증부분 추가
   userSignup = async (req, res, next) => {
     try {
       const emailCode = req.session.emailCode;
@@ -77,6 +28,7 @@ export class UserController {
       //   return res.status(400).json({
       //     message: err.message,
       //   });
+      //   return err.message
       // }
       next(err);
     }

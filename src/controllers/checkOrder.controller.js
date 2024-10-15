@@ -1,5 +1,4 @@
-import { Statement } from '@prisma/client';
-
+import { CheckedOrder, UpdatedOrderStatement } from '../utils/validators/checkOrderValidator.js';
 export class CheckOrderController {
   constructor(checkOrderService) {
     this.checkOrderService = checkOrderService;
@@ -7,10 +6,11 @@ export class CheckOrderController {
 
   checkOrder = async (req, res, next) => {
     try {
-      const { userId, isOwner } = req.user;
-      if (!isOwner) {
-        throw new Error('사장님만 접근 가능한 페이지입니다.');
-      }
+      const checkedOrder = new CheckedOrder(req.user.isOwner);
+      checkedOrder.validate();
+
+      const userId = req.user.userId;
+
       const checkOrder = await this.checkOrderService.checkOrder(userId);
 
       return res.status(200).json({ data: checkOrder });
@@ -33,22 +33,15 @@ export class CheckOrderController {
 
   updateOrderStatement = async (req, res, next) => {
     try {
-      const isOwner = req.user.isOwner;
-      const { orderId, statement } = req.body;
+      const userId = req.user.userId;
+      const updatedOrderStatement = new UpdatedOrderStatement(req.user.isOwner, req.body);
+      updatedOrderStatement.validate();
 
-      if (!isOwner) {
-        throw new Error('사장님만 접근 가능한 페이지입니다.');
-      }
-
-      if (
-        statement !== 'PREPARE' &&
-        statement !== 'IN_DELIVERY' &&
-        statement !== 'DELIVERY_COMPLETE'
-      ) {
-        throw new Error('올바른 상태값을 입력해주세요.');
-      }
-
-      const updateOrder = await this.checkOrderService.updateOrderStatement(orderId, statement);
+      const updateOrder = await this.checkOrderService.updateOrderStatement(
+        userId,
+        updatedOrderStatement.orderId,
+        updatedOrderStatement.statement,
+      );
 
       return res.status(200).json({ data: updateOrder });
     } catch (error) {

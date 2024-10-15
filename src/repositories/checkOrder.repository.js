@@ -41,7 +41,7 @@ export class CheckOrderRepository {
 
   updateOrderStatement = async (orderId, statement) => {
     const updatedOrder = await this.prisma.order.update({
-      where: { orderId: +orderId },
+      where: { orderId: +orderId, storeId: storeId },
       data: {
         statement: statement,
       },

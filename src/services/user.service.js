@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { UserValidation, LogInValidation } from '../utils/validators/service/userValidator.js';
 export class UserService {
   constructor(userRepository) {
     this.userRepository = userRepository;
@@ -7,10 +8,8 @@ export class UserService {
 
   signUp = async (email, password, name, address, isOwner) => {
     const existEmail = await this.userRepository.checkEmail(email);
-
-    if (existEmail) {
-      throw new Error('이미 존재하는 email 입니다.');
-    }
+    const emailValidation = new UserValidation(existEmail);
+    emailValidation.validate();
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -33,15 +32,9 @@ export class UserService {
 
   logIn = async (email, password) => {
     const user = await this.userRepository.findUserByEmail(email);
-
-    if (!user) {
-      throw new Error('해당 email의 사용자가 존재하지 않습니다.');
-    }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new Error('비밀번호가 일치하지 않습니다.');
-    }
+    const loginValidation = new LogInValidation(user, isPasswordValid);
+    loginValidation.validate();
 
     const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
     return token;

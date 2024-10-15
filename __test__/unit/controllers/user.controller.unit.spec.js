@@ -1,6 +1,7 @@
 import { jest, test, expect } from '@jest/globals';
 import { UserController } from '../../../src/controllers/user.controller';
 import { UserService } from '../../../src/services/user.service';
+import { SignUpUser } from '../../../src/utils/validators/userValidator';
 
 const mockUserService = {
   signUp: jest.fn(),
@@ -10,6 +11,7 @@ const mockUserService = {
 
 const mockRequest = {
   body: jest.fn(),
+  session: jest.fn(),
 };
 
 const mockResponse = {
@@ -19,6 +21,8 @@ const mockResponse = {
 
 const mockNext = jest.fn();
 
+const emailCode = mockRequest.session.emailCode;
+const signUpValidation = new SignUpUser(mockRequest.body, emailCode);
 const userController = new UserController(mockUserService);
 
 // 초기화
@@ -41,6 +45,7 @@ describe('UserController Unit Test', () => {
     };
 
     mockRequest.body = signUpRequestBodyParams;
+
     const signUpReturnValue = {
       userId: 1,
       ...signUpRequestBodyParams,
@@ -48,12 +53,11 @@ describe('UserController Unit Test', () => {
     };
     mockUserService.signUp.mockReturnValue(signUpReturnValue);
 
-    await userController.userSignup(mockRequest, mockResponse);
+    await userController.userSignup(mockRequest, mockResponse, mockNext);
     expect(mockUserService.signUp).toHaveBeenCalledTimes(1);
     expect(mockUserService.signUp).toHaveBeenCalledWith(
       signUpRequestBodyParams.email,
       signUpRequestBodyParams.password,
-      signUpRequestBodyParams.confirmPassword,
       signUpRequestBodyParams.name,
       signUpRequestBodyParams.address,
       signUpRequestBodyParams.isOwner,
@@ -94,7 +98,7 @@ describe('UserController Unit Test', () => {
     mockResponse.cookie = jest.fn();
 
     await userController.userLogin(mockRequest, mockResponse, mockNext);
-    
+
     expect(mockUserService.logIn).toHaveBeenCalledTimes(1);
     expect(mockUserService.logIn).toHaveBeenCalledWith(
       logInRequestBodyParams.email,
@@ -102,17 +106,14 @@ describe('UserController Unit Test', () => {
     );
 
     expect(mockResponse.cookie).toHaveBeenCalledTimes(1); // 쿠키 설정 확인
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'authorization',
-      `Bearer ${logInReturnValue}`
-    );
+    expect(mockResponse.cookie).toHaveBeenCalledWith('authorization', `Bearer ${logInReturnValue}`);
 
     expect(mockResponse.status).toHaveBeenCalledTimes(1);
     expect(mockResponse.status).toHaveBeenCalledWith(201);
 
     expect(mockResponse.json).toHaveBeenCalledTimes(1);
     expect(mockResponse.json).toHaveBeenCalledWith({ message: '로그인 성공!' });
-});
+  });
 
   //포인트 성공
   test('getUserPoint', async () => {
