@@ -1,6 +1,6 @@
 import { jest, test } from '@jest/globals';
 import { NodeMailerController } from '../../../src/controllers/nodemailer.controller.js';
-import { NodeMailerValidator } from '../../../src/utils/validators/nodeMailerValidator.js';
+import { NodeMailerValidator } from '../../../src/utils/validators/controller/nodeMailerValidator.js';
 
 const mockNodemailerService = {
   nodemailer: jest.fn(),

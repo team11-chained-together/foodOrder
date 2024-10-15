@@ -1,4 +1,4 @@
-import { CheckedOrder, UpdatedOrderStatement } from '../utils/validators/checkOrderValidator.js';
+import { CheckedOrder, UpdatedOrderStatement } from '../utils/validators/controller/checkOrderValidator.js';
 export class CheckOrderController {
   constructor(checkOrderService) {
     this.checkOrderService = checkOrderService;

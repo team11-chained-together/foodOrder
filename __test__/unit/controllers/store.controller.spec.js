@@ -7,7 +7,7 @@ import {
   UpdateStoreValidation,
   DeleteStoreValidation,
   SearchStoreValidation,
-} from '../../../src/utils/validators/storeValidator'
+} from '../../../src/utils/validators/controller/storeValidator.js'
 
 const mockStoreService = {
   searchStores: jest.fn(),

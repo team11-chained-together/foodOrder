@@ -1,6 +1,6 @@
 import { jest, test } from '@jest/globals';
 import { UserOrderController } from '../../../src/controllers/userOrder.controller.js';
-import { UserOrderValidation } from '../../../src/utils/validators/userOrderValidator.js';
+import { UserOrderValidation } from '../../../src/utils/validators/controller/userOrderValidator.js';
 
 const mockUserOrderService = {
   createUserOrder: jest.fn(),

@@ -12,11 +12,11 @@ export class UserOrderRepository {
   };
 
   getMenuData = async (menuId) => {
-    const menuPrice = await this.prisma.menu.findFirst({
+    const menuData = await this.prisma.menu.findFirst({
       where: { menuId: menuId },
     });
 
-    return menuPrice;
+    return menuData;
   };
 
   getUserPoint = async (userId) => {
@@ -54,33 +54,24 @@ export class UserOrderRepository {
           statement: 'PREPARE',
         },
       });
-      for (let i = 0; i < Array(menuId).length; i++) {
-        await tx.orderMenu.create({
+      for (let i = 0; i < menuId.length; i++) {
+        let create = await tx.orderMenu.create({
           data: {
             orderId: createdOrder.orderId,
             menuId: menuId[i],
             quantity: quantity[i],
           },
         });
+        console.log(create);
       }
     });
     return createOrder;
   };
 
-  updateStock = async (menuId, quantity) => {
-    const updateStock = await this.prisma.menu.update({
-      where: { menuId: menuId },
-      data: {
-        stock: { decrement: quantity },
-      },
-    });
-    return updateStock;
-  };
-
   updateCash = async (totalPrice, userId, storeId, orderId, menuId, quantity) => {
     const updateCash = await this.prisma.$transaction(
       async (tx) => {
-        for (let i = 0; i < Array(menuId).length; i++) {
+        for (let i = 0; i < menuId.length; i++) {
           await tx.menu.update({
             where: { menuId: menuId[i] },
             data: {
@@ -88,13 +79,6 @@ export class UserOrderRepository {
             },
           });
         }
-
-        await tx.order.update({
-          where: { orderId: orderId },
-          data: {
-            totalPrice: totalPrice,
-          },
-        });
 
         await tx.user.update({
           where: { userId: userId },

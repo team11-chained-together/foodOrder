@@ -1,4 +1,4 @@
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../../errors/ValidationError.js';
 
 export class CreateReview {
   constructor({ orderId, comment, rate }) {
@@ -38,7 +38,7 @@ export class UpdateReview {
 
   validateReviewId() {
     if (!this.reviewId) {
-      throw new ValidationError('해당하는 리뷰아이디를 입력해 주세요.');
+      throw new ValidationError('해당하는 reviewId를 입력해 주세요.');
     }
   }
 }
@@ -54,7 +54,7 @@ export class DeleteReview {
 
   validateReviewId() {
     if (!this.reviewId) {
-      throw new ValidationError('reviewId를 입력해 주세요.');
+      throw new ValidationError('해당하는 reviewId를 입력해 주세요.');
     }
   }
 }

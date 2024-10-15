@@ -1,4 +1,4 @@
-import { UserOrderValidation } from '../utils/validators/userOrderValidator.js';
+import { UserOrderValidation } from '../utils/validators/controller/userOrderValidator.js';
 
 export class UserOrderController {
   constructor(userOrderService) {

@@ -3,7 +3,7 @@ export class MenuRepository {
     this.prisma = prisma;
   }
 
-  findMenuNameByStoreId = async (storeId, menuName) => {
+  findMenuByStoreId = async (storeId, menuName) => {
     const menu = await this.prisma.menu.findUnique({
       where: {
         storeId_menuName: { storeId: +storeId, menuName },

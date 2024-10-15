@@ -11,8 +11,10 @@ export class MenuService {
 
   createMenu = async (userId, menuName, image, price, stock) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    const checkStoreIdValidation = new CreateMenuValidation(checkStoreId);
+    checkStoreIdValidation.validate();
 
-    const isMenuNameExists = await this.menuRepository.findMenuNameByStoreId(
+    const isMenuNameExists = await this.menuRepository.findMenuByStoreId(
       checkStoreId.storeId,
       menuName,
     );
@@ -42,6 +44,8 @@ export class MenuService {
 
   updateMenu = async (userId, menuId, menuName, image, price, stock) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    const checkStoreIdValidation = new CreateMenuValidation(checkStoreId);
+    checkStoreIdValidation.validate();
 
     const isMenuNameExists = await this.menuRepository.findMenuByMenuId(
       checkStoreId.storeId,
@@ -81,6 +85,8 @@ export class MenuService {
 
   deleteMenu = async (userId, menuId) => {
     const checkStoreId = await this.menuRepository.findStoreIdByUserId(userId);
+    const checkStoreIdValidation = new CreateMenuValidation(checkStoreId);
+    checkStoreIdValidation.validate();
 
     const isMenuNameExists = await this.menuRepository.findMenuByMenuId(
       checkStoreId.storeId,
@@ -93,11 +99,7 @@ export class MenuService {
     const deleteMenu = await this.menuRepository.deleteMenu(menuId);
 
     return {
-      menuId: deleteMenu.menuId,
-      menuName: deleteMenu.menuName,
-      image: deleteMenu.image,
-      price: deleteMenu.price,
-      stock: deleteMenu.stock,
+      deleteMenu,
     };
   };
 }

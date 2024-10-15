@@ -1,4 +1,4 @@
-import { SignUpUser, SignInUser } from '../utils/validators/userValidator.js';
+import { SignUpUser, SignInUser } from '../utils/validators/controller/userValidator.js';
 
 export class UserController {
   constructor(userService) {
@@ -28,7 +28,6 @@ export class UserController {
       //   return res.status(400).json({
       //     message: err.message,
       //   });
-      //   return err.message
       // }
       next(err);
     }

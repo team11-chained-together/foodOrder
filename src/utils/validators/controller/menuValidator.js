@@ -1,4 +1,4 @@
-import { ValidationError } from '../errors/ValidationError.js';
+import { ValidationError } from '../../errors/ValidationError.js';
 
 export class CreateMenu {
   constructor(isOwner, { menuName, image, price, stock }) {
@@ -19,7 +19,7 @@ export class CreateMenu {
     }
 
     if (!this.menuName || !this.image || !this.price || !this.stock) {
-      throw new ValidationError('menuName, image, price, stock를 입력해주세요.');
+      throw new ValidationError('menuName, image, price, stock을 모두 입력해주세요.');
     }
   }
 }
@@ -79,7 +79,7 @@ export class GetMenu {
   }
   validateGetStore() {
     if (!this.storeId) {
-      throw new ValidationError('해당하는 가게아이디를 입력 해 주세요.');
+      throw new ValidationError('해당하는 storeId를 입력 해 주세요.');
     }
   }
 }
