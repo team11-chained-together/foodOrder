@@ -65,20 +65,29 @@ export class UpdateReviewUserIdValidation {
 }
 
 export class DeleteReviewValidation {
-  constructor(findReviewData, userId) {
+  constructor(findReviewData) {
     this.findReviewData = findReviewData;
-    this.userId = userId;
   }
 
   validate() {
     this.validateFindReviewData();
-    this.validateFindReviewDataUserId();
   }
 
   validateFindReviewData() {
     if (!this.findReviewData) {
       throw new ValidationError('해당하는 리뷰가 존재하지 않습니다.');
     }
+  }
+}
+
+export class DeleteReviewUserIdValidation {
+  constructor(findReviewData, userId) {
+    this.findReviewData = findReviewData;
+    this.userId = userId;
+  }
+
+  validate() {
+    this.validateFindReviewDataUserId();
   }
 
   validateFindReviewDataUserId() {

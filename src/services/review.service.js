@@ -3,6 +3,7 @@ import {
   UpdateReviewValidation,
   UpdateReviewUserIdValidation,
   DeleteReviewValidation,
+  DeleteReviewUserIdValidation,
   FindStoreData,
   GetReviewDataValidation,
   GetMyReviewValidation,
@@ -61,7 +62,7 @@ export class ReviewService {
     const findReviewDataValidation = new DeleteReviewValidation(findReviewData);
     findReviewDataValidation.validate();
 
-    const findReviewDataUserIdValidation = new DeleteReviewValidation(findReviewData, userId);
+    const findReviewDataUserIdValidation = new DeleteReviewUserIdValidation(findReviewData, userId);
     findReviewDataUserIdValidation.validate();
 
     const deletedReview = await this.reviewRepository.deleteReview(reviewId);
