@@ -14,13 +14,15 @@ export class UserOrderService {
     let totalPrice = 0;
     let index = 0;
 
+    //TODO: 해당하는 메뉴가 없을때 오류가 생성되지 않음
     const checkStore = await this.userOrderRepository.getStoreData(storeId);
     const checkStoreValidation = new CheckStoreValidation(checkStore);
     checkStoreValidation.validate();
     for (let i = 0; i < Array(menuId).length; i++) {
       const checkMenu = await this.userOrderRepository.getMenuData(menuId[i]);
-      const checkMenuValidation = new CheckMenuValidation(checkMenu);
-      checkMenuValidation.validate;
+      console.log(checkMenu);
+      const checkMenuValidation = new CheckMenuValidation(checkMenu, storeId);
+      checkMenuValidation.validate();
     }
 
     for (const element of menuId) {

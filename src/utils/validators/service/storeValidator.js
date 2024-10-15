@@ -59,7 +59,7 @@ export class GetStoreValidation {
 
   getStoreValidate() {
     if (!this.store) {
-      throw new ValidationError('등록된 음식점이 없습니다.');
+      throw new ValidationError('등록된 식당이 없습니다.');
     }
   }
 }

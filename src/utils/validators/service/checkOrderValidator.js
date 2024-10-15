@@ -33,9 +33,8 @@ export class CheckMyOrderValidation {
     this.validateOrderData();
   }
 
-  //TODO: findMany로 빈배열이 나오지만 에러가 안뜸 문제 해결해야함
   validateOrderData() {
-    if (!this.orderData) {
+    if (this.orderData.length === 0) {
       throw new ValidationError('내가 주문한 목록이 없습니다.');
     }
   }

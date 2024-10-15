@@ -17,18 +17,30 @@ export class CheckStoreValidation {
 }
 
 export class CheckMenuValidation {
-  constructor(checkMenu) {
+  constructor(checkMenu, storeId) {
     this.checkMenu = checkMenu;
+    this.storeId = storeId;
   }
 
   validate() {
     this.checkMenuValidate();
+    this.checkMenuStoreIdValidate();
+    this.checkMenuStockValidate();
   }
 
   checkMenuValidate() {
     if (!this.checkMenu) {
       throw new ValidationError('해당하는 메뉴가 존재하지 않습니다.');
     }
+  }
+
+  checkMenuStoreIdValidate() {
+    if (this.checkMenu.storeId !== this.storeId) {
+      throw new ValidationError('해당하는 가게의 메뉴가 아닙니다.');
+    }
+  }
+
+  checkMenuStockValidate() {
     if (this.checkMenu.stock === 0) {
       throw new ValidationError('해당하는 메뉴가 품절 입니다.');
     }

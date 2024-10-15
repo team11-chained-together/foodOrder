@@ -20,6 +20,13 @@ export class ReviewRepository {
     return reviewData;
   };
 
+  findStoreData = async (storeId) => {
+    const getStoreData = await this.prisma.store.findFirst({
+      where: { storeId: storeId },
+    });
+    return getStoreData;
+  };
+
   findReviewData = async (storeId) => {
     const getReviewData = await this.prisma.review.findMany({
       where: { storeId: storeId },
