@@ -2,6 +2,8 @@ import {
   CreateReviewValidation,
   UpdateReviewValidation,
   DeleteReviewValidation,
+  GetReviewValidation,
+  GetMyReviewValidation,
 } from '../utils/validators/service/reviewValidator.js';
 
 export class ReviewService {
@@ -68,8 +70,13 @@ export class ReviewService {
   };
 
   getReview = async (storeId) => {
-    const getReviewData = await this.reviewRepository.findReviewData(storeId);
+    const findStoreData = await this.reviewRepository.findStoreData(storeId);
+    const findStoreDataValidation = new GetReviewValidation(findStoreData);
+    findStoreDataValidation.validate();
 
+    const getReviewData = await this.reviewRepository.findReviewData(storeId);
+    const getReviewDataValidation = new GetReviewValidation(getReviewData);
+    getReviewDataValidation.validate();
     return {
       getReviewData,
     };
@@ -77,6 +84,8 @@ export class ReviewService {
 
   getMyReview = async (userId) => {
     const getMyReviewData = await this.reviewRepository.findMyReviewData(userId);
+    const getMyReviewDataValidation = new GetMyReviewValidation(getMyReviewData);
+    getMyReviewDataValidation.validate();
 
     return { getMyReviewData };
   };

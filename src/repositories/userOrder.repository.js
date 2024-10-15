@@ -12,11 +12,11 @@ export class UserOrderRepository {
   };
 
   getMenuData = async (menuId) => {
-    const menuPrice = await this.prisma.menu.findFirst({
+    const menuData = await this.prisma.menu.findFirst({
       where: { menuId: menuId },
     });
 
-    return menuPrice;
+    return menuData;
   };
 
   getUserPoint = async (userId) => {

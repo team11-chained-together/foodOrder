@@ -7,15 +7,8 @@ export class CreateReviewValidation {
   }
 
   validate() {
-    this.validateCheckOrderData();
     this.validateCheckUserId();
     this.validateCheckOrderStatement();
-  }
-
-  validateCheckOrderData() {
-    if (this.checkOrderData.length === 0) {
-      throw new ValidationError('주문 내역이 없습니다.');
-    }
   }
 
   validateCheckUserId() {
@@ -75,6 +68,46 @@ export class DeleteReviewValidation {
   validateFindReviewDataUserId() {
     if (this.findReviewData.userId !== this.userId) {
       throw new ValidationError('해당하는 리뷰는 삭제할 수 없습니다.');
+    }
+  }
+}
+
+export class GetReviewValidation {
+  constructor(getReviewData, findStoreData) {
+    this.getReviewData = getReviewData;
+    this.findStoreData = findStoreData;
+  }
+
+  validate() {
+    this.validateGetReviewStoreId();
+    this.validateGetReview();
+  }
+
+  validateGetReviewStoreId() {
+    if (!this.findStoreData) {
+      throw new ValidationError('해당하는 가게는 존재하지 않습니다.');
+    }
+  }
+
+  validateGetReview() {
+    if (this.getReviewData.length === 0) {
+      throw new ValidationError('해당하는 가게에 대한 리뷰가 없습니다.');
+    }
+  }
+}
+
+export class GetMyReviewValidation {
+  constructor(getMyReviewData) {
+    this.getMyReviewData = getMyReviewData;
+  }
+
+  validate() {
+    this.validateGetMyReview();
+  }
+
+  validateGetMyReview() {
+    if (this.getMyReviewData.length === 0) {
+      throw new ValidationError('내가 작성한 리뷰가 없습니다.');
     }
   }
 }
