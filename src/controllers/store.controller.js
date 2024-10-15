@@ -54,6 +54,7 @@ export class StoreController {
       const updatedStore = await this.storeService.updateStore(
         storeValidation.userId,
         storeValidation.storeName,
+        storeValidation.location,
         storeValidation.foodType,
         storeValidation.location,
       );

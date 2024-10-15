@@ -49,8 +49,8 @@ export class CheckMyOrderValidation {
 }
 
 export class UpdateOrderStatementValidation {
-  constructor(storeId, order) {
-    this.storeId = storeId;
+  constructor(store, order) {
+    this.store = store;
     this.order = order;
   }
 
@@ -66,7 +66,7 @@ export class UpdateOrderStatementValidation {
   }
 
   validateStoreIdOrderId() {
-    if (this.storeId !== this.order.storeId) {
+    if (this.store.storeId !== this.order.storeId) {
       throw new ValidationError('해당하는 오더는 사장님 가게의 주문목록에 없습니다.');
     }
   }

@@ -67,6 +67,7 @@ export class StoreService {
       userId: updatedStore.userId,
       storeId: updatedStore.storeId,
       storeName: updatedStore.storeName,
+      location: updatedStore.location,
       foodType: updatedStore.foodType,
       sales: updatedStore.sales,
       createdAt: updatedStore.createdAt,
