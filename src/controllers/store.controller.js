@@ -3,7 +3,7 @@ import {
   UpdateStoreValidation,
   DeleteStoreValidation,
   SearchStoreValidation,
-} from '../utils/validators/storeValidator.js';
+} from '../utils/validators/controller/storeValidator.js';
 
 export class StoreController {
   constructor(storeService) {

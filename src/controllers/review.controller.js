@@ -1,4 +1,4 @@
-import { CreateReview, UpdateReview, DeleteReview } from '../utils/validators/reviewValidator.js';
+import { CreateReview, UpdateReview, DeleteReview } from '../utils/validators/controller/reviewValidator.js';
 
 export class ReviewController {
   constructor(reviewService) {

@@ -1,6 +1,6 @@
 import { beforeAll, describe, jest, test } from '@jest/globals';
 import { MenuController } from '../../../src/controllers/menu.controller';
-import {CreateMenu,UpdateMenu,DeleteMenu,GetMenu} from '../../../src/utils/validators/menuValidator.js'
+import {CreateMenu,UpdateMenu,DeleteMenu,GetMenu} from '../../../src/utils/validators/controller/menuValidator.js'
 const mockMenuService = {
   createMenu: jest.fn(),
   updateMenu: jest.fn(),
