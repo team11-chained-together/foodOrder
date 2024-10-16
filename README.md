@@ -1,4 +1,43 @@
 # 백오피스 프로그램 - foodOrder
-개요
+
+##개요
 이 프로젝트는 Node.js 와 EXpress.js를 사용하여 음식 배달 서비스를 구현하는 과제입니다.
+
+##기술 스택
+- **Node.js** :자바스크립트 실행 환경
+- **Express.js** : Node.js 웹 애플리케이션 프레임워크
+- **MySQL** : 관계형 데이터베이스 (Prisma를 통해 사용)
+-  **JEST** : Test 프레임워크
+-  **NodeMailer**: 메일 전송할 수 있는 라이브러리
+
+## 프로젝트 설치 및 실행
+
+## 요구 사항
+
+- Node.js
+- yarn
+- MySQL
+
+### 설정
+
+1. **환경 변수 설정**
+   '.env' 파일 생성, 아래 환경 변수 설정.
+   
+   ```plaintext
+   DATABASE_URL="mysql://root:990211@localhost:3306/food_order_db"
+   JWT_SECRET="MY_JWT_SECRET_KEY"
+
+   user = 'coconarooroo@gmail.com'
+   pass = 'vjrb vbow xwas ugyz'
+
+   SESSION_KEY = 'your-secret-key'
+
+   PORT = 7777
+   ```
+   
+2. **서버 실행**
+
+   ```bash
+   yarn run dev
+   ```
 
