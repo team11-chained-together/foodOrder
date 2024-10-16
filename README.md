@@ -10,6 +10,9 @@
 -  **JEST** : Test 프레임워크
 -  **NodeMailer**: 메일 전송할 수 있는 라이브러리
 
+## 와이어프레임
+![image](https://github.com/user-attachments/assets/8240262e-fa01-461c-8333-a4d42f81c9e0)
+
 ## ERD
 ![image](https://github.com/user-attachments/assets/3ed97578-28b4-4ab2-9dc9-f2a54c8ca4b1)
 
