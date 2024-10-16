@@ -59,7 +59,7 @@ describe('User Repository Unit Test', () => {
       password: 'hashPassword',
       name: 'createName',
       address: 'createAddress',
-      type: true, //유저 타입을 불리언으로 설정해서 true
+      isOwner: true, //유저 타입을 불리언으로 설정해서 true
     };
 
     //createdUser 메서드가 실행되는 부분
@@ -68,7 +68,7 @@ describe('User Repository Unit Test', () => {
       createUserParams.hashPassword,
       createUserParams.name,
       createUserParams.address,
-      createUserParams.type,
+      createUserParams.isOwner,
     );
     // 비교부분
     expect(createUserData).toEqual(mockReturn);
@@ -81,7 +81,7 @@ describe('User Repository Unit Test', () => {
         password: createUserParams.hashPassword,
         name: createUserParams.name,
         address: createUserParams.address,
-        type: createUserParams.type,
+        isOwner: createUserParams.isOwner,
       },
     });
   });

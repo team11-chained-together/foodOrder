@@ -129,10 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-<<<<<<< HEAD
+
 #
 .idea
-=======
-# config nodemailer
-config
->>>>>>> shinminjae
+

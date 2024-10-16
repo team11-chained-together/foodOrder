@@ -3,23 +3,21 @@ export class MenuRepository {
     this.prisma = prisma;
   }
 
-  findMenuName = async (storeId, menuName) => {
+  findMenuByStoreId = async (storeId, menuName) => {
     const menu = await this.prisma.menu.findUnique({
       where: {
-        storeId: +storeId,
-        menuName,
+        storeId_menuName: { storeId: +storeId, menuName },
       },
     });
     return menu;
   };
 
-  // userId를 사용해서 store 테이블에서 storeId를 가져오기 위한 로직
   findStoreIdByUserId = async (userId) => {
-    const menu = await this.prisma.store.findFirst({
-      where: { userId: +userId },
+    const store = await this.prisma.store.findFirst({
+      where: { userId: userId },
     });
 
-    return menu;
+    return store;
   };
 
   createMenu = async (storeId, menuName, image, price, stock) => {
@@ -36,19 +34,51 @@ export class MenuRepository {
     return createdMenu;
   };
 
-  updateMenu = async (storeId, menuName, newMenuName, image, price, stock) => {
+  updateMenu = async (menuId, menuName, image, price, stock) => {
     const updatedMenu = await this.prisma.menu.update({
       where: {
-        storeId: +storeId,
-        menuName,
+        menuId: menuId,
       },
       data: {
-        menuName: newMenuName,
+        menuName: menuName,
         image: image,
         price: price,
         stock: stock,
       },
     });
     return updatedMenu;
+  };
+
+  deleteMenu = async (menuId) => {
+    const deleteMenu = await this.prisma.menu.delete({
+      where: { menuId: menuId },
+    });
+    return deleteMenu;
+  };
+
+  findMenuByMenuId = async (storeId, menuId) => {
+    const menu = await this.prisma.menu.findFirst({
+      where: { storeId: storeId, menuId: menuId },
+    });
+    return menu;
+  };
+
+  findStore = async (storeId) => {
+    const getStore = await this.prisma.store.findFirst({
+      where: {
+        storeId: storeId,
+      },
+    });
+
+    return getStore;
+  };
+
+  findMenuByStoreId = async (storeId) => {
+    const getMenu = await this.prisma.menu.findMany({
+      where: { storeId: storeId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return getMenu;
   };
 }

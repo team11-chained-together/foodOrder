@@ -14,5 +14,6 @@ const menuController = new MenuController(menuService);
 router.post('/owner/menu', authMiddleware, menuController.createMenu);
 router.put('/owner/menu', authMiddleware, menuController.updateMenu);
 router.delete('/owner/menu', authMiddleware, menuController.deleteMenu);
+router.get('/owner/menu', menuController.getMenu);
 
 export default router;

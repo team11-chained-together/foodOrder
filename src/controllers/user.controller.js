@@ -1,16 +1,23 @@
-// User의 컨트롤러(Controller)역할을 하는 클래스
+import { SignUpUser, SignInUser } from '../utils/validators/controller/userValidator.js';
+
 export class UserController {
   constructor(userService) {
     this.userService = userService;
   }
-  // 유저 생성 ( 회원 가입 )
 
   userSignup = async (req, res, next) => {
     try {
-      const { email, password, name, address, type } = req.body;
+      const emailCode = req.session.emailCode;
+      const signUpUser = new SignUpUser(req.body, emailCode);
+      signUpUser.validate();
 
-      // 서비스 계층에 구현된 createUser 로직을 실행합니다.
-      const createdUser = await this.userService.signUp(email, password, name, address, type);
+      const createdUser = await this.userService.signUp(
+        signUpUser.email,
+        signUpUser.password,
+        signUpUser.name,
+        signUpUser.address,
+        signUpUser.isOwner,
+      );
 
       return res.status(201).json({
         message: '회원가입 성공!',
@@ -21,16 +28,13 @@ export class UserController {
     }
   };
 
-  //로그인 로직
   userLogin = async (req, res, next) => {
     try {
-      const { email, password } = req.body;
+      const loginUser = new SignInUser(req.body);
+      loginUser.validate();
 
-      if (!email || !password) {
-        throw new Error('InvalidParamsError');
-      }
-
-      await this.userService.logIn(email, password, res);
+      const login = await this.userService.logIn(loginUser.email, loginUser.password);
+      res.cookie('authorization', `Bearer ${login}`);
 
       return res.status(201).json({ message: '로그인 성공!' });
     } catch (err) {
@@ -38,7 +42,6 @@ export class UserController {
     }
   };
 
-  // 포인트 확인
   userPoint = async (req, res, next) => {
     try {
       const { userId } = req.user;

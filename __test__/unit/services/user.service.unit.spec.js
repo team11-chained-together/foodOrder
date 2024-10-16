@@ -41,12 +41,11 @@ describe('userService Unit Test', () => {
       password: 'aaaa4321',
       name: '홍길동',
       address: 'seoul',
-      type: true,
+      isOwner: true,
     };
 
-    // bcrypt 해시 메서드 Mock 설정
     const hashedPassword = 'hashedPassword';
-    bcrypt.hash.mockResolvedValue(hashedPassword); // bcrypt.hash가 해시된 비밀번호를 반환하도록 설정
+    bcrypt.hash.mockResolvedValue(hashedPassword);
 
     // createdUser 반환 Mock 설정
     mockUserRepository.createdUser.mockResolvedValue({
@@ -54,7 +53,7 @@ describe('userService Unit Test', () => {
       password: hashedPassword,
       name: sampleUser.name,
       address: sampleUser.address,
-      type: sampleUser.type,
+      isOwner: sampleUser.isOwner,
       createdAt: new Date(),
     });
 
@@ -64,52 +63,77 @@ describe('userService Unit Test', () => {
       sampleUser.password,
       sampleUser.name,
       sampleUser.address,
-      sampleUser.type,
+      sampleUser.isOwner,
     );
 
-    // createdUser가 한 번 호출되었는지 확인
     expect(mockUserRepository.createdUser).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.createdUser).toHaveBeenCalledWith(
       sampleUser.email,
-      hashedPassword, // 해시된 비밀번호가 전달되는지 확인
+      hashedPassword,
       sampleUser.name,
       sampleUser.address,
-      sampleUser.type,
+      sampleUser.isOwner,
     );
 
-    // 반환된 유저 정보가 예상대로 반환되었는지 확인
     expect(createdUser).toEqual({
       email: sampleUser.email,
       name: sampleUser.name,
       address: sampleUser.address,
-      type: sampleUser.type,
+      isOwner: sampleUser.isOwner,
       createdAt: expect.any(Date), //동적 날짜 검증
     });
   });
 
+  //TODO: 테스트 코드 다시 작성 해보기
   test('logIn Method By Success', async () => {
     const sampleUser = {
       email: 'test@example.com',
       password: 'aaaa4321',
+      userId: 1,
     };
-
-    const token = userService.logIn({ userId: 1 });
-
-    mockUserRepository.findUserByEmail.mockReturnValue(sampleUser);
-    bcrypt.compare.mockReturnValue(sampleUser);
-    jwt.sign.mockReturnValue(sampleUser);
-
-    const getId = await userService.logIn(sampleUser);
-
-    expect(getId).toEqual(sampleUser);
+  
+    // 사용자 정보 Mock 설정
+    mockUserRepository.findUserByEmail.mockResolvedValue({
+      ...sampleUser,
+      password: 'hashedPassword',
+    });
+  
+    // bcrypt.compare는 true를 반환하도록 설정
+    bcrypt.compare.mockResolvedValue(true);
+  
+    // JWT 토큰 반환 Mock 설정
+    jwt.sign.mockReturnValue('token');
+  
+    // logIn 메서드 실행
+    const token = await userService.logIn(
+      sampleUser.email,
+       sampleUser.password
+      );
+  
+    // userRepository 메서드가 호출되었는지 확인
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledTimes(1);
     expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith(
-      sampleUser.email,
-      sampleUser.password,
+      sampleUser.email
     );
-
+  
+    // bcrypt.compare 호출 확인
+    expect(bcrypt.compare).toHaveBeenCalledTimes(1);
+    expect(bcrypt.compare).toHaveBeenCalledWith(
+      sampleUser.password, 
+      'hashedPassword'
+    );
+  
+    // JWT 토큰 생성 호출 확인
     expect(jwt.sign).toHaveBeenCalledTimes(1);
-    expect(jwt.sign).toHaveBeenCalledWith({ userId: 1 }, JWT_SECRET);
+    expect(jwt.sign).toHaveBeenCalledWith({ 
+      userId: sampleUser.userId 
+    }, 
+    process.env.JWT_SECRET, 
+    {
+      expiresIn: '1h',
+    });
+  
+    // 토큰이 올바르게 반환되었는지 확인
     expect(token).toBe('token');
   });
 });

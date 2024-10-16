@@ -1,46 +1,84 @@
 import { expect, jest, test } from '@jest/globals';
 import { StoreController } from '../../../src/controllers/store.controller';
-
+import { query } from 'express';
+import cookieParser from 'cookie-parser';
+import {
+  StoreValidation,
+  UpdateStoreValidation,
+  DeleteStoreValidation,
+  SearchStoreValidation,
+} from '../../../src/utils/validators/controller/storeValidator.js';
+import { ValidationError } from '../../../src/utils/errors/ValidationError.js';
 const mockStoreService = {
+  searchStores: jest.fn(),
   createStore: jest.fn(),
   updateStore: jest.fn(),
   deleteStore: jest.fn(),
   getStore: jest.fn(),
 };
 
-const mockRequest = {
-  body: jest.fn(),
-};
-
-const mockResponse = {
-  status: jest.fn(),
-  json: jest.fn(),
-};
-
 const mockNext = jest.fn();
 
-const storeController = new StoreController(mockStoreService);
+// const searchStoreValidation= new SearchStoreValidation(mockRequest.query)
 
-describe('Store Controller Unit Test', () => {
+describe('스토어 컨트롤러 유닛 테스트', () => {
+  const storeController = new StoreController(mockStoreService);
+
+  const mockRequest = {
+    body: {},
+    user: {},
+    query: {},
+  };
+
+  const mockResponse = {
+    status: jest.fn(),
+    json: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
 
     mockResponse.status.mockReturnValue(mockResponse);
   });
 
-  /** Create Store Controller Test */
-  test('createStore Method by Success', async () => {
+  test('가게목록 조회 성공 테스트', async () => {
+    const searchQuery = 'Test search';
+    const sampleStore = {
+      storeId: 1,
+      storeName: 'Test StoreName',
+      foodType: 'Test Food Type',
+      location: '전북',
+    };
+
+    mockRequest.query = { search: searchQuery };
+
+    mockStoreService.searchStores.mockResolvedValue([sampleStore]); //sampleStore가 비동기함수이면 mockReturnValue 대신 mockResolvedValue 사용해야함
+
+    await storeController.searchStores(mockRequest, mockResponse, mockNext);
+
+    expect(mockStoreService.searchStores).toHaveBeenCalledTimes(1);
+    expect(mockStoreService.searchStores).toHaveBeenCalledWith(searchQuery);
+
+    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.json).toHaveBeenCalledWith({ data: [sampleStore] });
+  });
+
+  test('가게 만들기 성공 테스트', async () => {
+    const createdStoreUser = { userId: 1, isOwner: true };
     const createStoreRequestBodyParams = {
       userId: 1,
+      storeId: 1,
       storeName: 'Store_name_Success',
+      location: 'Store Location',
       foodType: 'Food_Type_Success',
-      type: true,
     };
+    mockRequest.user = createdStoreUser;
     mockRequest.body = createStoreRequestBodyParams;
 
     // Service 계층에서 구현된 createStore 메서드를 실행했을때, 반환되는 데이터 형식
     const createdStoreReturnValue = {
       storeId: 1,
+      createdStoreUser,
       ...createStoreRequestBodyParams,
       createdAt: new Date().toString,
     };
@@ -48,10 +86,12 @@ describe('Store Controller Unit Test', () => {
     mockStoreService.createStore.mockReturnValue(createdStoreReturnValue);
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
+
     expect(mockStoreService.createStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.createStore).toHaveBeenCalledWith(
-      createStoreRequestBodyParams.userId,
+      createdStoreUser.userId,
       createStoreRequestBodyParams.storeName,
+      createStoreRequestBodyParams.location,
       createStoreRequestBodyParams.foodType,
     );
 
@@ -67,12 +107,23 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Update Store Controller Test */
-  test('updateStore Method by Success', async () => {
+  test('스토어 업데이트 테스트 성공', async () => {
+    const storeUpdateValidation = new UpdateStoreValidation(
+      mockRequest.user.userId,
+      mockRequest.user.isOwner,
+      mockRequest.body,
+    );
     const updateStoreRequestBodyParams = {
       userId: 1,
+      isOwner: true,
       storeName: 'New_Store_name_Success',
       foodType: 'New_Food_Type_Success',
-      type: true,
+      location: 'TestLocation',
+    };
+
+    mockRequest.user = {
+      userId: 1,
+      isOwner: true,
     };
 
     mockRequest.body = updateStoreRequestBodyParams;
@@ -80,16 +131,21 @@ describe('Store Controller Unit Test', () => {
     // Service 계층에서 구현된 updateStore 메서드를 실행했을때, 반환되는 데이터 형식
     const updatedStoreReturnValue = {
       ...updateStoreRequestBodyParams,
-      updatedAt: new Date().toString,
+      storeId: 1,
+      sales: 0,
+      createdAt: new Date().toString(),
+      updatedAt: new Date().toString(),
     };
 
     mockStoreService.updateStore.mockReturnValue(updatedStoreReturnValue);
 
     await storeController.updateStore(mockRequest, mockResponse, mockNext);
+
     expect(mockStoreService.updateStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.updateStore).toHaveBeenCalledWith(
-      updateStoreRequestBodyParams.userId,
+      mockRequest.user.userId,
       updateStoreRequestBodyParams.storeName,
+      updateStoreRequestBodyParams.location,
       updateStoreRequestBodyParams.foodType,
     );
 
@@ -105,11 +161,15 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Delete Store Controller Test */
-  test('deleteStore Method by Success', async () => {
+  test('가게 삭제 테스트 성공', async () => {
     const deleteStoreRequestBodyParams = {
       userId: 1,
-      storeName: 'Delete Store Name',
-      type: true,
+      storeId: 1,
+    };
+
+    mockRequest.user = {
+      userId: 1,
+      isOwner: true,
     };
 
     mockRequest.body = deleteStoreRequestBodyParams;
@@ -124,7 +184,7 @@ describe('Store Controller Unit Test', () => {
     expect(mockStoreService.deleteStore).toHaveBeenCalledTimes(1);
     expect(mockStoreService.deleteStore).toHaveBeenCalledWith(
       deleteStoreRequestBodyParams.userId,
-      deleteStoreRequestBodyParams.storeName,
+      deleteStoreRequestBodyParams.storeId,
     );
 
     // Response status
@@ -140,7 +200,7 @@ describe('Store Controller Unit Test', () => {
   });
 
   /** Get Store Controller Test */
-  test('getStore Method by Success', async () => {
+  test('스토어 목록 조회 테스트 성공', async () => {
     const getStoreRequestBodyParams = {
       storeName: 'Get Store Name',
     };
@@ -168,32 +228,41 @@ describe('Store Controller Unit Test', () => {
     });
   });
 
-  /** Created Store Controller Fail Test */
-  test('createStore Method By Invalid Params Error', async () => {
-    mockRequest.body = {
-      userId: 1,
-      storeName: 'StoreName_InvalidParamsError',
-      type: true,
-    };
+  test('스토어 생성 시 값이 없으면 에러 발생', async () => {
+    mockRequest.body = {};
+    mockRequest.user = { userId: 1, isOwner: true };
+
+    const storeValidationSpy = jest
+      .spyOn(StoreValidation.prototype, 'validate')
+      .mockImplementation(() => {
+        throw new Error('validationError: 상점 이름을 입력해주세요.');
+      });
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
 
-    expect(mockNext).toHaveBeenCalledWith(new Error('InvalidParamsError'));
+    expect(storeValidationSpy).toHaveBeenCalledTimes(1);
+    expect(mockNext).toHaveBeenCalledWith(new Error('validationError: 상점 이름을 입력해주세요.'));
+
+    storeValidationSpy.mockRestore();
   });
 
-  /** 사장님이 아닐때 발생하는 에러 Test*/
-  test('Store Method By Type Error', async () => {
-    mockRequest.body = {
+  test('가게 사장님이 아닐떄 오류 발생', async () => {
+    mockRequest.user = {
       userId: 1,
+      isOwner: false,
+    };
+    mockRequest.body = {
       storeName: 'storeName',
       foodType: 'foodType',
-      type: false,
+      isOwner: false,
     };
 
     await storeController.createStore(mockRequest, mockResponse, mockNext);
     await storeController.updateStore(mockRequest, mockResponse, mockNext);
     await storeController.deleteStore(mockRequest, mockResponse, mockNext);
 
-    expect(mockNext).toHaveBeenCalledWith(new Error('해당하는 유저는 사장님이 아닙니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(1, new ValidationError('사장님만 이용가능합니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(2, new ValidationError('사장님만 이용가능합니다.'));
+    expect(mockNext).toHaveBeenNthCalledWith(3, new ValidationError('사장님만 이용가능합니다.'));
   });
 });

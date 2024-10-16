@@ -1,3 +1,10 @@
+import {
+  CreateMenu,
+  UpdateMenu,
+  DeleteMenu,
+  GetMenu,
+} from '../utils/validators/controller/menuValidator.js';
+
 export class MenuController {
   constructor(menuService) {
     this.menuService = menuService;
@@ -5,20 +12,17 @@ export class MenuController {
 
   createMenu = async (req, res, next) => {
     try {
-      const userId = req.user;
-      const type = req.user;
-      const { menuName, image, price, stock } = req.body;
+      const userId = req.user.userId;
+      const createMenu = new CreateMenu(req.user.isOwner, req.body);
+      createMenu.validate();
 
-      // 사장과 손님 확인 작업
-      if (type !== true) {
-        throw new Error('해당하는 유저는 사장님이 아닙니다.');
-      }
-
-      if (!menuName || !image || !price || !stock) {
-        throw new Error('InvalidParamsError');
-      }
-
-      const createdMenu = await this.menuService.createMenu(userId, menuName, image, price, stock);
+      const createdMenu = await this.menuService.createMenu(
+        userId,
+        createMenu.menuName,
+        createMenu.image,
+        createMenu.price,
+        createMenu.stock,
+      );
 
       return res.status(201).json({ data: createdMenu });
     } catch (err) {
@@ -28,16 +32,18 @@ export class MenuController {
 
   updateMenu = async (req, res, next) => {
     try {
-      const userId = req.user;
-      const type = req.user;
-      const { menuName, image, price, stock } = req.body;
+      const userId = req.user.userId;
+      const updatedMenu = new UpdateMenu(req.user.isOwner, req.body);
+      updatedMenu.validate();
 
-      // 사장과 손님 확인 작업
-      if (type !== true) {
-        throw new Error('해당하는 유저는 사장님이 아닙니다.');
-      }
-
-      const updateMenu = await this.menuService.updateMenu(userId, menuName, image, price, stock);
+      const updateMenu = await this.menuService.updateMenu(
+        userId,
+        updatedMenu.menuId,
+        updatedMenu.menuName,
+        updatedMenu.image,
+        updatedMenu.price,
+        updatedMenu.stock,
+      );
 
       return res.status(200).json({ data: updateMenu });
     } catch (err) {
@@ -45,11 +51,29 @@ export class MenuController {
     }
   };
 
-  /**메뉴 삭제 */
-  deleteMenu = async (req, res, next) => {
-    //삭제할 메뉴의 id
-    //유저.바디의 이메일과 req.바디의 이메일 일시하면 삭제가능
+  getMenu = async (req, res, next) => {
+    try {
+      const getMenu = new GetMenu(req.body);
+      getMenu.validate();
 
-    console.log(user.email);
+      const menu = await this.menuService.getMenu(getMenu.storeId);
+
+      return res.status(200).json({ data: menu });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  deleteMenu = async (req, res, next) => {
+    try {
+      const userId = req.user.userId;
+      const deletedMenu = new DeleteMenu(req.user.isOwner, req.body);
+      deletedMenu.validate();
+
+      const deleteMenu = await this.menuService.deleteMenu(userId, deletedMenu.menuId);
+      return res.status(200).json({ message: '메뉴 삭제를 성공하였습니다.', data: deleteMenu });
+    } catch (err) {
+      next(err);
+    }
   };
 }

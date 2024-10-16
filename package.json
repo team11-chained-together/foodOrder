@@ -17,13 +17,15 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "bcrypt": "^5.1.1",
-    "cookie-parser": "^1.4.6",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
     "prisma": "^5.20.0",
+    "session-storage": "^1.0.1",
     "winston": "^3.15.0"
   },
   "devDependencies": {
