@@ -77,6 +77,12 @@ export class SignInUser {
     if (!this.email) {
       throw new ValidationError('이메일을 입력해주세요.');
     }
+
+    const investigateEmail =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    if (!investigateEmail.test(this.email)) {
+      throw new ValidationError('이메일 형식에 맞게 입력해주세요.');
+    }
   }
 
   validatePassword() {
