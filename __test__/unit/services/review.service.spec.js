@@ -129,19 +129,4 @@ describe('리뷰 서비스 유닛 테스트', () => {
       },
     });
   });
-
-  test('가게 리뷰 목록 조회 선공 테스트', async () => {
-    const sampleFindStoreData = {
-      storeId: 1,
-      userId: 1,
-      storeName: 'storeName',
-      location: 'location',
-      foodType: 'foodType',
-      sales: 5000,
-      createdAt: '2024-09-28T09:35:43.410Z',
-      updatedAt: '2024-09-28T09:35:43.410Z',
-    };
-
-    const sampleGetReviewData = {};
-  });
 });

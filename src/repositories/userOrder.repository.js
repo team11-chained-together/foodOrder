@@ -45,25 +45,30 @@ export class UserOrderRepository {
   };
 
   createOrder = async (storeId, userId, totalPrice, menuId, quantity) => {
-    const createOrder = await this.prisma.$transaction(async (tx) => {
-      const createdOrder = await tx.order.create({
-        data: {
-          storeId: storeId,
-          userId: userId,
-          totalPrice: totalPrice,
-          statement: 'PREPARE',
-        },
-      });
-      for (let i = 0; i < menuId.length; i++) {
-        await tx.orderMenu.create({
+    const createOrder = await this.prisma.$transaction(
+      async (tx) => {
+        const createdOrder = await tx.order.create({
           data: {
-            orderId: createdOrder.orderId,
-            menuId: menuId[i],
-            quantity: quantity[i],
+            storeId: storeId,
+            userId: userId,
+            totalPrice: totalPrice,
+            statement: 'PREPARE',
           },
         });
-      }
-    });
+        for (let i = 0; i < menuId.length; i++) {
+          await tx.orderMenu.create({
+            data: {
+              orderId: createdOrder.orderId,
+              menuId: menuId[i],
+              quantity: quantity[i],
+            },
+          });
+        }
+      },
+      {
+        isolationLevel: this.Prisma.READ_COMMITTED,
+      },
+    );
     return createOrder;
   };
 
@@ -94,7 +99,7 @@ export class UserOrderRepository {
         });
       },
       {
-        isolationLevel: this.Prisma.TransactionIsolationLevel.Serializable,
+        isolationLevel: this.Prisma.REPEATABLE_READ,
       },
     );
     return updateCash;
