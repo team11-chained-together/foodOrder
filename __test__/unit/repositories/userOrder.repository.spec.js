@@ -27,6 +27,7 @@ describe('유저 주문 리포지토리 유닛 테스트', () => {
   };
 
   const userOrderRepository = new UserOrderRepository(mockPrisma);
+
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -145,12 +146,9 @@ describe('유저 주문 리포지토리 유닛 테스트', () => {
   test('주문 생성 트랜잭션 테스트 성공', async () => {
     const mockReturn = 'createOrder transaction Test';
 
-    mockPrisma
-      .$transaction(async (tx) => {
-        tx.order.create;
-        tx.orderMenu.create;
-      })
-      .mockResolvedValue(mockReturn);
+    mockPrisma.$transaction.mockImplementation(async (fn) => {
+      return await fn(mockPrisma);
+    });
 
     const createOrderTransactionParams = {
       storeId: 1,
@@ -160,7 +158,19 @@ describe('유저 주문 리포지토리 유닛 테스트', () => {
       quantity: [1, 1, 1],
     };
 
-    const createOrderData = await userOrderRepository.createOrder(createOrderTransactionParams);
+    const sampleCreatedOrder = {
+      orderId: 1,
+    };
+
+    mockPrisma.order.create.mockReturnValue(sampleCreatedOrder);
+
+    const createOrderData = await userOrderRepository.createOrder(
+      createOrderTransactionParams.storeId,
+      createOrderTransactionParams.userId,
+      createOrderTransactionParams.totalPrice,
+      createOrderTransactionParams.menuId,
+      createOrderTransactionParams.quantity,
+    );
     expect(createOrderData).toEqual(mockReturn);
     expect(mockPrisma.$transaction).toHaveBeenCalledTimes(1);
     expect(mockPrisma.$transaction).toHaveBeenCalledWith(
@@ -171,5 +181,18 @@ describe('유저 주문 리포지토리 유닛 테스트', () => {
         statement: 'PREPARE',
       }),
     );
+    expect(mockPrisma.order.create).toHaveBeenCalledTimes(1);
+    expect(mockPrisma.order.create).toHaveBeenCalledWith({
+      data: {
+        ...createOrderTransactionParams,
+        statement: 'PREPARE',
+      },
+    });
+    expect(mockPrisma.orderMenu.create).toHaveBeenCalledTimes(3);
+    expect(mockPrisma.orderMenu.create).toHaveBeenCalledWith({
+      data: sampleCreatedOrder.orderId,
+      menuId: menuId[0],
+      quantity: quantity[0],
+    });
   });
 });

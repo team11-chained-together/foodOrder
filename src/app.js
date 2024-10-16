@@ -14,7 +14,7 @@ import reviewRouter from './routes/review.router.js';
 import storeRankingRouter from './routes/storeRanking.router.js';
 
 const app = express();
-const PORT = 7777;
+const { PORT } = process.env;
 
 app.use(LogMiddleware);
 app.use(express.json());

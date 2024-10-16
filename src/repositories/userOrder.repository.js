@@ -55,14 +55,13 @@ export class UserOrderRepository {
         },
       });
       for (let i = 0; i < menuId.length; i++) {
-        let create = await tx.orderMenu.create({
+        await tx.orderMenu.create({
           data: {
             orderId: createdOrder.orderId,
             menuId: menuId[i],
             quantity: quantity[i],
           },
         });
-        console.log(create);
       }
     });
     return createOrder;
@@ -95,7 +94,7 @@ export class UserOrderRepository {
         });
       },
       {
-        isolationLevel: this.Prisma.TransactionIsolationLevel.ReadCommitted,
+        isolationLevel: this.Prisma.TransactionIsolationLevel.Serializable,
       },
     );
     return updateCash;
